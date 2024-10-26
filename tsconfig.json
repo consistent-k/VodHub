@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+      "target": "ESNext",
+      "module": "ESNext",
+      "moduleResolution": "bundler",
+      "strict": true,
+      "jsx": "react-jsx",
+      "jsxImportSource": "hono/jsx",
+      "paths": {
+          "@/*": ["./src/*"]
+      },
+      "esModuleInterop": true,
+      "noImplicitAny": false,
+      "outDir": "./dist",
+      "skipLibCheck": true,
+      "noEmit": true,
+      "incremental": true,
+      "resolveJsonModule": true,
+      "isolatedModules": true
+  },
+  "exclude": ["node_modules", "*.test.*"]
+}
