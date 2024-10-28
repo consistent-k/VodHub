@@ -6,7 +6,7 @@ function md5(text: string) {
     return crypto.createHash('md5').update(text).digest('hex');
 }
 
-const requestTT = async (url: string, method: 'post' | 'get', data?: any) => {
+request.interceptors.request.use((config) => {
     const timestamp = Math.floor(new Date().getTime() / 1000);
     const key = 'kj5649ertj84ks89r4jh8s45hf84hjfds04k';
     const sign = md5(`${key}${timestamp}`).toString();
@@ -14,14 +14,16 @@ const requestTT = async (url: string, method: 'post' | 'get', data?: any) => {
         sign: sign,
         timestamp: timestamp
     };
-    let response: any = await request(`${url}`, {
-        method: method || 'get',
-        data: {
-            ...defaultData,
-            ...data
-        }
-    });
-    return await response;
-};
+    config.data = {
+        ...defaultData,
+        ...config.data
+    };
+    console.log(config.data);
+    return config;
+});
 
-export default requestTT;
+request.interceptors.response.use(async (response) => {
+    return response;
+});
+
+export default request;
