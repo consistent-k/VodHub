@@ -3,7 +3,8 @@
     "type": "module",
     "scripts": {
         "dev": "tsx watch --clear-screen=false src/index.ts",
-        "prepare": "husky install"
+        "prepare": "husky install",
+        "commit": "git-cz"
     },
     "dependencies": {
         "@hono/node-server": "^1.13.2",
