@@ -2,39 +2,52 @@
     "name": "vod-hub",
     "type": "module",
     "scripts": {
-        "dev": "tsx watch --clear-screen=false src/index.ts"
+        "dev": "tsx watch --clear-screen=false src/index.ts",
+        "prepare": "husky install"
     },
     "dependencies": {
         "@hono/node-server": "^1.13.2",
         "axios": "^1.7.7",
         "cache-manager": "^6.1.1",
         "cacheable": "^1.8.1",
+        "crypto-js": "^4.2.0",
         "dayjs": "^1.11.13",
         "directory-import": "^3.3.1",
         "hono": "^4.6.6",
         "ioredis": "^5.4.1",
         "keyv": "^5.1.2",
         "lodash": "^4.17.21",
-        "winston": "^3.15.0",
-        "xxhash-wasm": "^1.0.2"
+        "winston": "^3.15.0"
     },
     "devDependencies": {
         "@babel/core": "^7.25.8",
         "@babel/eslint-parser": "^7.25.8",
         "@babel/eslint-plugin": "^7.25.7",
+        "@commitlint/cli": "^19.5.0",
+        "@commitlint/config-conventional": "^19.5.0",
         "@ecomfe/eslint-config": "^8.0.0",
+        "@types/crypto-js": "^4.2.2",
         "@types/lodash": "^4.17.12",
         "@types/node": "^20.11.17",
         "@typescript-eslint/eslint-plugin": "^5.35.1",
         "@typescript-eslint/parser": "^5.35.1",
+        "commitizen": "^4.3.1",
+        "cz-conventional-changelog": "^3.3.0",
         "eslint": "8",
         "eslint-config-prettier": "^9.1.0",
         "eslint-plugin-import": "^2.31.0",
+        "husky": "^9.1.6",
+        "lint-staged": "^15.2.10",
         "prettier": "^3.3.3",
         "tsx": "^4.7.1"
     },
     "engines": {
         "node": ">=22",
         "pnpm": ">=9"
+    },
+    "config": {
+        "commitizen": {
+            "path": "./node_modules/cz-conventional-changelog"
+        }
     }
 }

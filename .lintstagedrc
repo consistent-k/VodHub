@@ -1,0 +1,5 @@
+{
+    "*.ts?(x)": [
+        "prettier --cache --parser=typescript --write"
+    ]
+}
