@@ -7,7 +7,6 @@ import { SearchRoute } from '@/types';
 import logger from '@/utils/logger';
 
 const handler = async (ctx: Context) => {
-    ctx.res.headers.set('Cache-Control', 'no-cache'); // 禁止缓存
     const body = await ctx.req.json();
     logger.info(`正在搜索 - ${namespace.name} - ${JSON.stringify(body)}`);
 
