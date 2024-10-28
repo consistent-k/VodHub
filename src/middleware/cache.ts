@@ -1,12 +1,28 @@
+import CryptoJS from 'crypto-js';
 import dayjs from 'dayjs';
 import type { MiddlewareHandler } from 'hono';
 
 import RequestInProgressError from '@/errors/types/request-in-progress';
 import cache from '@/utils/cache';
 
+const { Hex } = CryptoJS.enc;
+
 const middleware: MiddlewareHandler = async (ctx, next) => {
-    const cacheKey = `vodspider:redis-cache:${ctx.req.path}`; // 缓存的 key
-    const pathKey = `vodspider:path-requested:${ctx.req.path}`; // 请求的 key
+    let cacheKey = `vod-hub:redis-cache:`; // 缓存的 key
+    let pathKey = `vod-hub:path-requested:`; // 请求的 key
+    switch (ctx.req.method) {
+        case 'POST':
+            const body = await ctx.req.json();
+            // eslint-disable-next-line
+            const contentMD5 = CryptoJS.MD5(JSON.stringify(body)).toString(Hex);
+            cacheKey += `${ctx.req.path}-${contentMD5}`;
+            pathKey += `${ctx.req.path}-${contentMD5}`;
+            break;
+        default:
+            cacheKey += ctx.req.path;
+            pathKey += ctx.req.path;
+            break;
+    }
 
     const isRequesting = await cache.get(pathKey); // 判断是否正在请求
 
@@ -30,7 +46,7 @@ const middleware: MiddlewareHandler = async (ctx, next) => {
 
     if (value) {
         ctx.status(200);
-        ctx.header('Vodspider-Cache-Status', 'HIT');
+        ctx.header('Vod-Hub-Cache-Status', 'HIT');
         ctx.set('data', JSON.parse(value));
         await next();
         return;
@@ -46,7 +62,7 @@ const middleware: MiddlewareHandler = async (ctx, next) => {
 
     const data: any = ctx.get('data');
     if (ctx.res.headers.get('Cache-Control') !== 'no-cache' && data) {
-        data.updateTime = dayjs().format('YYYY-MM-DD HH:mm:ss');
+        data.update_time = dayjs().format('YYYY-MM-DD HH:mm:ss');
         ctx.set('data', data);
         const body = JSON.stringify(data);
         await cache.set(cacheKey, body);
