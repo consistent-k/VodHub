@@ -6,6 +6,7 @@ module.exports = {
         sourceType: 'module'
     },
     rules: {
+        '@babel/new-cap': 0,
         semi: [2, 'always'],
         'comma-dangle': ['error', 'never'],
         'no-console': 0,

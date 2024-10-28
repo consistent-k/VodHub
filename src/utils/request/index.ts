@@ -16,7 +16,7 @@ request.interceptors.request.use((config) => {
 });
 
 request.interceptors.response.use((response) => {
-    return response.data;
+    return response;
 });
 
 export default request;

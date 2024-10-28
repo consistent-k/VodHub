@@ -13,7 +13,6 @@ const middleware: MiddlewareHandler = async (ctx, next) => {
     switch (ctx.req.method) {
         case 'POST':
             const body = await ctx.req.json();
-            // eslint-disable-next-line
             const contentMD5 = CryptoJS.MD5(JSON.stringify(body)).toString(Hex);
             cacheKey += `${ctx.req.path}-${contentMD5}`;
             pathKey += `${ctx.req.path}-${contentMD5}`;
