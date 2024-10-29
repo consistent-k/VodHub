@@ -9,13 +9,13 @@ updates:
  - package-ecosystem: "devcontainers"
    directory: "/"
    schedule:
-     interval: weekly
+     interval: "weekly"
 
- - package-ecosystem: npm
-    directory: '/'
+ - package-ecosystem: "npm"
+    directory: "/"
     schedule:
-      interval: daily
-      time: '09:00'
+      interval: "daily"
+      time: "09:00"
     open-pull-requests-limit: 100
     labels:
-      - dependencies
+      - "dependencies"
