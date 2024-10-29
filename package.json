@@ -8,14 +8,14 @@
         "commit": "git-cz"
     },
     "dependencies": {
-        "@hono/node-server": "^1.13.2",
+        "@hono/node-server": "^1.13.3",
         "axios": "^1.7.7",
-        "cache-manager": "^6.1.1",
-        "cacheable": "^1.8.1",
+        "cache-manager": "^6.1.2",
+        "cacheable": "^1.8.2",
         "crypto-js": "^4.2.0",
         "dayjs": "^1.11.13",
         "directory-import": "^3.3.1",
-        "hono": "^4.6.6",
+        "hono": "^4.6.8",
         "ioredis": "^5.4.1",
         "keyv": "^5.1.2",
         "lodash": "^4.17.21",
@@ -23,7 +23,7 @@
         "winston": "^3.15.0"
     },
     "devDependencies": {
-        "@babel/core": "^7.25.8",
+        "@babel/core": "^7.26.0",
         "@babel/eslint-parser": "^7.25.8",
         "@babel/eslint-plugin": "^7.25.7",
         "@commitlint/cli": "^19.5.0",
@@ -31,7 +31,7 @@
         "@ecomfe/eslint-config": "^8.0.0",
         "@types/crypto-js": "^4.2.2",
         "@types/lodash": "^4.17.12",
-        "@types/node": "^20.11.17",
+        "@types/node": "^22.8.2",
         "@typescript-eslint/eslint-plugin": "^5.35.1",
         "@typescript-eslint/parser": "^5.35.1",
         "commitizen": "^4.3.1",
@@ -42,7 +42,7 @@
         "husky": "^9.1.6",
         "lint-staged": "^15.2.10",
         "prettier": "^3.3.3",
-        "tsx": "^4.7.1"
+        "tsx": "^4.19.2"
     },
     "engines": {
         "node": ">=22",
