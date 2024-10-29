@@ -4,6 +4,7 @@ import { namespace } from './namespace';
 import request from './request';
 
 import { DetailData, DetailRoute } from '@/types';
+import { formatVodContent } from '@/utils/format';
 import logger from '@/utils/logger';
 
 const handler = async (ctx: Context) => {
@@ -30,7 +31,7 @@ const handler = async (ctx: Context) => {
             vod_area: data.vod_area,
             vod_actor: data.vod_actor,
             vod_director: data.vod_director,
-            vod_content: data.vod_content,
+            vod_content: formatVodContent(data.vod_content),
             vod_play_list: data.vod_play_list
         };
 
