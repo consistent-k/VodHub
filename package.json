@@ -3,7 +3,8 @@
     "type": "module",
     "scripts": {
         "dev": "tsx watch --clear-screen=false src/index.ts",
-        "prepare": "husky install",
+        "start": "tsx src/index.ts",
+        "prepare": "husky",
         "commit": "git-cz"
     },
     "dependencies": {
