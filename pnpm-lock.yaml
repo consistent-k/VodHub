@@ -18,8 +18,8 @@ importers:
         specifier: ^6.1.2
         version: 6.1.2
       cacheable:
-        specifier: ^1.8.1
-        version: 1.8.1
+        specifier: ^1.8.2
+        version: 1.8.2
       crypto-js:
         specifier: ^4.2.0
         version: 4.2.0
@@ -744,8 +744,8 @@ packages:
   cache-manager@6.1.2:
     resolution: {integrity: sha512-hBFCGc7g1sVMto7+Dwr1BWrOXOMuLvC77SbTYaI44tZPFK9myaySBmgvmBYgc7iqbG/qNyUc6oyuDOcHn6oTvw==}
 
-  cacheable@1.8.1:
-    resolution: {integrity: sha512-BQU8fJtRc02n0TVitAUMJ1EfeG32lQl3tof+8exwxb/hRMk2oGMlzDFiaPvkD6mi7XLEP7Wb3cOjhHKVmP3jnw==}
+  cacheable@1.8.2:
+    resolution: {integrity: sha512-r5BZFaYu7+HzVX3DsY2i02X45YxJYqlllnr33NC0s17O4vqOOf+68Xkhy6HufCMOpkuj5dkAbOB4OdUxsXQEYQ==}
 
   cachedir@2.3.0:
     resolution: {integrity: sha512-A+Fezp4zxnit6FanDmv9EqXNAi3vt9DWp51/71UEhXukb7QUuvtv9344h91dyAxuTLoSYJFU299qzR3tzwPAhw==}
@@ -3030,7 +3030,7 @@ snapshots:
     dependencies:
       keyv: 5.1.2
 
-  cacheable@1.8.1:
+  cacheable@1.8.2:
     dependencies:
       hookified: 1.4.0
       keyv: 5.1.2
