@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@hono/node-server':
         specifier: ^1.13.3
-        version: 1.13.3(hono@4.6.6)
+        version: 1.13.3(hono@4.6.8)
       axios:
         specifier: ^1.7.7
         version: 1.7.7
@@ -30,8 +30,8 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1
       hono:
-        specifier: ^4.6.6
-        version: 4.6.6
+        specifier: ^4.6.8
+        version: 4.6.8
       ioredis:
         specifier: ^5.4.1
         version: 5.4.1
@@ -1392,8 +1392,8 @@ packages:
     resolution: {integrity: sha512-eSmmWE5bZTK2Nou4g0AI3zZ9rswp7GRKoKXS1BLUkvPviOqs4YTN1djQIqrXy9k5gEtdLPy86JjRwsNM9tnDcA==}
     engines: {node: '>=0.10.0'}
 
-  hono@4.6.6:
-    resolution: {integrity: sha512-euUj5qwvtkG+p38GFs0LYacwaoS2hYRAGn9ysAggiwT2QBcPnT1XYUCW3hatW4C1KzAXTYuQ08BlVDJtAGuhlg==}
+  hono@4.6.8:
+    resolution: {integrity: sha512-f+2Ec9JAzabT61pglDiLJcF/DjiSefZkjCn9bzm1cYLGkD5ExJ3Jnv93ax9h0bn7UPLHF81KktoyjdQfWI2n1Q==}
     engines: {node: '>=16.9.0'}
 
   hookified@1.4.0:
@@ -2700,9 +2700,9 @@ snapshots:
 
   '@eslint/js@8.57.1': {}
 
-  '@hono/node-server@1.13.3(hono@4.6.6)':
+  '@hono/node-server@1.13.3(hono@4.6.8)':
     dependencies:
-      hono: 4.6.6
+      hono: 4.6.8
 
   '@humanwhocodes/config-array@0.13.0':
     dependencies:
@@ -3796,7 +3796,7 @@ snapshots:
     dependencies:
       parse-passwd: 1.0.0
 
-  hono@4.6.6: {}
+  hono@4.6.8: {}
 
   hookified@1.4.0: {}
 
