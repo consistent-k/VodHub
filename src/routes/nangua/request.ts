@@ -1,4 +1,6 @@
+import { AxiosRequestConfig } from 'axios';
 import CryptoJS from 'crypto-js';
+import { merge } from 'lodash';
 
 import { NAN_GUA_CONFIG } from './config';
 
@@ -34,4 +36,14 @@ request.interceptors.response.use(async (response) => {
     return response.data;
 });
 
-export default request;
+const newRequest = {
+    async get<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
+        return await request(url, merge({}, config, { method: 'get' }));
+    },
+
+    async post<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
+        return await request(url, merge({}, config, { method: 'post' }));
+    }
+};
+
+export default newRequest;
