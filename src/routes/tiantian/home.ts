@@ -4,12 +4,22 @@ import request from './request';
 import { HomeData, HomeRoute } from '@/types';
 import logger from '@/utils/logger';
 
+// 源头的首页数据
+interface HomeDataOrigin {
+    list: Array<{
+        type_id: number;
+        type_name: string;
+        extend: string[];
+        area: string[];
+        lang: string[];
+        year: string[];
+    }>;
+}
+
 const handler = async () => {
     try {
         logger.info(`正在获取首页分类列表 - ${namespace.name}`);
-        const res = await request<any, any>(`${namespace.url}/v2/type/top_type`, {
-            method: 'POST'
-        });
+        const res = await request.post<HomeDataOrigin>(`${namespace.url}/v2/type/top_type`);
 
         const { data, code } = res;
 
