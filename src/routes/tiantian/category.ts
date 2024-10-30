@@ -6,6 +6,19 @@ import request from './request';
 import { CategoryRoute } from '@/types';
 import logger from '@/utils/logger';
 
+// 源头的分类列表数据
+interface CategoryDataOrigin {
+    list: Array<{
+        vod_id: number;
+        vod_pic: string;
+        vod_pic_thumb: string;
+        vod_name: string;
+        vod_remarks: string;
+        type_id: number;
+        tag: string;
+    }>;
+}
+
 const handler = async (ctx: Context) => {
     try {
         const body = await ctx.req.json();
@@ -14,8 +27,7 @@ const handler = async (ctx: Context) => {
         const { id, page, filters } = body;
         // filters: { class, area, lang, year }
 
-        const res = await request<any, any>(`${namespace.url}/v2/home/type_search`, {
-            method: 'POST',
+        const res = await request.post<CategoryDataOrigin>(`${namespace.url}/v2/home/type_search`, {
             data: {
                 limit: 12,
                 type_id: id,
@@ -24,13 +36,12 @@ const handler = async (ctx: Context) => {
             }
         });
 
-        const {
-            data: { list },
-            code
-        } = res;
+        // return res;
+
+        const { data, code } = res;
 
         if (code === 1) {
-            const newList = list.map((item: any) => {
+            const newList = data.list.map((item) => {
                 return {
                     vod_id: item.vod_id,
                     vod_name: item.vod_name,
@@ -44,13 +55,13 @@ const handler = async (ctx: Context) => {
             };
         }
 
-        logger.error(`获取分类列表失败 - ${namespace.name}`, JSON.stringify(res));
+        logger.error(`获取分类列表失败 - ${namespace.name} - ${JSON.stringify(res)}`);
         return {
             code: -1,
             data: []
         };
     } catch (error) {
-        logger.error(`获取分类列表失败 - ${namespace.name}`, JSON.stringify(res));
+        logger.error(`获取分类列表失败 - ${namespace.name} - ${error}`);
         return {
             code: -1,
             data: []

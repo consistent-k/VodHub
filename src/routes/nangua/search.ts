@@ -8,6 +8,22 @@ import request from './request';
 import { SearchData, SearchRoute } from '@/types';
 import logger from '@/utils/logger';
 
+// 源头的关键词搜索数据
+interface SearchDataOrigin {
+    code: number;
+    msg: string;
+    data: Array<{
+        id: number;
+        type: number;
+        video_name: string;
+        qingxidu: string;
+        img: string;
+        director: string;
+        main_actor: string;
+        blurb: string;
+        category: string;
+    }>;
+}
 const handler = async (ctx: Context) => {
     try {
         const body = await ctx.req.json();
@@ -26,14 +42,12 @@ const handler = async (ctx: Context) => {
 
         const strParams = queryString.stringify(params);
 
-        const res = await request<any, any>(`${namespace.url}/api.php/provide/search_result_more?${strParams}`, {
-            method: 'POST'
-        });
+        const res = await request.post<SearchDataOrigin>(`${namespace.url}/api.php/provide/search_result_more?${strParams}`);
 
         const { data, code } = res;
 
         if (code === 1) {
-            const newList: SearchData[] = data.map((item: any) => {
+            const newList: SearchData[] = data.map((item) => {
                 return {
                     vod_id: item.id,
                     vod_name: item.video_name,
@@ -53,6 +67,7 @@ const handler = async (ctx: Context) => {
             data: []
         };
     } catch (error) {
+        ctx.res.headers.set('Cache-Control', 'no-cache');
         logger.error(`关键词搜索失败 - ${namespace.name} - ${error}`);
         return {
             code: -1,
@@ -64,7 +79,7 @@ const handler = async (ctx: Context) => {
 export const route: SearchRoute = {
     path: '/search',
     name: 'search',
-    example: '/tiantian/search',
+    example: '/nangua/search',
     description: `关键词搜索`,
     handler,
     method: 'POST'

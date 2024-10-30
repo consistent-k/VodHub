@@ -1,5 +1,6 @@
 {
     "*.ts?(x)": [
+        "eslint --fix",
         "prettier --cache --parser=typescript --write"
     ]
 }

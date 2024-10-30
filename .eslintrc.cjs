@@ -10,6 +10,7 @@ module.exports = {
         semi: [2, 'always'],
         'comma-dangle': ['error', 'never'],
         'no-console': 0,
+        "@typescript-eslint/no-explicit-any": "error",
         'import/order': [
             1,
             {

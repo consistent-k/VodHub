@@ -17,32 +17,34 @@ const handler = async (ctx: Context) => {
         const body = await ctx.req.json();
         logger.info(`正在获取详情 - ${namespace.name} - ${JSON.stringify(body)}`);
 
-        const { url, parse_urls } = body;
+        const { url } = body;
         let play_type = '';
         let play_url = '';
 
-        if (Array.isArray(parse_urls) && parse_urls.length > 0) {
-            // 使用for-of遍历请求解析地址
-            for (const parse_url of parse_urls) {
-                try {
-                    const res = await request.post<unknown, PlayDataOrigin>(
-                        `${parse_url}${url}`,
-                        {},
-                        {
-                            timeout: 4000
-                        }
-                    );
-                    const { code } = res;
-
-                    if (code === 200 && url.length > 0) {
-                        play_type = res.type;
-                        play_url = res.url;
-                        break;
-                    }
-                } catch (e) {
-                    logger.error(`解析地址失败 - ${namespace.name} - ${e}`);
+        if (url.indexOf('m3u8') !== -1) {
+            play_url = url.split('url=')[1];
+            play_type = 'hls';
+        } else if (url.indexOf(',') !== -1) {
+            let mjurl = url.split(',')[1];
+            const res = await request.post<unknown, PlayDataOrigin>(
+                `${mjurl}`,
+                {},
+                {
+                    timeout: 4000
                 }
-            }
+            );
+            play_url = res.url || '';
+            play_type = 'hls';
+        } else {
+            const res = await request.post<unknown, PlayDataOrigin>(
+                `${url}`,
+                {},
+                {
+                    timeout: 4000
+                }
+            );
+            play_url = res.url || '';
+            play_type = 'hls';
         }
 
         if (play_url.length > 0) {
@@ -62,6 +64,7 @@ const handler = async (ctx: Context) => {
             data: []
         };
     } catch (error) {
+        ctx.res.headers.set('Cache-Control', 'no-cache');
         logger.error(`获取播放地址失败 - ${namespace.name} - ${error}`);
         return {
             code: -1,
@@ -73,7 +76,7 @@ const handler = async (ctx: Context) => {
 export const route: PlayRoute = {
     path: '/play',
     name: 'play',
-    example: '/tiantian/play',
+    example: '/nangua/play',
     description: `获取播放地址`,
     handler,
     method: 'POST'
