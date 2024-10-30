@@ -7,6 +7,24 @@ import { DetailData, DetailRoute } from '@/types';
 import { formatVodContent } from '@/utils/format';
 import logger from '@/utils/logger';
 
+export interface VodPlayList {
+    pic: string;
+    sid: number;
+    referer: string;
+    ua: string;
+    flag: number;
+    title: string;
+    name: string;
+    sort: number;
+    parse_urls: string[];
+    urls: Array<{
+        name: string;
+        url: string;
+        nid: number;
+        form: string;
+    }>;
+}
+
 // 源头详情数据
 interface DetailDataOrigin {
     type_id: number;
@@ -27,23 +45,7 @@ interface DetailDataOrigin {
     vod_content: string;
     comment_num: number;
     vod_blurb: string;
-    vod_play_list: Array<{
-        pic: string;
-        sid: number;
-        referer: string;
-        ua: string;
-        flag: number;
-        title: string;
-        name: string;
-        sort: number;
-        parse_urls: string[];
-        urls: Array<{
-            name: string;
-            url: string;
-            nid: number;
-            form: string;
-        }>;
-    }>;
+    vod_play_list: VodPlayList[];
 }
 
 const handler = async (ctx: Context) => {
