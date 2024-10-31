@@ -1,11 +1,12 @@
-import { AxiosRequestConfig } from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import CryptoJS from 'crypto-js';
 import { merge } from 'lodash';
 
 import { NAN_GUA_CONFIG } from './config';
 
 import cache from '@/utils/cache';
-import request from '@/utils/request';
+
+const request = axios.create({});
 
 request.interceptors.request.use(async (config) => {
     let t = new Date().getTime().toString();

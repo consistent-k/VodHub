@@ -61,7 +61,7 @@ export interface HomeData {
 
 // 首页视频列表
 export interface HomeVodData {
-    vod_id: number; // 视频id
+    vod_id: number | string; // 视频id
     vod_name: string; // 视频名称
     vod_pic: string; // 视频封面
     vod_remarks: string; // 视频备注
@@ -69,7 +69,7 @@ export interface HomeVodData {
 
 // 按分类视频列表
 export interface CategoryVodData {
-    vod_id: number; // 视频id
+    vod_id: number | string; // 视频id
     vod_name: string; // 视频名称
     vod_pic: string; // 视频封面
     vod_remarks: string; // 视频备注
@@ -107,7 +107,7 @@ export interface PlayData {
 
 // 关键词搜索
 export interface SearchData {
-    vod_id: number; // 视频id
+    vod_id: number | string; // 视频id
     vod_name: string; // 视频名称
     vod_pic: string; // 视频封面
     vod_remarks: string; // 视频备注
