@@ -26,7 +26,7 @@ request.interceptors.request.use((config) => {
 });
 
 request.interceptors.response.use(async (response) => {
-    return response;
+    return response.data;
 });
 
 export interface TianTianResponse<T> {
