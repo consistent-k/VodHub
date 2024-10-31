@@ -18,8 +18,8 @@ importers:
         specifier: ^6.1.2
         version: 6.1.2
       cacheable:
-        specifier: ^1.8.2
-        version: 1.8.2
+        specifier: ^1.8.3
+        version: 1.8.3
       cheerio:
         specifier: ^1.0.0
         version: 1.0.0
@@ -756,8 +756,8 @@ packages:
   cache-manager@6.1.2:
     resolution: {integrity: sha512-hBFCGc7g1sVMto7+Dwr1BWrOXOMuLvC77SbTYaI44tZPFK9myaySBmgvmBYgc7iqbG/qNyUc6oyuDOcHn6oTvw==}
 
-  cacheable@1.8.2:
-    resolution: {integrity: sha512-r5BZFaYu7+HzVX3DsY2i02X45YxJYqlllnr33NC0s17O4vqOOf+68Xkhy6HufCMOpkuj5dkAbOB4OdUxsXQEYQ==}
+  cacheable@1.8.3:
+    resolution: {integrity: sha512-u1JKDsgAR1Z389QQFP1btl8TgmfvQUmoOP50S8IT2Z5bDUSCYSZHq66FOvEX0zhHvtuPwGyf8m5/E2BjAK4jAg==}
 
   cachedir@2.3.0:
     resolution: {integrity: sha512-A+Fezp4zxnit6FanDmv9EqXNAi3vt9DWp51/71UEhXukb7QUuvtv9344h91dyAxuTLoSYJFU299qzR3tzwPAhw==}
@@ -1442,8 +1442,8 @@ packages:
     resolution: {integrity: sha512-f+2Ec9JAzabT61pglDiLJcF/DjiSefZkjCn9bzm1cYLGkD5ExJ3Jnv93ax9h0bn7UPLHF81KktoyjdQfWI2n1Q==}
     engines: {node: '>=16.9.0'}
 
-  hookified@1.4.0:
-    resolution: {integrity: sha512-P2ETS9IFdI9g/qcpu0/ZYTiOPECBK4M07CQT+yAoMZr8eltlh4Lt7aizKscUS+ZzRyUpAPloFZmPNH74jQ7q6w==}
+  hookified@1.5.0:
+    resolution: {integrity: sha512-4U0zw2ibOws7kfGdNCIL6oRg+t6ITxkgi9kUaJ71IDp0ZATHjvY6o7l90RBa/R8H2qOKl47SZISA5a3hNnei1g==}
 
   htmlparser2@9.1.0:
     resolution: {integrity: sha512-5zfg6mHUoaer/97TxnGpxmbR7zJtPwIYFMZ/H5ucTlPZhKvtum05yiPK3Mgai3a0DyVxv7qYqoweaEd2nrYQzQ==}
@@ -3105,9 +3105,9 @@ snapshots:
     dependencies:
       keyv: 5.1.2
 
-  cacheable@1.8.2:
+  cacheable@1.8.3:
     dependencies:
-      hookified: 1.4.0
+      hookified: 1.5.0
       keyv: 5.1.2
 
   cachedir@2.3.0: {}
@@ -3932,7 +3932,7 @@ snapshots:
 
   hono@4.6.8: {}
 
-  hookified@1.4.0: {}
+  hookified@1.5.0: {}
 
   htmlparser2@9.1.0:
     dependencies:
