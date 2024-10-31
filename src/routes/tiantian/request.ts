@@ -1,9 +1,9 @@
 import crypto from 'crypto';
 
-import { AxiosRequestConfig } from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import { merge } from 'lodash';
 
-import request from '@/utils/request';
+const request = axios.create({});
 
 function md5(text: string) {
     return crypto.createHash('md5').update(text).digest('hex');
