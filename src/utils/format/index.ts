@@ -7,4 +7,14 @@ const formatVodContent = (content) => {
         .replaceAll(/<\/?[^>]+>/g, '');
 };
 
-export { formatVodContent };
+function formatStrByReg(pattern, str) {
+    let matcher = pattern.exec(str);
+    if (matcher !== null) {
+        if (matcher.length >= 1) {
+            if (matcher.length >= 1) return matcher[1];
+        }
+    }
+    return '';
+}
+
+export { formatVodContent, formatStrByReg };

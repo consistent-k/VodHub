@@ -1,7 +1,7 @@
-import { AxiosRequestConfig } from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import { merge } from 'lodash';
 
-import request from '@/utils/request';
+const request = axios.create({});
 
 request.interceptors.request.use((config) => {
     return config;
