@@ -11,7 +11,7 @@
         "@hono/node-server": "^1.13.3",
         "axios": "^1.7.7",
         "cache-manager": "^6.1.2",
-        "cacheable": "^1.8.2",
+        "cacheable": "^1.8.3",
         "cheerio": "^1.0.0",
         "crypto-js": "^4.2.0",
         "dayjs": "^1.11.13",
