@@ -4,6 +4,7 @@ import { namespace } from './namespace';
 import request from './request';
 import { DetailListData } from './type';
 
+import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
 import { DetailData, DetailRoute, VodPlayList } from '@/types';
 import { formatVodContent } from '@/utils/format';
 import logger from '@/utils/logger';
@@ -62,7 +63,7 @@ const handler = async (ctx: Context) => {
                 ]
             };
             return {
-                code: 0,
+                code: SUCCESS_CODE,
                 data: [detailData]
             };
         }
@@ -70,14 +71,16 @@ const handler = async (ctx: Context) => {
         logger.error(`获取详情失败 - ${namespace.name} - ${JSON.stringify(res)}`);
 
         return {
-            code: -1,
+            code: ERROR_CODE,
+            message: '获取详情失败',
             data: []
         };
     } catch (error) {
         logger.error(`获取详情失败 - ${namespace.name} - ${error}`);
 
         return {
-            code: -1,
+            code: SYSTEM_ERROR_CODE,
+            message: '获取详情失败',
             data: []
         };
     }

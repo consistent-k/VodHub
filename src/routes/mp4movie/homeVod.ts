@@ -1,6 +1,7 @@
 import { namespace } from './namespace';
 import request from './request';
 
+import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
 import { HomeVodData, HomeVodRoute } from '@/types';
 import { formatStrByReg } from '@/utils/format';
 import logger from '@/utils/logger';
@@ -29,7 +30,7 @@ const handler = async () => {
 
         if (vod_list.length > 0) {
             return {
-                code: 0,
+                code: SUCCESS_CODE,
                 data: vod_list
             };
         }
@@ -37,14 +38,16 @@ const handler = async () => {
         logger.error(`获取最近更新失败 - ${namespace.name}`);
 
         return {
-            code: -1,
+            code: ERROR_CODE,
+            message: '获取最近更新失败',
             data: []
         };
     } catch (error) {
         logger.error(`获取最近更新失败 - ${namespace.name} - ${error}`);
 
         return {
-            code: -1,
+            code: SYSTEM_ERROR_CODE,
+            message: '获取最近更新失败',
             data: []
         };
     }

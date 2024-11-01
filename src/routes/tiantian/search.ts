@@ -4,6 +4,7 @@ import { VodPlayList } from './detail';
 import { namespace } from './namespace';
 import request from './request';
 
+import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
 import { SearchRoute } from '@/types';
 import logger from '@/utils/logger';
 
@@ -52,20 +53,22 @@ const handler = async (ctx: Context) => {
                 };
             });
             return {
-                code: 0,
+                code: SUCCESS_CODE,
                 data: newList
             };
         }
 
         logger.error(`关键词搜索失败 - ${namespace.name} - ${JSON.stringify(res)}`);
         return {
-            code: -1,
+            code: ERROR_CODE,
+            message: '搜索失败',
             data: []
         };
     } catch (error) {
         logger.error(`关键词搜索失败 - ${namespace.name} - ${error}`);
         return {
-            code: -1,
+            code: SYSTEM_ERROR_CODE,
+            message: '搜索失败',
             data: []
         };
     }
