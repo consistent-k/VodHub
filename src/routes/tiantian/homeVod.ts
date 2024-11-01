@@ -45,7 +45,6 @@ const handler = async () => {
         logger.info(`正在获取最近更新 - ${namespace.name}`);
         const res = await request.post<HomeVodDataOrigin>(`${namespace.url}/v2/type/tj_vod`);
 
-        // return res;
         const { data, code } = res;
 
         if (code === 1) {
@@ -57,6 +56,7 @@ const handler = async () => {
                             vod_id: vod.vod_id,
                             vod_name: vod.vod_name,
                             vod_pic: vod.vod_pic,
+                            vod_pic_thumb: vod.vod_pic_thumb,
                             vod_remarks: vod.vod_remarks
                         };
                     });

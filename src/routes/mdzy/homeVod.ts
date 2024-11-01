@@ -1,7 +1,7 @@
 import { namespace } from './namespace';
 import request from './request';
 
-import { HomeVodRoute } from '@/types';
+import { HomeVodData, HomeVodRoute } from '@/types';
 import logger from '@/utils/logger';
 
 // 源头的最近更新数据
@@ -31,17 +31,21 @@ const handler = async () => {
 
         const { code, list } = res;
 
+        let vod_list: HomeVodData[] = [];
+        list.forEach((item) => {
+            vod_list.push({
+                vod_id: item.vod_id,
+                vod_name: item.vod_name,
+                vod_pic: '',
+                vod_pic_thumb: '',
+                vod_remarks: item.vod_remarks
+            });
+        });
+
         if (code === 1) {
             return {
                 code: 0,
-                data: list.map((item) => {
-                    return {
-                        vod_id: item.vod_id,
-                        vod_name: item.vod_name,
-                        vod_pic: '',
-                        vod_remarks: item.vod_remarks
-                    };
-                })
+                data: vod_list
             };
         }
 
