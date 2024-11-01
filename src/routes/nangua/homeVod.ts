@@ -53,7 +53,7 @@ interface HomeVodDataOrigin {
     }>;
 }
 
-const handler = async () => {
+const handler = async (ctx) => {
     try {
         logger.info(`正在获取最近更新 - ${namespace.name}`);
 
@@ -73,8 +73,18 @@ const handler = async () => {
 
         let res = await request.post<HomeVodDataOrigin>(`${namespace.url}/api.php/provide/home_data?${strParams}`);
 
-        const { video } = res;
+        const { slide, video } = res;
         let vod_list: HomeVodData[] = [];
+
+        slide.data.forEach((item) => {
+            vod_list.push({
+                vod_id: item.id,
+                vod_name: item.name,
+                vod_pic: item.img,
+                vod_pic_thumb: item.img,
+                vod_remarks: ''
+            });
+        });
 
         video.forEach((item) => {
             item.data.forEach((vod) => {
@@ -83,6 +93,7 @@ const handler = async () => {
                         vod_id: vod.id,
                         vod_name: vod.name,
                         vod_pic: vod.img,
+                        vod_pic_thumb: vod.img,
                         vod_remarks: vod.msg
                     });
                 }
@@ -102,6 +113,7 @@ const handler = async () => {
             data: []
         };
     } catch (error) {
+        ctx.res.headers.set('Cache-Control', 'no-cache');
         logger.error(`获取最近更新失败 - ${namespace.name} - ${error}`);
         return {
             code: -1,

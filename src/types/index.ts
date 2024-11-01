@@ -64,6 +64,7 @@ export interface HomeVodData {
     vod_id: number | string; // 视频id
     vod_name: string; // 视频名称
     vod_pic: string; // 视频封面
+    vod_pic_thumb: string; // 视频缩略图/封面
     vod_remarks: string; // 视频备注
 }
 
