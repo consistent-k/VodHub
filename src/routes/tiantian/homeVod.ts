@@ -3,6 +3,7 @@ import { forEach } from 'lodash';
 import { namespace } from './namespace';
 import request from './request';
 
+import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
 import { HomeVodData, HomeVodRoute } from '@/types';
 import logger from '@/utils/logger';
 
@@ -64,7 +65,7 @@ const handler = async () => {
                 }
             });
             return {
-                code: 0,
+                code: SUCCESS_CODE,
                 data: vod_list
             };
         }
@@ -72,14 +73,16 @@ const handler = async () => {
         logger.error(`获取最近更新失败 - ${namespace.name} - ${JSON.stringify(res)}`);
 
         return {
-            code: -1,
+            code: ERROR_CODE,
+            message: '获取最近更新失败',
             data: []
         };
     } catch (error) {
         logger.error(`获取最近更新失败 - ${namespace.name} - ${error}`);
 
         return {
-            code: -1,
+            code: SYSTEM_ERROR_CODE,
+            message: '获取最近更新失败',
             data: []
         };
     }

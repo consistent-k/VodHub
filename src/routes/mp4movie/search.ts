@@ -4,6 +4,7 @@ import { Context } from 'hono';
 import { namespace } from './namespace';
 import request from './request';
 
+import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
 import { SearchData, SearchRoute } from '@/types';
 import { formatStrByReg } from '@/utils/format';
 import logger from '@/utils/logger';
@@ -41,20 +42,22 @@ const handler = async (ctx: Context) => {
 
         if (searchData.length > 0) {
             return {
-                code: 0,
+                code: SUCCESS_CODE,
                 data: searchData
             };
         }
 
         logger.error(`关键词搜索失败 - ${namespace.name}`);
         return {
-            code: -1,
+            code: ERROR_CODE,
+            message: '搜索失败',
             data: []
         };
     } catch (error) {
         logger.error(`关键词搜索失败 - ${namespace.name} - ${error}`);
         return {
-            code: -1,
+            code: SYSTEM_ERROR_CODE,
+            message: '搜索失败',
             data: []
         };
     }

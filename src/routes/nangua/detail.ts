@@ -5,6 +5,7 @@ import { NAN_GUA_CONFIG } from './config';
 import { namespace } from './namespace';
 import request from './request';
 
+import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
 import { DetailData, DetailRoute } from '@/types';
 import logger from '@/utils/logger';
 
@@ -100,20 +101,22 @@ const handler = async (ctx: Context) => {
                 })
             };
             return {
-                code: 0,
+                code: SUCCESS_CODE,
                 data: [detailData]
             };
         }
         logger.error(`获取详情失败 - ${namespace.name} - ${JSON.stringify(res)}`);
         return {
-            code: -1,
+            code: ERROR_CODE,
+            message: '获取详情失败',
             data: []
         };
     } catch (error) {
         ctx.res.headers.set('Cache-Control', 'no-cache');
         logger.error(`获取详情失败 - ${namespace.name} - ${JSON.stringify(error)}`);
         return {
-            code: -1,
+            code: SYSTEM_ERROR_CODE,
+            message: '获取详情失败',
             data: []
         };
     }

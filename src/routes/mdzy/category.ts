@@ -3,6 +3,7 @@ import { Context } from 'hono';
 import { namespace } from './namespace';
 import request from './request';
 
+import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
 import { CategoryRoute, CategoryVodData } from '@/types';
 import logger from '@/utils/logger';
 
@@ -53,20 +54,22 @@ const handler = async (ctx: Context) => {
             });
 
             return {
-                code: 0,
+                code: SUCCESS_CODE,
                 data: newList
             };
         }
         logger.error(`获取分类列表失败 - ${namespace.name} - ${JSON.stringify(res)}`);
         return {
-            code: -1,
+            code: ERROR_CODE,
+            message: '获取分类列表失败',
             data: []
         };
     } catch (error) {
         ctx.res.headers.set('Cache-Control', 'no-cache');
         logger.error(`获取分类列表失败 - ${namespace.name} - ${error}`);
         return {
-            code: -1,
+            code: SYSTEM_ERROR_CODE,
+            message: '获取分类列表失败',
             data: []
         };
     }

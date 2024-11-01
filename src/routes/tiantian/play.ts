@@ -2,6 +2,7 @@ import { Context } from 'hono';
 
 import { namespace } from './namespace';
 
+import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
 import { PlayRoute } from '@/types';
 import logger from '@/utils/logger';
 import request from '@/utils/request';
@@ -13,6 +14,7 @@ interface PlayDataOrigin {
 }
 
 const handler = async (ctx: Context) => {
+    ctx.res.headers.set('Cache-Control', 'no-cache');
     try {
         const body = await ctx.req.json();
         logger.info(`正在获取详情 - ${namespace.name} - ${JSON.stringify(body)}`);
@@ -47,7 +49,7 @@ const handler = async (ctx: Context) => {
 
         if (play_url.length > 0) {
             return {
-                code: 0,
+                code: SUCCESS_CODE,
                 data: [
                     {
                         play_type,
@@ -58,13 +60,15 @@ const handler = async (ctx: Context) => {
         }
         logger.error(`获取播放地址失败 - ${namespace.name}`);
         return {
-            code: -1,
+            code: ERROR_CODE,
+            message: '获取播放地址失败',
             data: []
         };
     } catch (error) {
         logger.error(`获取播放地址失败 - ${namespace.name} - ${error}`);
         return {
-            code: -1,
+            code: SYSTEM_ERROR_CODE,
+            message: '获取播放地址失败',
             data: []
         };
     }
