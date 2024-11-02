@@ -8,7 +8,7 @@ import logger from '@/utils/logger';
 const port = config.connect.port;
 const hostIPList = getLocalhostAddress();
 
-if (config.listenInaddrAny) {
+if (config.connect.listenInaddrAny) {
     for (const ip of hostIPList) {
         logger.info(`🔗 Network: 👉 http://${ip}:${port}`);
     }
@@ -16,7 +16,7 @@ if (config.listenInaddrAny) {
 
 const server = serve({
     fetch: app.fetch,
-    hostname: config.listenInaddrAny ? '::' : '127.0.0.1',
+    hostname: config.connect.listenInaddrAny ? '::' : '127.0.0.1',
     port
 });
 

@@ -5,6 +5,7 @@ import { namespace } from './namespace';
 import request from './request';
 
 import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
+import { HOME_VOD_MESSAGE } from '@/constant/message';
 import { HomeVodData, HomeVodRoute } from '@/types';
 import logger from '@/utils/logger';
 
@@ -56,7 +57,7 @@ interface HomeVodDataOrigin {
 
 const handler = async (ctx) => {
     try {
-        logger.info(`正在获取最近更新 - ${namespace.name}`);
+        logger.info(`${HOME_VOD_MESSAGE.INFO} - ${namespace.name}`);
 
         const params = {
             app: NAN_GUA_CONFIG.app,
@@ -104,22 +105,23 @@ const handler = async (ctx) => {
         if (vod_list.length > 0) {
             return {
                 code: SUCCESS_CODE,
+                message: HOME_VOD_MESSAGE.SUCCESS,
                 data: vod_list
             };
         }
 
-        logger.error(`获取最近更新失败 - ${namespace.name} - ${JSON.stringify(res)}`);
+        logger.error(`${HOME_VOD_MESSAGE.ERROR} - ${namespace.name} - ${JSON.stringify(res)}`);
         return {
             code: ERROR_CODE,
-            message: '获取最近更新失败',
+            message: HOME_VOD_MESSAGE.ERROR,
             data: []
         };
     } catch (error) {
         ctx.res.headers.set('Cache-Control', 'no-cache');
-        logger.error(`获取最近更新失败 - ${namespace.name} - ${error}`);
+        logger.error(`${HOME_VOD_MESSAGE.ERROR} - ${namespace.name} - ${error}`);
         return {
             code: SYSTEM_ERROR_CODE,
-            message: '获取最近更新失败',
+            message: HOME_VOD_MESSAGE.ERROR,
             data: []
         };
     }

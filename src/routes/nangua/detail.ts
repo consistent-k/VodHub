@@ -6,6 +6,7 @@ import { namespace } from './namespace';
 import request from './request';
 
 import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
+import { DETAIL_MESSAGE } from '@/constant/message';
 import { DetailData, DetailRoute } from '@/types';
 import logger from '@/utils/logger';
 
@@ -60,7 +61,7 @@ interface DetailDataOrigin {
 const handler = async (ctx: Context) => {
     try {
         const body = await ctx.req.json();
-        logger.info(`正在获取详情 - ${namespace.name} - ${JSON.stringify(body)}`);
+        logger.info(`${DETAIL_MESSAGE.INFO} - ${namespace.name} - ${JSON.stringify(body)}`);
 
         const { id } = body;
         const params = {
@@ -102,21 +103,22 @@ const handler = async (ctx: Context) => {
             };
             return {
                 code: SUCCESS_CODE,
+                message: DETAIL_MESSAGE.SUCCESS,
                 data: [detailData]
             };
         }
-        logger.error(`获取详情失败 - ${namespace.name} - ${JSON.stringify(res)}`);
+        logger.error(`${DETAIL_MESSAGE.ERROR} - ${namespace.name} - ${JSON.stringify(res)}`);
         return {
             code: ERROR_CODE,
-            message: '获取详情失败',
+            message: DETAIL_MESSAGE.ERROR,
             data: []
         };
     } catch (error) {
         ctx.res.headers.set('Cache-Control', 'no-cache');
-        logger.error(`获取详情失败 - ${namespace.name} - ${JSON.stringify(error)}`);
+        logger.error(`${DETAIL_MESSAGE.ERROR} - ${namespace.name} - ${error}`);
         return {
             code: SYSTEM_ERROR_CODE,
-            message: '获取详情失败',
+            message: DETAIL_MESSAGE.ERROR,
             data: []
         };
     }

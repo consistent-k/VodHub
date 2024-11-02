@@ -2,6 +2,7 @@ import { namespace } from './namespace';
 import request from './request';
 
 import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
+import { HOME_MESSAGE } from '@/constant/message';
 import { HomeData, HomeRoute } from '@/types';
 import logger from '@/utils/logger';
 
@@ -17,7 +18,7 @@ interface HomeDataOrigin {
 
 const handler = async (ctx) => {
     try {
-        logger.info(`正在获取首页分类列表 - ${namespace.name}`);
+        logger.info(`${HOME_MESSAGE.INFO} - ${namespace.name}`);
         const res = await request.post<HomeDataOrigin[]>(`${namespace.url}/api.php/provide/home_nav`);
         const home_data: HomeData[] = [];
         res.forEach((item) => {
@@ -40,19 +41,19 @@ const handler = async (ctx) => {
                 data: home_data
             };
         }
-        logger.error(`获取首页分类列表失败 - ${namespace.name}`);
 
+        logger.error(`${HOME_MESSAGE.ERROR} - ${namespace.name} - ${JSON.stringify(res)}`);
         return {
             code: ERROR_CODE,
-            message: '获取首页分类列表失败',
+            message: HOME_MESSAGE.ERROR,
             data: []
         };
     } catch (error) {
         ctx.res.headers.set('Cache-Control', 'no-cache');
-        logger.error(`获取首页分类列表失败 - ${namespace.name} - ${error}`);
+        logger.error(`${HOME_MESSAGE.ERROR} - ${namespace.name} - ${error}`);
         return {
             code: SYSTEM_ERROR_CODE,
-            message: '获取首页分类列表失败',
+            message: HOME_MESSAGE.ERROR,
             data: []
         };
     }
