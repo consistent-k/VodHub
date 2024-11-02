@@ -3,6 +3,7 @@ import { Context } from 'hono';
 import { namespace } from './namespace';
 
 import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
+import { PLAY_MESSAGE } from '@/constant/message';
 import { PlayRoute } from '@/types';
 import logger from '@/utils/logger';
 import request from '@/utils/request';
@@ -17,7 +18,7 @@ const handler = async (ctx: Context) => {
     ctx.res.headers.set('Cache-Control', 'no-cache');
     try {
         const body = await ctx.req.json();
-        logger.info(`正在获取详情 - ${namespace.name} - ${JSON.stringify(body)}`);
+        logger.info(`${PLAY_MESSAGE.INFO} - ${namespace.name} - ${JSON.stringify(body)}`);
 
         const { url } = body;
         let play_type = '';
@@ -52,6 +53,7 @@ const handler = async (ctx: Context) => {
         if (play_url.length > 0) {
             return {
                 code: SUCCESS_CODE,
+                message: PLAY_MESSAGE.SUCCESS,
                 data: [
                     {
                         play_type,
@@ -60,17 +62,17 @@ const handler = async (ctx: Context) => {
                 ]
             };
         }
-        logger.error(`获取播放地址失败 - ${namespace.name}`);
+        logger.error(`${PLAY_MESSAGE.ERROR} - ${namespace.name}`);
         return {
             code: ERROR_CODE,
-            message: '获取播放地址失败',
+            message: PLAY_MESSAGE.ERROR,
             data: []
         };
     } catch (error) {
-        logger.error(`获取播放地址失败 - ${namespace.name} - ${error}`);
+        logger.error(`${PLAY_MESSAGE.ERROR} - ${namespace.name} - ${error}`);
         return {
             code: SYSTEM_ERROR_CODE,
-            message: '获取播放地址失败',
+            message: PLAY_MESSAGE.ERROR,
             data: []
         };
     }

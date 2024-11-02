@@ -5,6 +5,7 @@ import request from './request';
 import { DetailListData } from './type';
 
 import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
+import { DETAIL_MESSAGE } from '@/constant/message';
 import { DetailData, DetailRoute, VodPlayList } from '@/types';
 import { formatVodContent } from '@/utils/format';
 import logger from '@/utils/logger';
@@ -29,7 +30,7 @@ function parseEpisodes(str): VodPlayList['urls'] {
 const handler = async (ctx: Context) => {
     try {
         const body = await ctx.req.json();
-        logger.info(`正在获取详情 - ${namespace.name} - ${JSON.stringify(body)}`);
+        logger.info(`${DETAIL_MESSAGE.INFO} - ${namespace.name} - ${JSON.stringify(body)}`);
 
         const { id } = body;
 
@@ -64,23 +65,23 @@ const handler = async (ctx: Context) => {
             };
             return {
                 code: SUCCESS_CODE,
+                message: DETAIL_MESSAGE.SUCCESS,
                 data: [detailData]
             };
         }
 
-        logger.error(`获取详情失败 - ${namespace.name} - ${JSON.stringify(res)}`);
-
+        logger.error(`${DETAIL_MESSAGE.ERROR} - ${namespace.name} - ${JSON.stringify(res)}`);
         return {
             code: ERROR_CODE,
-            message: '获取详情失败',
+            message: DETAIL_MESSAGE.ERROR,
             data: []
         };
     } catch (error) {
-        logger.error(`获取详情失败 - ${namespace.name} - ${error}`);
-
+        ctx.res.headers.set('Cache-Control', 'no-cache');
+        logger.error(`${DETAIL_MESSAGE.ERROR} - ${namespace.name} - ${error}`);
         return {
             code: SYSTEM_ERROR_CODE,
-            message: '获取详情失败',
+            message: DETAIL_MESSAGE.ERROR,
             data: []
         };
     }

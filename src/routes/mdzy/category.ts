@@ -4,6 +4,7 @@ import { namespace } from './namespace';
 import request from './request';
 
 import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
+import { CATEGORY_MESSAGE } from '@/constant/message';
 import { CategoryRoute, CategoryVodData } from '@/types';
 import logger from '@/utils/logger';
 
@@ -29,7 +30,7 @@ interface CategoryDataOrigin {
 const handler = async (ctx: Context) => {
     try {
         const body = await ctx.req.json();
-        logger.info(`正在获取分类列表 - ${namespace.name} - ${JSON.stringify(body)}`);
+        logger.info(`${CATEGORY_MESSAGE.INFO} - ${namespace.name} - ${JSON.stringify(body)}`);
         const { id, page, filters } = body;
         // filters: { class, area, lang, year }
 
@@ -55,21 +56,22 @@ const handler = async (ctx: Context) => {
 
             return {
                 code: SUCCESS_CODE,
+                message: CATEGORY_MESSAGE.SUCCESS,
                 data: newList
             };
         }
-        logger.error(`获取分类列表失败 - ${namespace.name} - ${JSON.stringify(res)}`);
+        logger.error(`${CATEGORY_MESSAGE.ERROR} - ${namespace.name} - ${JSON.stringify(res)}`);
         return {
             code: ERROR_CODE,
-            message: '获取分类列表失败',
+            message: CATEGORY_MESSAGE.ERROR,
             data: []
         };
     } catch (error) {
         ctx.res.headers.set('Cache-Control', 'no-cache');
-        logger.error(`获取分类列表失败 - ${namespace.name} - ${error}`);
+        logger.error(`${CATEGORY_MESSAGE.ERROR} - ${namespace.name} - ${error}`);
         return {
             code: SYSTEM_ERROR_CODE,
-            message: '获取分类列表失败',
+            message: CATEGORY_MESSAGE.ERROR,
             data: []
         };
     }

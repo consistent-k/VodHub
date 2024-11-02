@@ -1,9 +1,11 @@
+import { Context } from 'hono';
 import { forEach } from 'lodash';
 
 import { namespace } from './namespace';
 import request from './request';
 
 import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
+import { HOME_VOD_MESSAGE } from '@/constant/message';
 import { HomeVodData, HomeVodRoute } from '@/types';
 import logger from '@/utils/logger';
 
@@ -41,9 +43,9 @@ interface HomeVodDataOrigin {
     }>;
 }
 
-const handler = async () => {
+const handler = async (ctx: Context) => {
     try {
-        logger.info(`正在获取最近更新 - ${namespace.name}`);
+        logger.info(`${HOME_VOD_MESSAGE.INFO} - ${namespace.name}`);
         const res = await request.post<HomeVodDataOrigin>(`${namespace.url}/v2/type/tj_vod`);
 
         const { data, code } = res;
@@ -66,23 +68,23 @@ const handler = async () => {
             });
             return {
                 code: SUCCESS_CODE,
+                message: HOME_VOD_MESSAGE.SUCCESS,
                 data: vod_list
             };
         }
 
-        logger.error(`获取最近更新失败 - ${namespace.name} - ${JSON.stringify(res)}`);
-
+        logger.error(`${HOME_VOD_MESSAGE.ERROR} - ${namespace.name} - ${JSON.stringify(res)}`);
         return {
             code: ERROR_CODE,
-            message: '获取最近更新失败',
+            message: HOME_VOD_MESSAGE.ERROR,
             data: []
         };
     } catch (error) {
-        logger.error(`获取最近更新失败 - ${namespace.name} - ${error}`);
-
+        ctx.res.headers.set('Cache-Control', 'no-cache');
+        logger.error(`${HOME_VOD_MESSAGE.ERROR} - ${namespace.name} - ${error}`);
         return {
             code: SYSTEM_ERROR_CODE,
-            message: '获取最近更新失败',
+            message: HOME_VOD_MESSAGE.ERROR,
             data: []
         };
     }

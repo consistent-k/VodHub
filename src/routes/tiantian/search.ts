@@ -5,6 +5,7 @@ import { namespace } from './namespace';
 import request from './request';
 
 import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
+import { SEARCH_MESSAGE } from '@/constant/message';
 import { SearchRoute } from '@/types';
 import logger from '@/utils/logger';
 
@@ -30,7 +31,7 @@ interface SearchDataOrigin {
 const handler = async (ctx: Context) => {
     try {
         const body = await ctx.req.json();
-        logger.info(`正在搜索 - ${namespace.name} - ${JSON.stringify(body)}`);
+        logger.info(`${SEARCH_MESSAGE.INFO} - ${namespace.name} - ${JSON.stringify(body)}`);
 
         const { page, keyword } = body;
 
@@ -54,21 +55,23 @@ const handler = async (ctx: Context) => {
             });
             return {
                 code: SUCCESS_CODE,
+                message: SEARCH_MESSAGE.SUCCESS,
                 data: newList
             };
         }
 
-        logger.error(`关键词搜索失败 - ${namespace.name} - ${JSON.stringify(res)}`);
+        logger.error(`${SEARCH_MESSAGE.ERROR} - ${namespace.name} - ${JSON.stringify(res)}`);
         return {
             code: ERROR_CODE,
-            message: '搜索失败',
+            message: SEARCH_MESSAGE.ERROR,
             data: []
         };
     } catch (error) {
-        logger.error(`关键词搜索失败 - ${namespace.name} - ${error}`);
+        ctx.res.headers.set('Cache-Control', 'no-cache');
+        logger.error(`${SEARCH_MESSAGE.ERROR} - ${namespace.name} - ${error}`);
         return {
             code: SYSTEM_ERROR_CODE,
-            message: '搜索失败',
+            message: SEARCH_MESSAGE.ERROR,
             data: []
         };
     }
