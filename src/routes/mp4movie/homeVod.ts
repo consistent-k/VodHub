@@ -12,25 +12,49 @@ import logger from '@/utils/logger';
 const handler = async (ctx: Context) => {
     try {
         logger.info(`${HOME_VOD_MESSAGE.INFO} - ${namespace.name}`);
-        let $ = await request.getHtml(`${namespace.url}/list/99-1.html`);
+        let $ = await request.getHtml(`${namespace.url}/`);
+
+        const typeNameMap: Record<string, string> = {
+            最新电影下载: '电影',
+            最新电视剧下载: '电视剧',
+            外语片: '外语片',
+            国语片: '国语片',
+            经典电影: '经典电影',
+            动画片: '动漫',
+            国产剧: '电视剧',
+            港台剧: '港台剧',
+            日韩剧: '日韩剧',
+            欧美剧: '欧美剧',
+            纪录片: '纪录片'
+        };
 
         let vod_list: HomeVodData[] = [];
-        let vodElements = $('#list_dy').find('li');
+        let vodElements = $('.list-group').filter((_i, el) => {
+            return !!$(el).prop('id');
+        });
         for (const vodElement of vodElements) {
-            const vodA = $(vodElement).find('a');
-            const vod_name = formatStrByReg(/《(.*?)》/, $(vodA).text());
-            if (vodA[0] && vod_name.length > 0) {
-                let vodShort: HomeVodData = {
-                    vod_name,
-                    vod_id: vodA[0].attribs.href,
-                    vod_pic: '',
-                    vod_pic_thumb: '',
-                    vod_remarks: $(vodElement).find('span').text()
-                };
-                vod_list.push(vodShort);
+            const vodItem = $(vodElement).find('#heading-text');
+            const typeText: string = $(vodItem).text();
+            const listGroup = $(vodElement).find('.list-group-item');
+            for (const item of listGroup) {
+                const vodA = $(item).find('a');
+                const vod_name = formatStrByReg(/《(.*?)》/, $(vodA).text());
+                const vod_remarks = $(vodA).text().split('》')[1];
+                const type_name = typeNameMap[typeText];
+                if (vodA[0] && vod_name.length > 0 && type_name) {
+                    let vodShort: HomeVodData = {
+                        vod_name,
+                        vod_id: vodA[0].attribs.href,
+                        vod_pic: '',
+                        vod_pic_thumb: '',
+                        vod_remarks,
+                        type_name,
+                        type_id: ''
+                    };
+                    vod_list.push(vodShort);
+                }
             }
         }
-
         if (vod_list.length > 0) {
             return {
                 code: SUCCESS_CODE,

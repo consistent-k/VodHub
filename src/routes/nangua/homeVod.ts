@@ -75,6 +75,15 @@ const handler = async (ctx) => {
 
         let res = await request.post<HomeVodDataOrigin>(`${namespace.url}/api.php/provide/home_data?${strParams}`);
 
+        const typeNameMap: Record<number, string> = {
+            0: '推荐',
+            1: '电影',
+            2: '电视剧',
+            3: '综艺',
+            4: '动漫',
+            46: '海外精选'
+        };
+
         const { slide, video } = res;
         let vod_list: HomeVodData[] = [];
 
@@ -84,7 +93,9 @@ const handler = async (ctx) => {
                 vod_name: item.name,
                 vod_pic: item.img,
                 vod_pic_thumb: item.img,
-                vod_remarks: ''
+                vod_remarks: '',
+                type_id: item.type,
+                type_name: typeNameMap[item.type]
             });
         });
 
@@ -96,7 +107,9 @@ const handler = async (ctx) => {
                         vod_name: vod.name,
                         vod_pic: vod.img,
                         vod_pic_thumb: vod.img,
-                        vod_remarks: vod.msg
+                        vod_remarks: vod.msg,
+                        type_id: item.id,
+                        type_name: typeNameMap[item.id]
                     });
                 }
             });

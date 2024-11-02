@@ -41,7 +41,9 @@ const handler = async (ctx: Context) => {
                 vod_name: item.vod_name,
                 vod_pic: '',
                 vod_pic_thumb: '',
-                vod_remarks: item.vod_remarks
+                vod_remarks: item.vod_remarks,
+                type_id: item.type_id,
+                type_name: item.type_name
             });
         });
 
