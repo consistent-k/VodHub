@@ -66,6 +66,8 @@ export interface HomeVodData {
     vod_pic: string; // 视频封面
     vod_pic_thumb: string; // 视频缩略图/封面
     vod_remarks: string; // 视频备注
+    type_id: number | string; // 类型id
+    type_name: string; // 类型名称
 }
 
 // 按分类视频列表

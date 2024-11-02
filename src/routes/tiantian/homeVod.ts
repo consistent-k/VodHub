@@ -29,7 +29,7 @@ interface HomeVodDataOrigin {
         tag: string;
     }>;
     type_vod: Array<{
-        type_id: string;
+        type_id: number;
         type_name: string;
         vod: Array<{
             vod_id: number;
@@ -49,18 +49,32 @@ const handler = async (ctx: Context) => {
         const res = await request.post<HomeVodDataOrigin>(`${namespace.url}/v2/type/tj_vod`);
 
         const { data, code } = res;
+        const typeNameMap: Record<number, string> = {
+            0: '推荐',
+            1: '电影',
+            2: '韩剧',
+            4: '日剧',
+            5: '美剧',
+            7: '泰剧',
+            9: '台剧',
+            10: '内地',
+            11: '动漫',
+            13: '综艺'
+        };
 
         if (code === 1) {
             let vod_list: HomeVodData[] = [];
             forEach(data.type_vod, (item) => {
                 if (item.type_name !== '广告') {
-                    const newVodList = item.vod.map((vod) => {
+                    const newVodList: HomeVodData[] = item.vod.map((vod) => {
                         return {
                             vod_id: vod.vod_id,
                             vod_name: vod.vod_name,
                             vod_pic: vod.vod_pic,
                             vod_pic_thumb: vod.vod_pic_thumb,
-                            vod_remarks: vod.vod_remarks
+                            vod_remarks: vod.vod_remarks,
+                            type_id: item.type_id,
+                            type_name: typeNameMap[item.type_id]
                         };
                     });
                     vod_list = [...vod_list, ...newVodList];
