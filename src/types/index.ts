@@ -51,7 +51,7 @@ interface Route extends RouteItem<unknown> {
 
 // 首页分类列表
 export interface HomeData {
-    type_id: number; // 类型id
+    type_id: string | number; // 类型id
     type_name: string; // 类型名称
     extend: string[]; // 子分类
     area: string[]; // 地区

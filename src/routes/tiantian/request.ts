@@ -3,7 +3,13 @@ import crypto from 'crypto';
 import axios, { AxiosRequestConfig } from 'axios';
 import { merge } from 'lodash';
 
-const request = axios.create({});
+import { USER_AGENT_CHROME } from '@/constant/userAgent';
+
+const request = axios.create({
+    headers: {
+        'User-Agent': USER_AGENT_CHROME
+    }
+});
 
 function md5(text: string) {
     return crypto.createHash('md5').update(text).digest('hex');
@@ -21,7 +27,6 @@ request.interceptors.request.use((config) => {
         ...defaultData,
         ...config.data
     };
-    config.headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36';
     return config;
 });
 
