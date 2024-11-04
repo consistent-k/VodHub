@@ -9,7 +9,7 @@ import { USER_AGENT_CHROME } from '@/constant/userAgent';
 const request = axios.create({
     headers: {
         'User-Agent': USER_AGENT_CHROME,
-        Referer: `${namespace.url}`
+        Referer: `${namespace.url}/`
     }
 });
 
