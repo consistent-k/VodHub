@@ -8,7 +8,7 @@
         "commit": "git-cz"
     },
     "dependencies": {
-        "@hono/node-server": "^1.13.4",
+        "@hono/node-server": "^1.13.5",
         "axios": "^1.7.7",
         "cache-manager": "^6.1.2",
         "cacheable": "^1.8.3",
