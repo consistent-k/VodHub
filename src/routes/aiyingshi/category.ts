@@ -20,13 +20,13 @@ const handler = async (ctx: Context) => {
         if (page) {
             url += `/page/${page}`;
         }
-        if (filters.area) {
+        if (filters?.area) {
             url += `/area/${filters.area}`;
         }
-        if (filters.lang) {
+        if (filters?.lang) {
             url += `/lang/${filters.lang}`;
         }
-        if (filters.year) {
+        if (filters?.year) {
             url += `/year/${filters.year}`;
         }
 

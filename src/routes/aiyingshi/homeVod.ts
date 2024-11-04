@@ -1,4 +1,5 @@
 import { Context } from 'hono';
+import { uniqBy } from 'lodash';
 
 import { namespace } from './namespace';
 import request from './request';
@@ -35,7 +36,7 @@ const handler = async (ctx: Context) => {
                 pic = 'https:' + pic;
             }
             vodShort.vod_pic = pic;
-            if (vodShort.vod_name !== undefined) {
+            if (vodShort.vod_name) {
                 vod_list.push(vodShort);
             }
         }
@@ -43,7 +44,7 @@ const handler = async (ctx: Context) => {
             return {
                 code: SUCCESS_CODE,
                 message: HOME_VOD_MESSAGE.SUCCESS,
-                data: vod_list
+                data: uniqBy(vod_list, 'vod_id')
             };
         }
 
