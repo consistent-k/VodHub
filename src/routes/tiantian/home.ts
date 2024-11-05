@@ -27,18 +27,75 @@ const handler = async (ctx: Context) => {
 
         const { data, code } = res;
 
-        const newList: HomeData[] = data.list.map((item) => {
-            return {
-                type_id: item.type_id,
-                type_name: item.type_name,
-                extend: item.extend,
-                area: item.area,
-                lang: item.lang,
-                year: item.year
-            };
-        });
+        if (code === 1 && data?.list) {
+            const newList: HomeData[] = [];
 
-        if (code === 1) {
+            data.list.forEach((item) => {
+                const home_data: HomeData = {
+                    type_id: item.type_id,
+                    type_name: item.type_name,
+                    filters: []
+                };
+
+                if (item.extend.length > 0) {
+                    home_data.filters.push({
+                        type: 'class',
+                        children: item.extend
+                            .filter((item) => item)
+                            .map((extend) => {
+                                return {
+                                    label: extend,
+                                    value: extend
+                                };
+                            })
+                    });
+                }
+
+                if (item.area.length > 0) {
+                    home_data.filters.push({
+                        type: 'area',
+                        children: item.area
+                            .filter((item) => item)
+                            .map((area) => {
+                                return {
+                                    label: area,
+                                    value: area
+                                };
+                            })
+                    });
+                }
+
+                if (item.lang.length > 0) {
+                    home_data.filters.push({
+                        type: 'lang',
+                        children: item.lang
+                            .filter((item) => item)
+                            .map((lang) => {
+                                return {
+                                    label: lang,
+                                    value: lang
+                                };
+                            })
+                    });
+                }
+
+                if (item.year.length > 0) {
+                    home_data.filters.push({
+                        type: 'year',
+                        children: item.year
+                            .filter((item) => item)
+                            .map((year) => {
+                                return {
+                                    label: year,
+                                    value: year
+                                };
+                            })
+                    });
+                }
+
+                newList.push(home_data);
+            });
+
             return {
                 code: SUCCESS_CODE,
                 message: HOME_MESSAGE.SUCCESS,

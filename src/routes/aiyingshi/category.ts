@@ -83,7 +83,7 @@ const handler = async (ctx: Context) => {
 export const route: CategoryRoute = {
     path: '/category',
     name: 'category',
-    example: '/mp4movie/category',
+    example: '/aiyingshi/category',
     description: `获取分类列表`,
     handler,
     method: 'POST'

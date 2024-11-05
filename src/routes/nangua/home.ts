@@ -20,25 +20,77 @@ const handler = async (ctx) => {
     try {
         logger.info(`${HOME_MESSAGE.INFO} - ${namespace.name}`);
         const res = await request.post<HomeDataOrigin[]>(`${namespace.url}/api.php/provide/home_nav`);
-        const home_data: HomeData[] = [];
+        const newList: HomeData[] = [];
+
         res.forEach((item) => {
             if (item.name !== '精选') {
-                const newData: HomeData = {
+                const home_data: HomeData = {
                     type_id: item.id,
                     type_name: item.name,
-                    lang: [],
-                    extend: item.msg.find((msg) => msg.name === 'type')?.data.filter((fItem) => fItem !== '类型') || [],
-                    area: item.msg.find((msg) => msg.name === 'area')?.data.filter((fItem) => fItem !== '地区') || [],
-                    year: item.msg.find((msg) => msg.name === 'year')?.data.filter((fItem) => fItem !== '年份') || []
+                    filters: []
                 };
-                home_data.push(newData);
+                item.msg.forEach((msg) => {
+                    if (msg.name === 'type') {
+                        home_data.filters.push({
+                            type: 'class',
+                            children: msg.data
+                                .filter((fItem) => fItem !== '类型')
+                                .map((mItem) => {
+                                    return {
+                                        label: mItem,
+                                        value: mItem
+                                    };
+                                })
+                        });
+                    }
+                    if (msg.name === 'area') {
+                        home_data.filters.push({
+                            type: 'area',
+                            children: msg.data
+                                .filter((fItem) => fItem !== '地区')
+                                .map((mItem) => {
+                                    return {
+                                        label: mItem,
+                                        value: mItem
+                                    };
+                                })
+                        });
+                    }
+                    if (msg.name === 'year') {
+                        home_data.filters.push({
+                            type: 'year',
+                            children: msg.data
+                                .filter((fItem) => fItem !== '年份')
+                                .map((mItem) => {
+                                    return {
+                                        label: mItem,
+                                        value: mItem
+                                    };
+                                })
+                        });
+                    }
+                    if (msg.name === 'order') {
+                        home_data.filters.push({
+                            type: 'order',
+                            children: msg.data
+                                .filter((fItem) => fItem !== '排序')
+                                .map((mItem) => {
+                                    return {
+                                        label: mItem,
+                                        value: mItem
+                                    };
+                                })
+                        });
+                    }
+                });
+                newList.push(home_data);
             }
         });
 
-        if (home_data.length > 0) {
+        if (newList.length > 0) {
             return {
                 code: SUCCESS_CODE,
-                data: home_data
+                data: newList
             };
         }
 

@@ -9,7 +9,7 @@ import logger from '@/utils/logger';
 const handler = async (ctx) => {
     try {
         logger.info(`${HOME_MESSAGE.INFO} - ${namespace.name}`);
-        const home_data: HomeData[] = [];
+        const newList: HomeData[] = [];
 
         // 访问首页
         let $ = await request.getHtml(`${namespace.url}/`);
@@ -19,17 +19,21 @@ const handler = async (ctx) => {
         for (const element of elements.slice(0, 6)) {
             let type_name = $($(element).find('span')).text();
             if (type_name !== '首页') {
-                const newData: HomeData = {
+                const home_data: HomeData = {
                     type_id: '',
                     type_name: '',
-                    extend: [],
-                    area: [],
-                    lang: [],
-                    year: []
+                    filters: []
                 };
-                newData.type_name = type_name;
+                const filterTypes = {
+                    全部类型: 'class',
+                    全部地区: 'area',
+                    全部语言: 'lang',
+                    全部时间: 'year',
+                    时间排序: 'order'
+                };
+                home_data.type_name = type_name;
                 let type_id = $(element).find('a')[0].attribs['href'].split('/').slice(-1)[0].split('.')[0];
-                newData.type_id = type_id;
+                home_data.type_id = type_id;
                 if (type_id !== '/' && type_id !== '最近更新') {
                     let type$ = await request.getHtml(`${namespace.url}/vodshow/id/${type_id}.html`);
 
@@ -37,28 +41,40 @@ const handler = async (ctx) => {
                     // eslint-disable-next-line @typescript-eslint/prefer-for-of
                     for (let i = 0; i < elements.length; i++) {
                         const element = elements[i];
-                        for (const ele of $(element).find('a').slice(1)) {
+
+                        const firstLinkText = $($(element).find('a')[0]).text();
+                        const filterType = filterTypes[firstLinkText];
+
+                        if (filterType) {
+                            const newFilter: HomeData['filters'][number] = {
+                                type: filterType,
+                                children: []
+                            };
+
                             // eslint-disable-next-line max-depth
-                            if ($($(element).find('a')[0]).text() === '全部类型') {
-                                newData.extend.push($(ele).text());
-                            } else if ($($(element).find('a')[0]).text() === '全部地区') {
-                                newData.area.push($(ele).text());
-                            } else if ($($(element).find('a')[0]).text() === '全部语音') {
-                                newData.lang.push($(ele).text());
-                            } else if ($($(element).find('a')[0]).text() === '全部时间') {
-                                newData.year.push($(ele).text());
+                            for (const ele of $(element).find('a').slice(1)) {
+                                const href = $(ele).attr('href');
+                                // eslint-disable-next-line max-depth
+                                if (href) {
+                                    newFilter.children.push({
+                                        label: $(ele).text(),
+                                        value: href
+                                    });
+                                }
                             }
+
+                            home_data.filters.push(newFilter);
                         }
                     }
                 }
-                home_data.push(newData);
+                newList.push(home_data);
             }
         }
-        if (home_data.length > 0) {
+        if (newList.length > 0) {
             return {
                 code: SUCCESS_CODE,
                 message: HOME_MESSAGE.SUCCESS,
-                data: home_data
+                data: newList
             };
         }
         logger.error(`${HOME_MESSAGE.ERROR} - ${namespace.name}`);

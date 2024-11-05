@@ -38,10 +38,7 @@ const handler = async (ctx: Context) => {
             return {
                 type_id: item.type_id,
                 type_name: item.type_name,
-                extend: [],
-                area: [],
-                lang: [],
-                year: []
+                filters: []
             };
         });
 

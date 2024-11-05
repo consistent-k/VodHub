@@ -68,7 +68,7 @@ const handler = async (ctx: Context) => {
 export const route: HomeVodRoute = {
     path: '/homeVod',
     name: 'homeVod',
-    example: '/mp4movie/homeVod',
+    example: '/aiyingshi/homeVod',
     description: `最近更新`,
     handler
 };

@@ -113,7 +113,7 @@ const handler = async (ctx: Context) => {
 export const route: DetailRoute = {
     path: '/detail',
     name: 'detail',
-    example: '/mp4movie/detail',
+    example: '/aiyingshi/detail',
     description: `获取详情`,
     handler,
     method: 'POST'
