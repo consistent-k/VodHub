@@ -9,12 +9,12 @@ import logger from '@/utils/logger';
 const handler = async (ctx) => {
     try {
         logger.info(`${HOME_MESSAGE.INFO} - ${namespace.name}`);
-        const home_data: HomeData[] = [];
+        const newList: HomeData[] = [];
 
-        const extend: HomeData['extend'] = [];
-        const area: HomeData['area'] = [];
-        const year: HomeData['year'] = [];
-        const lang: HomeData['lang'] = [];
+        const extend: string[] = [];
+        const area: string[] = [];
+        const year: string[] = [];
+        const lang: string[] = [];
 
         // 访问首页
         let $ = await request.getHtml(`${namespace.url}/`);
@@ -30,16 +30,16 @@ const handler = async (ctx) => {
                 if ($(ele).text() === '全部') {
                     continue;
                 }
+                const home_data: HomeData = {
+                    type_id: '',
+                    type_name: '',
+                    filters: []
+                };
                 switch (name) {
                     case '类型':
-                        home_data.push({
-                            type_id: Number(ele.attribs.data.split('-')[1]),
-                            type_name: $(ele).text(),
-                            lang: [],
-                            extend: [],
-                            area: [],
-                            year: []
-                        });
+                        home_data.type_id = Number(ele.attribs.data.split('-')[1]);
+                        home_data.type_name = $(ele).text();
+                        newList.push(home_data);
                         break;
                     case '标签':
                         extend.push($(ele).text());
@@ -58,17 +58,52 @@ const handler = async (ctx) => {
                 }
             }
         }
-        if (home_data.length > 0) {
+
+        if (newList.length > 0) {
             return {
                 code: SUCCESS_CODE,
                 message: HOME_MESSAGE.SUCCESS,
-                data: home_data.map((item) => {
+                data: newList.map((item) => {
                     return {
                         ...item,
-                        extend: extend,
-                        area: area,
-                        year: year,
-                        lang: lang
+                        filters: [
+                            {
+                                type: 'class',
+                                children: extend.map((mItem) => {
+                                    return {
+                                        label: mItem,
+                                        value: mItem
+                                    };
+                                })
+                            },
+                            {
+                                type: 'area',
+                                children: area.map((mItem) => {
+                                    return {
+                                        label: mItem,
+                                        value: mItem
+                                    };
+                                })
+                            },
+                            {
+                                type: 'year',
+                                children: year.map((mItem) => {
+                                    return {
+                                        label: mItem,
+                                        value: mItem
+                                    };
+                                })
+                            },
+                            {
+                                type: 'lang',
+                                children: lang.map((mItem) => {
+                                    return {
+                                        label: mItem,
+                                        value: mItem
+                                    };
+                                })
+                            }
+                        ]
                     };
                 })
             };

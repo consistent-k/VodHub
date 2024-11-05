@@ -15,48 +15,29 @@ export type { Namespace };
 
 // route
 interface RouteItem<T> {
-    /**
-     * The route path, using [Hono routing](https://hono.dev/api/routing) syntax
-     */
-    path: string | string[];
-
-    /**
-     * The human-readable name of the route, which will be used as the level 3 heading in the documentation
-     * and radar rule title (can be overridden by `RadarRule[].title`)
-     */
-    name: string;
-
-    /**
-     * The handler function of the route
-     */
-    handler: (ctx: Context) => Promise<T> | T;
-
-    /**
-     * An example URL of the route
-     */
-    example: string;
-
-    /**
-     * Hints and additional explanations for users using this route, it will be appended after the route component, supports markdown
-     */
-    description?: string;
-    method?: 'GET' | 'POST';
+    path: string | string[]; // 路由路径
+    method?: 'GET' | 'POST'; // 请求方法
+    name: string; // 路由名称
+    handler: (ctx: Context) => Promise<T> | T; // 路由处理函数
+    example: string; // 路由示例
+    description?: string; // 路由描述
 }
 
 interface Route extends RouteItem<unknown> {
-    ja?: NamespaceItem;
     zh?: NamespaceItem;
-    'zh-TW'?: NamespaceItem;
 }
 
 // 首页分类列表
 export interface HomeData {
     type_id: string | number; // 类型id
     type_name: string; // 类型名称
-    extend: string[]; // 子分类
-    area: string[]; // 地区
-    lang: string[]; // 语言
-    year: string[]; // 年代
+    filters: Array<{
+        type: 'area' | 'lang' | 'year' | 'class' | 'order'; // 地区、语言、年代、分类、排序
+        children: Array<{
+            label: string;
+            value: string;
+        }>;
+    }>;
 }
 
 // 首页视频列表

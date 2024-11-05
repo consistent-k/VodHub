@@ -52,7 +52,7 @@ const handler = async (ctx: Context) => {
 export const route: PlayRoute = {
     path: '/play',
     name: 'play',
-    example: '/mp4movie/play',
+    example: '/aiyingshi/play',
     description: `获取播放地址`,
     handler,
     method: 'POST'
