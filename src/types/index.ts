@@ -71,7 +71,7 @@ export interface VodPlayList {
 
 // 视频详情
 export interface DetailData {
-    vod_id: number; // 视频id
+    vod_id: number | string; // 视频id
     vod_name: string; // 视频名称
     vod_pic: string; // 视频封面
     vod_remarks: string; // 视频备注
