@@ -105,7 +105,7 @@ const handler = async (ctx: Context) => {
                 let vodItems: VodPlayList['urls'] = [];
                 let items = data.playlinksdetail[playFormat];
                 let episodeUrl = items.default_url;
-                let episodeName = items.quality;
+                let episodeName = items.quality || items.title || '默认';
                 vodItems.push({
                     name: episodeName,
                     url: episodeUrl
