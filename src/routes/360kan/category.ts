@@ -51,10 +51,10 @@ const handler = async (ctx: Context) => {
         const res = await request.get<CategoryDataOrigin>(`${namespace.url}/v1/filter/list`, {
             params: {
                 catid: id,
-                rank: filters.order || 'rankhot',
-                cat: filters.class || '',
-                year: filters.year || '',
-                area: filters.area || '',
+                rank: filters?.order || 'rankhot',
+                cat: filters?.class || '',
+                year: filters?.year || '',
+                area: filters?.area || '',
                 act: '',
                 size: 35,
                 pageno: page,

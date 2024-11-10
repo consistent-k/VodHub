@@ -32,7 +32,7 @@ const handler = async (ctx: Context) => {
         const body = await ctx.req.json();
         logger.info(`${CATEGORY_MESSAGE.INFO} - ${namespace.name} - ${JSON.stringify(body)}`);
 
-        const { id, page, filters } = body;
+        const { id, page, filters = {} } = body;
         // filters: { class, area, lang, year }
 
         const params = {
@@ -40,9 +40,9 @@ const handler = async (ctx: Context) => {
             imei: NAN_GUA_CONFIG.imei,
             id,
             page,
-            type: filters.class,
-            area: filters.area,
-            year: filters.year
+            type: filters?.class || '',
+            area: filters?.area || '',
+            year: filters?.year || ''
         };
 
         const strParams = queryString.stringify(params);

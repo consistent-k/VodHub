@@ -89,11 +89,6 @@ const handler = async (ctx) => {
         logger.info(`${HOME_MESSAGE.INFO} - ${namespace.name}`);
         const newList: HomeData[] = [
             {
-                type_id: '最近更新',
-                type_name: '最近更新',
-                filters: []
-            },
-            {
                 type_id: '1',
                 type_name: '电影',
                 filters: [

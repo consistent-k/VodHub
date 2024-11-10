@@ -13,7 +13,7 @@ const handler = async (ctx: Context) => {
         const body = await ctx.req.json();
         logger.info(`${CATEGORY_MESSAGE.INFO} - ${namespace.name} - ${JSON.stringify(body)}`);
 
-        const { id, page, filters } = body;
+        const { id, page, filters = {} } = body;
         // filters: { class, area, lang, year }
         // to do: class
         let url = `${namespace.url}/vodshow/id/${id}`;
