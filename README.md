@@ -27,44 +27,60 @@ $ pnpm dev
 ```
 
 ## 🔧 如何使用接口
+
+> 以下示例中的 `{{vod_site}}` 为视频源的名称，如 `tiantian`、`360kan` 等。
+
+
+```bash
+# 获取目前支持视频源名称列表
+curl --location --request GET 'http://localhost:8888/vodhub/api/namespace'
+```
+
+
 ```bash
 # 通过首页获取分类
-curl --location --request GET 'http://localhost:8888/vodhub/tiantian/home'
+curl --location --request GET 'http://localhost:8888/vodhub/{{vod_site}}/home'
+```
 
+```bash
 # 按分类获取视频列表
-curl --location --request POST 'http://localhost:8888/vodhub/tiantian/category' \
+curl --location --request POST 'http://localhost:8888/vodhub/{{vod_site}}/category' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "id": 1,
     "page":1,
     "filters": {}
 }'
+```
 
-# 获取详情
-curl --location --request POST 'http://localhost:8888/vodhub/tiantian/detail' \
+```bash
+# 获取详情 {{vod_id}} 由分类、搜索等接口返回的数据中获取
+curl --location --request POST 'http://localhost:8888/vodhub/{{vod_site}}/detail' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-    "id": "54879"
+    "id": "{{vod_id}}",
 }'
+```
 
-# 获取播放地址
-curl --location --request POST 'http://localhost:8888/vodhub/tiantian/play' \
+```bash
+# 获取播放地址 url 和 parse_urls 由详情接口返回的数据中获取
+curl --location --request POST 'http://localhost:8888/vodhub/{{vod_site}}/play' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-   "url": "https://vip.ffzy-video.com/20240926/3057_c1502ae5/index.m3u8",
-   "parse_urls": [
-      "http://43.248.187.19:88/jiexi/?url="
-   ]
+   "url": "",
+   "parse_urls": []
 }'
+```
 
+
+```bash
 # 关键词搜索
-curl --location --request POST 'http://localhost:8888/vodhub/tiantian/search' \
+curl --location --request POST 'http://localhost:8888/vodhub/{{vod_site}}/search' \
 --header 'Content-Type: application/json' \
 --data-raw '{
    "page": 1,
    "keyword": "钢铁侠"
 }'
-
 ```
 
 ## 💾 使用Docker部署
