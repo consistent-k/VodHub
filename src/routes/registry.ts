@@ -22,7 +22,7 @@ let namespaces: Record<
 > = {};
 
 modules = directoryImport({
-    targetDirectoryPath: path.join(__dirname, './routes'),
+    targetDirectoryPath: path.join(__dirname, './'),
     importPattern: /\.ts$/
 }) as typeof modules;
 
@@ -53,14 +53,12 @@ export { namespaces };
 const app = new Hono();
 
 Object.entries(namespaces).forEach(([namespace, namespaceContent]) => {
-    const subApp = app.basePath(`/vodhub/${namespace}`);
+    const subApp = app.basePath(`/${namespace}`);
     Object.entries(namespaceContent.routes).forEach(([path, route]) => {
         const wrappedHandler: Handler = async (ctx) => {
             if (!ctx.get('data')) {
                 if (typeof route.handler !== 'function') {
-                    const { route: importedRoute } = await import(
-                        `./routes/${namespace}/${route.location}`
-                    );
+                    const { route: importedRoute } = await import(`./routes/${namespace}/${route.location}`);
                     route.handler = importedRoute.handler;
                 }
                 ctx.set('data', await route.handler(ctx));
