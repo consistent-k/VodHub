@@ -23,7 +23,7 @@ const handler = async (ctx: Context) => {
                 data: [
                     {
                         play_type,
-                        play_url: url
+                        play_url: `https://jx.xmflv.com/?url=${url}`
                     }
                 ]
             };
