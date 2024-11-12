@@ -1,5 +1,7 @@
+import { trim } from 'lodash';
+
 const formatVodContent = (content) => {
-    return content
+    return trim(content)
         .replaceAll('&amp;', '&')
         .replaceAll('&lt;', '<')
         .replaceAll('&gt;', '>')

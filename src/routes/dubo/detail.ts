@@ -9,7 +9,7 @@ import { DetailData, DetailRoute } from '@/types';
 import { formatVodContent } from '@/utils/format';
 import logger from '@/utils/logger';
 
-export interface VodPlayList {
+export interface DoBoVodPlayList {
     pic: string;
     sid: number;
     referer: string;
@@ -47,7 +47,7 @@ interface DetailDataOrigin {
     vod_content: string;
     comment_num: number;
     vod_blurb: string;
-    vod_play_list: VodPlayList[];
+    vod_play_list: DoBoVodPlayList[];
 }
 
 const handler = async (ctx: Context) => {
