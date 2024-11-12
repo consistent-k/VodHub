@@ -1,8 +1,9 @@
 name: Docker Image CI
 
 on:
-  push:
-    branches: [ "main" ]
+  workflow_dispatch:
+  release:
+    types: [published]
 
 jobs:
 
@@ -22,11 +23,29 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
+      
+      - name: 生成镜像标签
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: consistentlee/vod_hub
+          tags: |
+            type=raw,value=latest
+            type=ref,event=tag
 
-      - name: 构建Docker镜像
+      - name: 设置QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: 设置Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: 构建并推送镜像
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./Dockerfile
+          platforms: linux/amd64,linux/arm64
           push: true
-          tags: consistentlee/vod_hub:latest
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
