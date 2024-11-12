@@ -1,6 +1,6 @@
 import { Context } from 'hono';
 
-import { VodPlayList } from './detail';
+import { TianTianVodPlayList } from './detail';
 import { namespace } from './namespace';
 import request from './request';
 
@@ -24,7 +24,7 @@ interface SearchDataOrigin {
         type_id: number;
         tag: string;
         type_name: string;
-        vod_play_list: VodPlayList[];
+        vod_play_list: TianTianVodPlayList[];
     }>;
 }
 
