@@ -1,23 +1,38 @@
-# 使用官方的 Node.js 22 版本作为基础镜像
-FROM node:22
+# -------------------- Base Image --------------------
+FROM node:22-bookworm AS base
 
-# 设置容器内的工作目录为 /home/work/vod-hub
-WORKDIR /home/work/vod-hub
+# -------------------- Dependencies Stage --------------------
+FROM base AS deps
 
-# 将 package.json 文件拷贝到工作目录
-COPY package.json ./
+WORKDIR /app
 
-# 全局安装 pnpm 包管理工具
-RUN npm install -g pnpm
+RUN \
+    set -ex && \
+    corepack enable pnpm && \
+    echo 'use npm mirror' && \
+    npm config set registry https://registry.npmmirror.com && \
+    yarn config set registry https://registry.npmmirror.com && \
+    pnpm config set registry https://registry.npmmirror.com
 
-# 安装项目的依赖
-RUN pnpm install
+COPY ./package.json /app/
+COPY ./pnpm-lock.yaml /app/
 
-# 将项目的所有文件拷贝到工作目录
-COPY . ./
+RUN \
+    set -ex && \
+    pnpm install --frozen-lockfile
 
-RUN pwd
+# -------------------- Runner Stage --------------------
+FROM node:22-bookworm-slim AS runner
 
-# 暴露端口8888
+WORKDIR /app
+
+COPY ./README.md /app/README.md
+COPY ./src /app/src
+COPY ./tsconfig.json /app/tsconfig.json
+
+COPY --from=deps /app /app
+
+# 暴露端口
 EXPOSE 8888
-ENTRYPOINT ["pnpm", "start"]
+# 启动应用
+ENTRYPOINT ["npm", "run", "start"]
