@@ -60,14 +60,14 @@ const handler = async (ctx) => {
         logger.info(`${HOME_VOD_MESSAGE.INFO} - ${namespace.name}`);
 
         const params = {
-            app: NAN_GUA_CONFIG.app,
-            devices: 'android',
             imei: NAN_GUA_CONFIG.imei,
+            app: NAN_GUA_CONFIG.app,
+            appVersionName: NAN_GUA_CONFIG.version_name,
+            appVersionCode: NAN_GUA_CONFIG.version_code,
+            devices: 'android',
             deviceModel: 'Subsystem for Android(TM)',
             deviceVersion: '33',
-            appVersionName: '1.0.9',
             deviceScreen: '427*250',
-            appVersionCode: '9',
             deviceBrand: 'Windows'
         };
 
