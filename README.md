@@ -33,18 +33,18 @@ $ pnpm dev
 
 ```bash
 # 获取目前支持视频源名称列表
-curl --location --request GET 'http://localhost:8888/vodhub/api/namespace'
+curl --location --request GET 'http://localhost:8888/api/vodhub/namespace'
 ```
 
 
 ```bash
 # 通过首页获取分类
-curl --location --request GET 'http://localhost:8888/vodhub/{{vod_site}}/home'
+curl --location --request GET 'http://localhost:8888/api/vodhub/{{vod_site}}/home'
 ```
 
 ```bash
 # 按分类获取视频列表
-curl --location --request POST 'http://localhost:8888/vodhub/{{vod_site}}/category' \
+curl --location --request POST 'http://localhost:8888/api/vodhub/{{vod_site}}/category' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "id": 1,
@@ -55,7 +55,7 @@ curl --location --request POST 'http://localhost:8888/vodhub/{{vod_site}}/catego
 
 ```bash
 # 获取详情 {{vod_id}} 由分类、搜索等接口返回的数据中获取
-curl --location --request POST 'http://localhost:8888/vodhub/{{vod_site}}/detail' \
+curl --location --request POST 'http://localhost:8888/api/vodhub/{{vod_site}}/detail' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "id": "{{vod_id}}",
@@ -64,7 +64,7 @@ curl --location --request POST 'http://localhost:8888/vodhub/{{vod_site}}/detail
 
 ```bash
 # 获取播放地址 url 和 parse_urls 由详情接口返回的数据中获取
-curl --location --request POST 'http://localhost:8888/vodhub/{{vod_site}}/play' \
+curl --location --request POST 'http://localhost:8888/api/vodhub/{{vod_site}}/play' \
 --header 'Content-Type: application/json' \
 --data-raw '{
    "url": "",
@@ -75,7 +75,7 @@ curl --location --request POST 'http://localhost:8888/vodhub/{{vod_site}}/play' 
 
 ```bash
 # 关键词搜索
-curl --location --request POST 'http://localhost:8888/vodhub/{{vod_site}}/search' \
+curl --location --request POST 'http://localhost:8888/api/vodhub/{{vod_site}}/search' \
 --header 'Content-Type: application/json' \
 --data-raw '{
    "page": 1,
