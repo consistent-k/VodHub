@@ -8,7 +8,7 @@ import { handler } from '@/utils/cms/home';
 export const route: HomeRoute = {
     path: '/home',
     name: 'home',
-    example: '/mdzy/home',
+    example: '/feifan/home',
     description: `首页分类列表`,
     handler: (ctx: Context) => handler(ctx, namespace)
 };

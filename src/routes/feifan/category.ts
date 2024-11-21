@@ -8,7 +8,7 @@ import { handler } from '@/utils/cms/category';
 export const route: CategoryRoute = {
     path: '/category',
     name: 'category',
-    example: '/mdzy/category',
+    example: '/feifan/category',
     description: `获取分类列表`,
     handler: (ctx: Context) => handler(ctx, namespace),
     method: 'POST'

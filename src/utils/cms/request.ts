@@ -11,7 +11,7 @@ request.interceptors.response.use(async (response) => {
     return response.data;
 });
 
-export interface MDZYResponse {
+export interface CMSResponse {
     code: number;
     msg: string;
     page: number;
@@ -21,11 +21,11 @@ export interface MDZYResponse {
 }
 
 const newRequest = {
-    async get<T>(url: string, config?: AxiosRequestConfig): Promise<MDZYResponse & T> {
+    async get<T>(url: string, config?: AxiosRequestConfig): Promise<CMSResponse & T> {
         return await request(url, merge({}, config, { method: 'get' }));
     },
 
-    async post<T>(url: string, config?: AxiosRequestConfig): Promise<MDZYResponse & T> {
+    async post<T>(url: string, config?: AxiosRequestConfig): Promise<CMSResponse & T> {
         return await request(url, merge({}, config, { method: 'post' }));
     }
 };

@@ -2,7 +2,7 @@ import CryptoJS from 'crypto-js';
 import dayjs from 'dayjs';
 import type { MiddlewareHandler } from 'hono';
 
-import RequestInProgressError from '@/errors/types/request-in-progress';
+import RequestInProgressError from '@/types/error';
 import cache from '@/utils/cache';
 
 const { Hex } = CryptoJS.enc;
@@ -59,6 +59,8 @@ const middleware: MiddlewareHandler = async (ctx, next) => {
         throw error;
     }
 
+    // @ts-ignore
+    // eslint-disable-next-line
     const data: any = ctx.get('data');
     if (ctx.res.headers.get('Cache-Control') !== 'no-cache' && data) {
         data.update_time = dayjs().format('YYYY-MM-DD HH:mm:ss');
