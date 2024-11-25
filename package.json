@@ -33,7 +33,7 @@
         "@ecomfe/eslint-config": "^8.0.0",
         "@types/crypto-js": "^4.2.2",
         "@types/lodash": "^4.17.13",
-        "@types/node": "^22.9.0",
+        "@types/node": "^22.9.3",
         "@typescript-eslint/eslint-plugin": "^5.35.1",
         "@typescript-eslint/parser": "^5.35.1",
         "commitizen": "^4.3.1",
