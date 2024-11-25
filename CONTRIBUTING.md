@@ -45,10 +45,7 @@ import type { Namespace } from '@/types';
 export const namespace: Namespace = {
     name: '我的电影',
     url: 'https://mymovie.com',
-    description: '我的电影网',
-    zh: {
-        name: '我的电影网'
-    }
+    description: '我的电影网'
 };
 ```
 

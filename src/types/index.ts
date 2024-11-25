@@ -1,14 +1,10 @@
 import type { Context } from 'hono';
 
 // namespace
-interface NamespaceItem {
+interface Namespace {
     name: string;
     url?: string;
     description?: string;
-}
-
-interface Namespace extends NamespaceItem {
-    zh?: NamespaceItem;
 }
 
 export type { Namespace };
@@ -23,9 +19,7 @@ interface RouteItem<T> {
     description?: string; // 路由描述
 }
 
-interface Route extends RouteItem<unknown> {
-    zh?: NamespaceItem;
-}
+type Route = RouteItem<unknown>;
 
 // 首页分类列表
 export interface HomeData {

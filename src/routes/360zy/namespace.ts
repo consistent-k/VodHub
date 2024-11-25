@@ -3,8 +3,5 @@ import type { Namespace } from '@/types';
 export const namespace: Namespace = {
     name: '360资源',
     url: 'https://360zy.com',
-    description: '360资源',
-    zh: {
-        name: '360资源'
-    }
+    description: '360资源'
 };
