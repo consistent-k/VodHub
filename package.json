@@ -45,7 +45,7 @@
         "lint-staged": "^15.2.10",
         "prettier": "^3.3.3",
         "tsx": "^4.19.2",
-        "typescript": "^5.6.3"
+        "typescript": "^5.7.2"
     },
     "engines": {
         "node": ">=22",
