@@ -6,6 +6,7 @@ import request from './request';
 import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
 import { SEARCH_MESSAGE } from '@/constant/message';
 import { SearchData, SearchRoute } from '@/types';
+import { filterSearchData } from '@/utils/filters';
 import logger from '@/utils/logger';
 
 const handler = async (ctx: Context) => {
@@ -17,23 +18,25 @@ const handler = async (ctx: Context) => {
 
         let $ = await request.getHtml(`${namespace.url}/vodsearch/wd/${keyword}.html`);
 
-        let searchData: SearchData[] = [];
+        let newList: SearchData[] = [];
         let items = $('.module-search-item');
         for (const item of items) {
             let vodShort: SearchData = {
+                type_id: $(item).find('.video-info-aux > a')[0].attribs.href,
+                type_name: $(item).find('.video-info-aux > a')[0].attribs.title,
                 vod_id: $(item).find('.video-serial')[0].attribs.href,
                 vod_name: $(item).find('.video-serial')[0].attribs.title,
                 vod_pic: $(item).find('.module-item-pic > img')[0].attribs['data-src'],
                 vod_remarks: $($(item).find('.video-serial')[0]).text()
             };
-            searchData.push(vodShort);
+            newList.push(vodShort);
         }
 
-        if (searchData.length > 0) {
+        if (newList.length > 0) {
             return {
                 code: SUCCESS_CODE,
                 message: SEARCH_MESSAGE.SUCCESS,
-                data: searchData
+                data: filterSearchData(newList)
             };
         }
 

@@ -7,6 +7,7 @@ import request from './request';
 import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
 import { SEARCH_MESSAGE } from '@/constant/message';
 import { SearchData, SearchRoute } from '@/types';
+import { filterSearchData } from '@/utils/filters';
 import { formatStrByReg } from '@/utils/format';
 import logger from '@/utils/logger';
 
@@ -29,27 +30,29 @@ const handler = async (ctx: Context) => {
         // @ts-ignore
         let $ = load(html);
 
-        let searchData: SearchData[] = [];
+        let newList: SearchData[] = [];
         let vodElements = $($('[id="list_all"]').find('ul')).find('li');
         for (const vodElement of vodElements) {
             let vodShort: SearchData = {
+                type_id: '0',
+                type_name: '未知',
                 vod_id: $(vodElement).find('a')[0].attribs.href,
                 vod_name: formatStrByReg(/《(.*?)》/, $($($(vodElement).find('[class="text_info"]')).find('a')[0]).text()),
                 vod_pic: $(vodElement).find('img')[0].attribs['data-original'],
                 vod_remarks: $($(vodElement).find('[class="update_time"]')).text()
             };
-            searchData.push(vodShort);
+            newList.push(vodShort);
         }
 
-        if (searchData.length > 0) {
+        if (newList.length > 0) {
             return {
                 code: SUCCESS_CODE,
                 message: SEARCH_MESSAGE.SUCCESS,
-                data: searchData
+                data: filterSearchData(newList)
             };
         }
 
-        logger.error(`${SEARCH_MESSAGE.ERROR} - ${namespace.name} - ${JSON.stringify(res)}`);
+        logger.error(`${SEARCH_MESSAGE.ERROR} - ${namespace.name}`);
         return {
             code: ERROR_CODE,
             message: SEARCH_MESSAGE.ERROR,

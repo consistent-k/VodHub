@@ -6,6 +6,7 @@ import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
 import { SEARCH_MESSAGE } from '@/constant/message';
 import { SearchData } from '@/types';
 import { CMSDetailList } from '@/types/cms';
+import { filterSearchData } from '@/utils/filters';
 import logger from '@/utils/logger';
 
 export const handler = async (ctx: Context, namespace) => {
@@ -29,6 +30,8 @@ export const handler = async (ctx: Context, namespace) => {
         if (code === 1) {
             const newList: SearchData[] = list.map((item) => {
                 return {
+                    type_id: item.type_id,
+                    type_name: item.type_name,
                     vod_id: item.vod_id,
                     vod_name: item.vod_name,
                     vod_pic: item.vod_pic,
@@ -38,7 +41,7 @@ export const handler = async (ctx: Context, namespace) => {
             return {
                 code: SUCCESS_CODE,
                 message: SEARCH_MESSAGE.SUCCESS,
-                data: newList
+                data: filterSearchData(newList)
             };
         }
 

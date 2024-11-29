@@ -6,6 +6,7 @@ import request from './request';
 import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
 import { SEARCH_MESSAGE } from '@/constant/message';
 import { SearchData, SearchRoute } from '@/types';
+import { filterSearchData } from '@/utils/filters';
 import logger from '@/utils/logger';
 
 // 源头的关键词搜索数据
@@ -92,8 +93,6 @@ const handler = async (ctx: Context) => {
 
         const { page, keyword } = body;
 
-        //
-
         const res = await request.get<SearchDataOrigin>(`https://api.so.360kan.com/index`, {
             params: {
                 kw: keyword,
@@ -111,6 +110,8 @@ const handler = async (ctx: Context) => {
             let newList: SearchData[] = [];
             data.longData.rows.forEach((item) => {
                 newList.push({
+                    type_name: item.cat_name,
+                    type_id: item.cat_id,
                     vod_id: `${item.en_id}+${item.cat_id}`,
                     vod_name: item.titleTxt,
                     vod_pic: !item.cover.startsWith('http') ? `https:${item.cover}` : item.cover,
@@ -121,7 +122,7 @@ const handler = async (ctx: Context) => {
             return {
                 code: SUCCESS_CODE,
                 message: SEARCH_MESSAGE.SUCCESS,
-                data: newList
+                data: filterSearchData(newList)
             };
         }
 
