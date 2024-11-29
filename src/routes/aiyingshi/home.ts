@@ -4,6 +4,7 @@ import request from './request';
 import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
 import { HOME_MESSAGE } from '@/constant/message';
 import { HomeData, HomeRoute } from '@/types';
+import { filterHomeData } from '@/utils/filters';
 import logger from '@/utils/logger';
 
 const handler = async (ctx) => {
@@ -74,7 +75,7 @@ const handler = async (ctx) => {
             return {
                 code: SUCCESS_CODE,
                 message: HOME_MESSAGE.SUCCESS,
-                data: newList
+                data: filterHomeData(newList)
             };
         }
         logger.error(`${HOME_MESSAGE.ERROR} - ${namespace.name}`);

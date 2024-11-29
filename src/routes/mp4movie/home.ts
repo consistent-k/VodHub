@@ -4,12 +4,13 @@ import request from './request';
 import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
 import { HOME_MESSAGE } from '@/constant/message';
 import { HomeData, HomeRoute } from '@/types';
+import { filterHomeData } from '@/utils/filters';
 import logger from '@/utils/logger';
 
 const handler = async (ctx) => {
     try {
         logger.info(`${HOME_MESSAGE.INFO} - ${namespace.name}`);
-        const newList: HomeData[] = [];
+        let newList: HomeData[] = [];
 
         const extend: string[] = [];
         const area: string[] = [];
@@ -59,53 +60,55 @@ const handler = async (ctx) => {
             }
         }
 
+        newList = newList.map((item) => {
+            return {
+                ...item,
+                filters: [
+                    {
+                        type: 'class',
+                        children: extend.map((mItem) => {
+                            return {
+                                label: mItem,
+                                value: mItem
+                            };
+                        })
+                    },
+                    {
+                        type: 'area',
+                        children: area.map((mItem) => {
+                            return {
+                                label: mItem,
+                                value: mItem
+                            };
+                        })
+                    },
+                    {
+                        type: 'year',
+                        children: year.map((mItem) => {
+                            return {
+                                label: mItem,
+                                value: mItem
+                            };
+                        })
+                    },
+                    {
+                        type: 'lang',
+                        children: lang.map((mItem) => {
+                            return {
+                                label: mItem,
+                                value: mItem
+                            };
+                        })
+                    }
+                ]
+            };
+        });
+
         if (newList.length > 0) {
             return {
                 code: SUCCESS_CODE,
                 message: HOME_MESSAGE.SUCCESS,
-                data: newList.map((item) => {
-                    return {
-                        ...item,
-                        filters: [
-                            {
-                                type: 'class',
-                                children: extend.map((mItem) => {
-                                    return {
-                                        label: mItem,
-                                        value: mItem
-                                    };
-                                })
-                            },
-                            {
-                                type: 'area',
-                                children: area.map((mItem) => {
-                                    return {
-                                        label: mItem,
-                                        value: mItem
-                                    };
-                                })
-                            },
-                            {
-                                type: 'year',
-                                children: year.map((mItem) => {
-                                    return {
-                                        label: mItem,
-                                        value: mItem
-                                    };
-                                })
-                            },
-                            {
-                                type: 'lang',
-                                children: lang.map((mItem) => {
-                                    return {
-                                        label: mItem,
-                                        value: mItem
-                                    };
-                                })
-                            }
-                        ]
-                    };
-                })
+                data: filterHomeData(newList)
             };
         }
         logger.error(`${HOME_MESSAGE.ERROR} - ${namespace.name}`);

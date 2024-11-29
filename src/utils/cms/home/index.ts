@@ -1,5 +1,4 @@
 import { Context } from 'hono';
-import { includes } from 'lodash';
 
 import request from '../request';
 
@@ -7,6 +6,7 @@ import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
 import { HOME_MESSAGE } from '@/constant/message';
 import { HomeData } from '@/types';
 import { CMSHomeData } from '@/types/cms';
+import { filterHomeData } from '@/utils/filters';
 import logger from '@/utils/logger';
 
 export const handler = async (ctx: Context, namespace) => {
@@ -30,7 +30,7 @@ export const handler = async (ctx: Context, namespace) => {
             return {
                 code: SUCCESS_CODE,
                 message: HOME_MESSAGE.SUCCESS,
-                data: newList.filter((item) => !includes(item.type_name, '伦理'))
+                data: filterHomeData(newList)
             };
         }
 
