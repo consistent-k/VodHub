@@ -8,7 +8,7 @@ import { handler } from '@/utils/cms/detail';
 export const route: DetailRoute = {
     path: '/detail',
     name: 'detail',
-    example: '/360zy/detail',
+    example: '/ikunzy/detail',
     description: `获取详情`,
     handler: (ctx: Context) => handler(ctx, namespace),
     method: 'POST'
