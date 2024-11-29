@@ -7,6 +7,7 @@ import request from './request';
 import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
 import { HOME_VOD_MESSAGE } from '@/constant/message';
 import { HomeVodData, HomeVodRoute } from '@/types';
+import { filterHomeVodData } from '@/utils/filters';
 import logger from '@/utils/logger';
 
 const handler = async (ctx: Context) => {
@@ -44,7 +45,7 @@ const handler = async (ctx: Context) => {
             return {
                 code: SUCCESS_CODE,
                 message: HOME_VOD_MESSAGE.SUCCESS,
-                data: uniqBy(vod_list, 'vod_id')
+                data: filterHomeVodData(uniqBy(vod_list, 'vod_id'))
             };
         }
 

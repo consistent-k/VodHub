@@ -6,6 +6,7 @@ import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
 import { HOME_VOD_MESSAGE } from '@/constant/message';
 import { HomeVodData } from '@/types';
 import { CMSDetailList } from '@/types/cms';
+import { filterHomeVodData } from '@/utils/filters';
 import logger from '@/utils/logger';
 
 export const handler = async (ctx: Context, namespace) => {
@@ -39,7 +40,7 @@ export const handler = async (ctx: Context, namespace) => {
             return {
                 code: SUCCESS_CODE,
                 message: HOME_VOD_MESSAGE.SUCCESS,
-                data: vod_list
+                data: filterHomeVodData(vod_list)
             };
         }
 

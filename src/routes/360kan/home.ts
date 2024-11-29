@@ -3,6 +3,7 @@ import { namespace } from './namespace';
 import { SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
 import { HOME_MESSAGE } from '@/constant/message';
 import { HomeData, HomeRoute } from '@/types';
+import { filterHomeData } from '@/utils/filters';
 import logger from '@/utils/logger';
 
 const YearList = [
@@ -172,10 +173,6 @@ const handler = async (ctx) => {
                                 value: '惊悚'
                             },
                             {
-                                label: '伦理',
-                                value: '伦理'
-                            },
-                            {
                                 label: '其他',
                                 value: '其他'
                             }
@@ -279,10 +276,6 @@ const handler = async (ctx) => {
                             {
                                 label: '剧情',
                                 value: '剧情'
-                            },
-                            {
-                                label: '伦理',
-                                value: '伦理'
                             },
                             {
                                 label: '喜剧',
@@ -777,7 +770,7 @@ const handler = async (ctx) => {
         return {
             code: SUCCESS_CODE,
             message: HOME_MESSAGE.SUCCESS,
-            data: newList
+            data: filterHomeData(newList)
         };
     } catch (error) {
         ctx.res.headers.set('Cache-Control', 'no-cache');

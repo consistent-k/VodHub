@@ -16,5 +16,7 @@ export const config = {
     // 缓存配置
     cache: {
         ttl: 60000
-    }
+    },
+    // 禁用关键词
+    bannedKeywords: ['福利', '伦理', '成人', '三级', '激情', '情色', '里番', '无码']
 };
