@@ -84,7 +84,7 @@ const handler = async (ctx: Context) => {
 
         const newList: HomeData[] = [
             {
-                type_id: '1',
+                type_id: 1,
                 type_name: '电影',
                 filters: [
                     {
@@ -113,7 +113,7 @@ const handler = async (ctx: Context) => {
                 ]
             },
             {
-                type_id: '2',
+                type_id: 2,
                 type_name: '电视剧',
                 filters: [
                     {
@@ -154,7 +154,7 @@ const handler = async (ctx: Context) => {
                 ]
             },
             {
-                type_id: '3',
+                type_id: 3,
                 type_name: '动漫',
                 filters: [
                     {
@@ -195,7 +195,7 @@ const handler = async (ctx: Context) => {
                 ]
             },
             {
-                type_id: '4',
+                type_id: 4,
                 type_name: '综艺',
                 filters: [
                     {

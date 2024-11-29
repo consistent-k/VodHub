@@ -85,6 +85,8 @@ export interface PlayData {
 
 // 关键词搜索
 export interface SearchData {
+    type_id: number | string; // 类型id
+    type_name: string; // 类型名称
     vod_id: number | string; // 视频id
     vod_name: string; // 视频名称
     vod_pic: string; // 视频封面

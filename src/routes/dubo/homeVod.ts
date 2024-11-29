@@ -57,6 +57,7 @@ const handler = async (ctx: Context) => {
             4: '日剧',
             5: '美剧',
             7: '泰剧',
+            8: '港剧',
             9: '台剧',
             10: '内地',
             11: '动漫',
@@ -75,7 +76,7 @@ const handler = async (ctx: Context) => {
                             vod_pic_thumb: vod.vod_pic_thumb,
                             vod_remarks: vod.vod_remarks,
                             type_id: item.type_id,
-                            type_name: typeNameMap[item.type_id]
+                            type_name: typeNameMap[item.type_id] || '未知'
                         };
                     });
                     vod_list = [...vod_list, ...newVodList];

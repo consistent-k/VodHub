@@ -6,6 +6,7 @@ import request from './request';
 import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
 import { SEARCH_MESSAGE } from '@/constant/message';
 import { SearchData, SearchRoute } from '@/types';
+import { filterSearchData } from '@/utils/filters';
 import logger from '@/utils/logger';
 
 // 源头的关键词搜索数据
@@ -44,9 +45,18 @@ const handler = async (ctx: Context) => {
 
         const { data, code } = res;
 
+        const typeNameMap: Record<number, string> = {
+            1: '电影',
+            2: '电视剧',
+            3: '动漫',
+            4: '综艺'
+        };
+
         if (code === 1) {
             const newList: SearchData[] = data.map((item) => {
                 return {
+                    type_id: item.cate_id,
+                    type_name: typeNameMap[item.cate_id] || '未知',
                     vod_id: item.id,
                     vod_name: item.title,
                     vod_pic: item.thumbnail,
@@ -56,7 +66,7 @@ const handler = async (ctx: Context) => {
             return {
                 code: SUCCESS_CODE,
                 message: SEARCH_MESSAGE.SUCCESS,
-                data: newList
+                data: filterSearchData(newList)
             };
         }
 
