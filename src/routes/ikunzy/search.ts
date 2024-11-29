@@ -8,7 +8,7 @@ import { handler } from '@/utils/cms/search';
 export const route: SearchRoute = {
     path: '/search',
     name: 'search',
-    example: '/360zy/search',
+    example: '/ikunzy/search',
     description: `关键词搜索`,
     handler: (ctx: Context) => handler(ctx, namespace),
     method: 'POST'

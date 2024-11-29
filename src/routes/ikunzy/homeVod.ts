@@ -8,7 +8,7 @@ import { handler } from '@/utils/cms/homeVod';
 export const route: HomeVodRoute = {
     path: '/homeVod',
     name: 'homeVod',
-    example: '/360zy/homeVod',
+    example: '/ikunzy/homeVod',
     description: `最近更新`,
     handler: (ctx: Context) => handler(ctx, namespace)
 };

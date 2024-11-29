@@ -8,7 +8,7 @@ import { handler } from '@/utils/cms/play';
 export const route: PlayRoute = {
     path: '/play',
     name: 'play',
-    example: '/360zy/play',
+    example: '/ikunzy/play',
     description: `获取播放地址`,
     handler: (ctx: Context) => handler(ctx, namespace),
     method: 'POST'
