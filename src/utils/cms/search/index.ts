@@ -4,8 +4,9 @@ import request from '../request';
 
 import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
 import { SEARCH_MESSAGE } from '@/constant/message';
+import { USER_AGENT_CHROME } from '@/constant/userAgent';
 import { SearchData } from '@/types';
-import { CMSDetailList } from '@/types/cms';
+import { CMSDetailData } from '@/types/cms';
 import { filterSearchData } from '@/utils/filters';
 import logger from '@/utils/logger';
 
@@ -16,12 +17,14 @@ export const handler = async (ctx: Context, namespace) => {
 
         const { keyword } = body;
 
-        const res = await request.post<{
-            list: CMSDetailList[];
-        }>(`${namespace.url}/api.php/provide/vod`, {
+        const res = await request.post<CMSDetailData>(`${namespace.url}/api.php/provide/vod`, {
             params: {
                 ac: 'detail',
                 wd: keyword
+            },
+            headers: {
+                'User-Agent': USER_AGENT_CHROME,
+                Referer: `${namespace.url}/`
             }
         });
 

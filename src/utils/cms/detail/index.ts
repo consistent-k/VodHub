@@ -4,8 +4,9 @@ import request from '../request';
 
 import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
 import { DETAIL_MESSAGE } from '@/constant/message';
+import { USER_AGENT_CHROME } from '@/constant/userAgent';
 import { DetailData, VodPlayList } from '@/types';
-import { CMSDetailList } from '@/types/cms';
+import { CMSDetailData } from '@/types/cms';
 import { formatVodContent } from '@/utils/format';
 import logger from '@/utils/logger';
 
@@ -28,12 +29,14 @@ export const handler = async (ctx: Context, namespace) => {
 
         const { id } = body;
 
-        const res = await request.get<{
-            list: CMSDetailList[];
-        }>(`${namespace.url}/api.php/provide/vod`, {
+        const res = await request.get<CMSDetailData>(`${namespace.url}/api.php/provide/vod`, {
             params: {
                 ac: 'detail',
                 ids: id
+            },
+            headers: {
+                'User-Agent': USER_AGENT_CHROME,
+                Referer: `${namespace.url}/`
             }
         });
 
