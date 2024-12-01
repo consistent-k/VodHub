@@ -4,21 +4,24 @@ import request from '../request';
 
 import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
 import { HOME_VOD_MESSAGE } from '@/constant/message';
+import { USER_AGENT_CHROME } from '@/constant/userAgent';
 import { HomeVodData } from '@/types';
-import { CMSDetailList } from '@/types/cms';
+import { CMSDetailData } from '@/types/cms';
 import { filterHomeVodData } from '@/utils/filters';
 import logger from '@/utils/logger';
 
 export const handler = async (ctx: Context, namespace) => {
     try {
         logger.info(`${HOME_VOD_MESSAGE.INFO} - ${namespace.name}`);
-        let res = await request.get<{
-            list: CMSDetailList[];
-        }>(`${namespace.url}/api.php/provide/vod`, {
+        let res = await request.get<CMSDetailData>(`${namespace.url}/api.php/provide/vod`, {
             params: {
                 ac: 'detail',
                 t: '0',
                 pagesize: 30
+            },
+            headers: {
+                'User-Agent': USER_AGENT_CHROME,
+                Referer: `${namespace.url}/`
             }
         });
 

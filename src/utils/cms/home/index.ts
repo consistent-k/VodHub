@@ -4,6 +4,7 @@ import request from '../request';
 
 import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
 import { HOME_MESSAGE } from '@/constant/message';
+import { USER_AGENT_CHROME } from '@/constant/userAgent';
 import { HomeData } from '@/types';
 import { CMSHomeData } from '@/types/cms';
 import { filterHomeData } from '@/utils/filters';
@@ -15,6 +16,10 @@ export const handler = async (ctx: Context, namespace) => {
         let res = await request.get<CMSHomeData>(`${namespace.url}/api.php/provide/vod`, {
             params: {
                 ac: 'list'
+            },
+            headers: {
+                'User-Agent': USER_AGENT_CHROME,
+                Referer: `${namespace.url}/`
             }
         });
         const { code } = res;

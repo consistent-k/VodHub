@@ -1,5 +1,9 @@
 {
     "name": "vod-hub",
+    "version": "0.1.0",
+    "keywords": [
+        "电影", "视频", "电视剧", "综艺", "动漫"
+    ],
     "type": "module",
     "scripts": {
         "dev": "tsx watch --clear-screen=false src/index.ts",

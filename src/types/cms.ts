@@ -16,6 +16,10 @@ export interface CMSHomeData {
     }>;
 }
 
+export interface CMSDetailData {
+    list: CMSDetailList[];
+}
+
 export interface CMSDetailList {
     group_id: number;
     type_id: number;
