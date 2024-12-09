@@ -15,7 +15,7 @@
         "@hono/node-server": "^1.13.7",
         "@hono/zod-openapi": "^0.18.3",
         "axios": "^1.7.9",
-        "cache-manager": "^6.2.0",
+        "cache-manager": "^6.3.0",
         "cacheable": "^1.8.5",
         "cheerio": "^1.0.0",
         "crypto-js": "^4.2.0",
