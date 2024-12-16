@@ -42,8 +42,8 @@ importers:
         specifier: ^5.4.1
         version: 5.4.1
       keyv:
-        specifier: ^5.2.1
-        version: 5.2.1
+        specifier: ^5.2.2
+        version: 5.2.2
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -1689,8 +1689,8 @@ packages:
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
 
-  keyv@5.2.1:
-    resolution: {integrity: sha512-tpIgCaY02VCW2Pz0zAn4guyct+IeH6Mb5wZdOvpe4oqXeQOJO0C3Wo8fTnf7P3ZD83Vr9kghbkNmzG3lTOhy/A==}
+  keyv@5.2.2:
+    resolution: {integrity: sha512-CRPP4Sq5ofbUE8s4FOirFmDgHeKZFRrH/8+WOUNvLJiMIplRMfnMjxmbaDb+zVd7ex0gGAWqMhZHfcL2u6PrNQ==}
 
   kuler@2.0.0:
     resolution: {integrity: sha512-Xq9nH7KlWZmXAtodXDDRE7vs6DU1gTU8zYDHDiWLSip45Egwq3plLHzPn27NgvzL2r1LMPC1vdqh98sQxtqj4A==}
@@ -3103,12 +3103,12 @@ snapshots:
 
   cache-manager@6.3.1:
     dependencies:
-      keyv: 5.2.1
+      keyv: 5.2.2
 
   cacheable@1.8.5:
     dependencies:
       hookified: 1.5.0
-      keyv: 5.2.1
+      keyv: 5.2.2
 
   cachedir@2.3.0: {}
 
@@ -4152,7 +4152,7 @@ snapshots:
     dependencies:
       json-buffer: 3.0.1
 
-  keyv@5.2.1:
+  keyv@5.2.2:
     dependencies:
       '@keyv/serialize': 1.0.1
 
