@@ -18,8 +18,8 @@ importers:
         specifier: ^1.7.9
         version: 1.7.9
       cache-manager:
-        specifier: ^6.3.0
-        version: 6.3.0
+        specifier: ^6.3.1
+        version: 6.3.1
       cacheable:
         specifier: ^1.8.5
         version: 1.8.5
@@ -762,8 +762,8 @@ packages:
   buffer@6.0.3:
     resolution: {integrity: sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA==}
 
-  cache-manager@6.3.0:
-    resolution: {integrity: sha512-dp3pVtuWfCr9Wnbr5O/h5UDlH27v66XD4HH2qejelkUUMod9nLlCkIzqj2a7iSDlzatiKt8ze6bHyEH8QUKF1w==}
+  cache-manager@6.3.1:
+    resolution: {integrity: sha512-Q8cTcjGzUaTfw/IBOZcUbu0/IUbybOy/+zQO9uluxqFIkfFb/YBZo2HVK8RLRvugeGABzi1vwVctCHQZV2Q2Ww==}
 
   cacheable@1.8.5:
     resolution: {integrity: sha512-sRdiC3/Va8SAqZcnvcfxQAP3p3uipWl9MZpnNmAzHteyMVDRb5QllQO/JRcHGeDzYzPTfOBPH/27hoTpcREF1A==}
@@ -3101,7 +3101,7 @@ snapshots:
       base64-js: 1.5.1
       ieee754: 1.2.1
 
-  cache-manager@6.3.0:
+  cache-manager@6.3.1:
     dependencies:
       keyv: 5.2.1
 
