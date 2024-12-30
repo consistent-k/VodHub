@@ -17,7 +17,7 @@ export const handler = async (ctx: Context, namespace) => {
 
         const { keyword } = body;
 
-        const res = await request.post<CMSDetailData>(`${namespace.url}/api.php/provide/vod`, {
+        const res = await request.get<CMSDetailData>(`${namespace.url}/api.php/provide/vod`, {
             params: {
                 ac: 'detail',
                 wd: keyword

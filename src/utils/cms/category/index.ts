@@ -16,7 +16,7 @@ export const handler = async (ctx: Context, namespace) => {
         const { id, page, filters } = body;
         // filters: { class, area, lang, year }
 
-        let res = await request.post<CMSDetailData>(`${namespace.url}/api.php/provide/vod`, {
+        let res = await request.get<CMSDetailData>(`${namespace.url}/api.php/provide/vod`, {
             params: {
                 ac: 'detail',
                 t: id,
