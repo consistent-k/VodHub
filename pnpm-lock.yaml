@@ -33,8 +33,8 @@ importers:
         specifier: ^1.11.13
         version: 1.11.13
       directory-import:
-        specifier: ^3.3.1
-        version: 3.3.1
+        specifier: ^3.3.2
+        version: 3.3.2
       hono:
         specifier: ^4.6.15
         version: 4.6.15
@@ -1033,8 +1033,8 @@ packages:
     resolution: {integrity: sha512-WkrWp9GR4KXfKGYzOLmTuGVi1UWFfws377n9cc55/tb6DuqyF6pcQ5AbiHEshaDpY9v6oaSr2XCDidGmMwdzIA==}
     engines: {node: '>=8'}
 
-  directory-import@3.3.1:
-    resolution: {integrity: sha512-d9paCbverdqmuwR+B40phSqiHhgPKiP8dpsMz5WT9U6ug2VVQ3tqXNCedpa6iGHg6mgv9lHaoq5DJUu2IXMjsQ==}
+  directory-import@3.3.2:
+    resolution: {integrity: sha512-dSApZXgx29qO/6AVigdsoC6HSvaHWinJ4HTRPKrlMAxX71FgPzn/WEWbgM+aB1PlKD9IfSC3Ir2ouYYQR1uy+g==}
     engines: {node: '>=18.17.0'}
 
   doctrine@2.1.0:
@@ -3441,7 +3441,7 @@ snapshots:
     dependencies:
       path-type: 4.0.0
 
-  directory-import@3.3.1: {}
+  directory-import@3.3.2: {}
 
   doctrine@2.1.0:
     dependencies:
