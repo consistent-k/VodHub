@@ -46,7 +46,7 @@
         "eslint-config-prettier": "^9.1.0",
         "eslint-plugin-import": "^2.31.0",
         "husky": "^9.1.7",
-        "lint-staged": "^15.3.0",
+        "lint-staged": "^15.4.1",
         "prettier": "^3.4.2",
         "tsx": "^4.19.2",
         "typescript": "^5.7.3"
