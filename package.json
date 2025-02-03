@@ -12,7 +12,7 @@
         "commit": "git-cz"
     },
     "dependencies": {
-        "@hono/node-server": "^1.13.7",
+        "@hono/node-server": "^1.13.8",
         "@hono/zod-openapi": "^0.18.3",
         "axios": "^1.7.9",
         "cache-manager": "^6.4.0",
