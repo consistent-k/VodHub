@@ -22,7 +22,7 @@
         "dayjs": "^1.11.13",
         "directory-import": "^3.3.2",
         "hono": "^4.6.20",
-        "ioredis": "^5.4.2",
+        "ioredis": "^5.5.0",
         "keyv": "^5.2.3",
         "lodash": "^4.17.21",
         "query-string": "^9.1.1",
