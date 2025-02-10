@@ -6,9 +6,13 @@ FROM base AS deps
 
 WORKDIR /app
 
+RUN npm install -g corepack
+
+# 启用 pnpm
+RUN corepack enable pnpm
+
 RUN \
     set -ex && \
-    corepack enable pnpm && \
     echo 'use npm mirror' && \
     npm config set registry https://registry.npmmirror.com && \
     yarn config set registry https://registry.npmmirror.com && \
