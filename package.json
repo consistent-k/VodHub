@@ -23,7 +23,7 @@
         "directory-import": "^3.3.2",
         "hono": "^4.7.2",
         "ioredis": "^5.5.0",
-        "keyv": "^5.2.3",
+        "keyv": "^5.3.1",
         "lodash": "^4.17.21",
         "query-string": "^9.1.1",
         "winston": "^3.17.0"
