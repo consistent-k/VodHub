@@ -36,7 +36,7 @@
         "@commitlint/config-conventional": "^19.7.1",
         "@ecomfe/eslint-config": "^8.0.0",
         "@types/crypto-js": "^4.2.2",
-        "@types/lodash": "^4.17.15",
+        "@types/lodash": "^4.17.16",
         "@types/node": "^22.13.5",
         "@typescript-eslint/eslint-plugin": "^5.35.1",
         "@typescript-eslint/parser": "^5.35.1",
