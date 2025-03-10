@@ -16,7 +16,7 @@
         "@hono/zod-openapi": "^0.19.2",
         "axios": "^1.8.2",
         "cache-manager": "^6.4.1",
-        "cacheable": "^1.8.8",
+        "cacheable": "^1.8.9",
         "cheerio": "^1.0.0",
         "crypto-js": "^4.2.0",
         "dayjs": "^1.11.13",
