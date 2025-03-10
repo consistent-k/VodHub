@@ -21,7 +21,7 @@
         "crypto-js": "^4.2.0",
         "dayjs": "^1.11.13",
         "directory-import": "^3.3.2",
-        "hono": "^4.7.2",
+        "hono": "^4.7.4",
         "ioredis": "^5.6.0",
         "keyv": "^5.3.1",
         "lodash": "^4.17.21",
