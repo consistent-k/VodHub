@@ -14,7 +14,7 @@
     "dependencies": {
         "@hono/node-server": "^1.14.0",
         "@hono/zod-openapi": "^0.19.2",
-        "axios": "^1.8.3",
+        "axios": "^1.8.4",
         "cache-manager": "^6.4.1",
         "cacheable": "^1.8.9",
         "cheerio": "^1.0.0",
