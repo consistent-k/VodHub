@@ -2,7 +2,11 @@
     "name": "vod-hub",
     "version": "0.1.0",
     "keywords": [
-        "电影", "视频", "电视剧", "综艺", "动漫"
+        "电影",
+        "视频",
+        "电视剧",
+        "综艺",
+        "动漫"
     ],
     "type": "module",
     "scripts": {
@@ -12,8 +16,8 @@
         "commit": "git-cz"
     },
     "dependencies": {
-        "@hono/node-server": "^1.14.0",
-        "@hono/zod-openapi": "^0.19.4",
+        "@hono/node-server": "^1.14.1",
+        "@hono/zod-openapi": "^0.19.5",
         "axios": "^1.8.4",
         "cache-manager": "^6.4.2",
         "cacheable": "^1.8.10",
@@ -21,9 +25,9 @@
         "crypto-js": "^4.2.0",
         "dayjs": "^1.11.13",
         "directory-import": "^3.3.2",
-        "hono": "^4.7.5",
+        "hono": "^4.7.7",
         "ioredis": "^5.6.1",
-        "keyv": "^5.3.2",
+        "keyv": "^5.3.3",
         "lodash": "^4.17.21",
         "query-string": "^9.1.1",
         "winston": "^3.17.0"
@@ -38,11 +42,11 @@
         "@types/crypto-js": "^4.2.2",
         "@types/lodash": "^4.17.16",
         "@types/node": "^22.14.1",
-        "@typescript-eslint/eslint-plugin": "^5.35.1",
-        "@typescript-eslint/parser": "^5.35.1",
+        "@typescript-eslint/eslint-plugin": "^5.62.0",
+        "@typescript-eslint/parser": "^5.62.0",
         "commitizen": "^4.3.1",
         "cz-conventional-changelog": "^3.3.0",
-        "eslint": "8",
+        "eslint": "^8.57.1",
         "eslint-config-prettier": "^10.1.2",
         "eslint-plugin-import": "^2.31.0",
         "husky": "^9.1.7",
