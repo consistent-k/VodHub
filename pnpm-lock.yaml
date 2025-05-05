@@ -10,10 +10,10 @@ importers:
     dependencies:
       '@hono/node-server':
         specifier: ^1.14.1
-        version: 1.14.1(hono@4.7.7)
+        version: 1.14.1(hono@4.7.8)
       '@hono/zod-openapi':
         specifier: ^0.19.5
-        version: 0.19.5(hono@4.7.7)(zod@3.23.8)
+        version: 0.19.5(hono@4.7.8)(zod@3.23.8)
       axios:
         specifier: ^1.8.4
         version: 1.8.4
@@ -36,8 +36,8 @@ importers:
         specifier: ^3.3.2
         version: 3.3.2
       hono:
-        specifier: ^4.7.7
-        version: 4.7.7
+        specifier: ^4.7.8
+        version: 4.7.8
       ioredis:
         specifier: ^5.6.1
         version: 5.6.1
@@ -1473,8 +1473,8 @@ packages:
     resolution: {integrity: sha512-eSmmWE5bZTK2Nou4g0AI3zZ9rswp7GRKoKXS1BLUkvPviOqs4YTN1djQIqrXy9k5gEtdLPy86JjRwsNM9tnDcA==}
     engines: {node: '>=0.10.0'}
 
-  hono@4.7.7:
-    resolution: {integrity: sha512-2PCpQRbN87Crty8/L/7akZN3UyZIAopSoRxCwRbJgUuV1+MHNFHzYFxZTg4v/03cXUm+jce/qa2VSBZpKBm3Qw==}
+  hono@4.7.8:
+    resolution: {integrity: sha512-PCibtFdxa7/Ldud9yddl1G81GjYaeMYYTq4ywSaNsYbB1Lug4mwtOMJf2WXykL0pntYwmpRJeOI3NmoDgD+Jxw==}
     engines: {node: '>=16.9.0'}
 
   hookified@1.8.2:
@@ -2876,20 +2876,20 @@ snapshots:
 
   '@eslint/js@8.57.1': {}
 
-  '@hono/node-server@1.14.1(hono@4.7.7)':
+  '@hono/node-server@1.14.1(hono@4.7.8)':
     dependencies:
-      hono: 4.7.7
+      hono: 4.7.8
 
-  '@hono/zod-openapi@0.19.5(hono@4.7.7)(zod@3.23.8)':
+  '@hono/zod-openapi@0.19.5(hono@4.7.8)(zod@3.23.8)':
     dependencies:
       '@asteasolutions/zod-to-openapi': 7.3.0(zod@3.23.8)
-      '@hono/zod-validator': 0.4.3(hono@4.7.7)(zod@3.23.8)
-      hono: 4.7.7
+      '@hono/zod-validator': 0.4.3(hono@4.7.8)(zod@3.23.8)
+      hono: 4.7.8
       zod: 3.23.8
 
-  '@hono/zod-validator@0.4.3(hono@4.7.7)(zod@3.23.8)':
+  '@hono/zod-validator@0.4.3(hono@4.7.8)(zod@3.23.8)':
     dependencies:
-      hono: 4.7.7
+      hono: 4.7.8
       zod: 3.23.8
 
   '@humanwhocodes/config-array@0.13.0':
@@ -4070,7 +4070,7 @@ snapshots:
     dependencies:
       parse-passwd: 1.0.0
 
-  hono@4.7.7: {}
+  hono@4.7.8: {}
 
   hookified@1.8.2: {}
 
