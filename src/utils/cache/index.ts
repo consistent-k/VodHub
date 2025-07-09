@@ -10,10 +10,10 @@ const cache = createCache({
         new Keyv({
             store: new CacheableMemory({ ttl: config.cache.ttl, lruSize: 5000 })
         }),
-        //  Redis Store
-        new Keyv({
+        // Redis Store (conditional)
+        ...(config.cache.redis ? [new Keyv({
             store: new KeyvRedis(config.cache.redis)
-        })
+        })] : [])
     ]
 });
 
