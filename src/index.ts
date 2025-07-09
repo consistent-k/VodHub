@@ -14,6 +14,8 @@ if (config.connect.listenInaddrAny) {
     }
 }
 
+logger.info(`⚙ Config: 👉 ${JSON.stringify(config, null, 2)}`);
+
 const server = serve({
     fetch: app.fetch,
     hostname: config.connect.listenInaddrAny ? '::' : '127.0.0.1',
