@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 export const config = {
     // 日志相关配置
     looger: {
@@ -15,8 +17,9 @@ export const config = {
     },
     // 缓存配置
     cache: {
-        ttl: 60000
+        ttl: 60000,
+        redis: process.env.REDIS_URL
     },
     // 禁用关键词
-    bannedKeywords: ['福利', '伦理', '成人', '三级', '激情', '情色', '里番', '无码']
+    bannedKeywords: process.env.BANNED_KEYWORDS?.split(',') || []
 };
