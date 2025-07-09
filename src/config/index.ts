@@ -19,12 +19,8 @@ export const config = {
     cache: {
     cache: {
         ttl: 60000,
--       redis: process.env.REDIS_URL
-+       redis: process.env.REDIS_URL || undefined,
-+       // 或者提供默认的 Redis 连接
-+       // redis: process.env.REDIS_URL || 'redis://localhost:6379'
-    },
+        redis: process.env.REDIS_URL || 'redis://localhost:6379'
     },
     // 禁用关键词
-    bannedKeywords: process.env.BANNED_KEYWORDS?.split(',') || []
+    bannedKeywords: process.env.BANNED_KEYWORDS?.split(',').filter(keyword => keyword.trim()) || []
 };
