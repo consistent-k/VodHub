@@ -8,13 +8,19 @@ import { config } from '@/config';
 const cache = createCache({
     stores: [
         new Keyv({
-            store: new CacheableMemory({ ttl: config.cache.ttl, lruSize: 5000 })
+            store: new CacheableMemory({ lruSize: 5000 })
         }),
         // Redis Store (conditional)
-        ...(config.cache.redis ? [new Keyv({
-            store: new KeyvRedis(config.cache.redis)
-        })] : [])
-    ]
+        ...(config.cache.redis
+            ? [
+                  new Keyv({
+                      store: new KeyvRedis(config.cache.redis)
+                  })
+              ]
+            : [])
+    ],
+    ttl: config.cache.ttl,
+    nonBlocking: true
 });
 
 export default cache;

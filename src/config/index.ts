@@ -17,7 +17,7 @@ export const config = {
     },
     cache: {
         ttl: 60000,
-        redis: process.env.REDIS_URL || 'redis://localhost:6379'
+        redis: process.env.REDIS_URL
     },
     // 禁用关键词
     bannedKeywords: process.env.BANNED_KEYWORDS?.split(',').filter((keyword) => keyword.trim()) || ['福利', '伦理', '成人', '三级', '激情', '情色', '里番', '无码']
