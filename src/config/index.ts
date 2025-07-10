@@ -1,3 +1,4 @@
+import { BANNED_KEYWORDS } from '@/constant/word';
 import 'dotenv/config';
 
 export const config = {
@@ -20,5 +21,5 @@ export const config = {
         redis: process.env.REDIS_URL
     },
     // 禁用关键词
-    bannedKeywords: process.env.BANNED_KEYWORDS?.split(',').filter((keyword) => keyword.trim()) || ['福利', '伦理', '成人', '三级', '激情', '情色', '里番', '无码']
+    bannedKeywords: process.env.BANNED_KEYWORDS?.split(',').filter((keyword) => keyword.trim()) || BANNED_KEYWORDS
 };
