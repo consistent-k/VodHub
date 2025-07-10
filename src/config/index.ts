@@ -16,7 +16,7 @@ export const config = {
         listenInaddrAny: true
     },
     cache: {
-        ttl: 60000,
+        ttl: process.env.CACHE_TTL ? parseInt(process.env.CACHE_TTL, 10) : 1000 * 60, // 默认缓存时间为60秒
         redis: process.env.REDIS_URL
     },
     // 禁用关键词

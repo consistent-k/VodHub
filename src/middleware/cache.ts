@@ -4,24 +4,23 @@ import type { MiddlewareHandler } from 'hono';
 
 import RequestInProgressError from '@/types/error';
 import cache from '@/utils/cache';
+import logger from '@/utils/logger';
 
 const { Hex } = CryptoJS.enc;
 
 const middleware: MiddlewareHandler = async (ctx, next) => {
-    let cacheKey = `vod-hub:redis-cache:`; // 缓存的 key
-    let pathKey = `vod-hub:path-requested:`; // 请求的 key
-    switch (ctx.req.method) {
-        case 'POST':
-            const body = await ctx.req.json();
-            const contentMD5 = CryptoJS.MD5(JSON.stringify(body)).toString(Hex);
-            cacheKey += `${ctx.req.path}-${contentMD5}`;
-            pathKey += `${ctx.req.path}-${contentMD5}`;
-            break;
-        default:
-            cacheKey += ctx.req.path;
-            pathKey += ctx.req.path;
-            break;
+    const method = ctx.req.method;
+    const path = ctx.req.path;
+    let bodyHash = '';
+
+    if (method === 'POST') {
+        const body = await ctx.req.json();
+        ctx.set('parsedBody', body);
+        bodyHash = '-' + CryptoJS.MD5(JSON.stringify(body)).toString(Hex);
     }
+
+    const cacheKey = `vod-hub:redis-cache:${path}${bodyHash}`;
+    const pathKey = `vod-hub:path-requested:${path}${bodyHash}`;
 
     const isRequesting = await cache.get(pathKey); // 判断是否正在请求
 
@@ -30,7 +29,8 @@ const middleware: MiddlewareHandler = async (ctx, next) => {
         let bypass = false;
         while (retryTimes > 0) {
             await new Promise((resolve) => setTimeout(resolve, 6000));
-            if ((await cache.get(pathKey)) !== '1') {
+            const currentStatus = await cache.get(pathKey);
+            if (currentStatus !== '1') {
                 bypass = true;
                 break;
             }
@@ -46,6 +46,7 @@ const middleware: MiddlewareHandler = async (ctx, next) => {
     if (value) {
         ctx.status(200);
         ctx.header('Vod-Hub-Cache-Status', 'HIT');
+        logger.info(`Cache hit for ${ctx.req.method} ${ctx.req.path}`);
         ctx.set('data', JSON.parse(value));
         await next();
         return;
@@ -54,21 +55,17 @@ const middleware: MiddlewareHandler = async (ctx, next) => {
     await cache.set(pathKey, '1');
     try {
         await next();
+        const data = ctx.get('data');
+        if (ctx.res.headers.get('Cache-Control') !== 'no-cache' && data) {
+            data.update_time = dayjs().format('YYYY-MM-DD HH:mm:ss');
+            ctx.set('data', data);
+            await cache.set(cacheKey, JSON.stringify(data));
+        }
     } catch (error) {
-        await cache.set(pathKey, '0');
         throw error;
+    } finally {
+        await cache.set(pathKey, '0');
     }
-
-    // @ts-ignore
-    // eslint-disable-next-line
-    const data: any = ctx.get('data');
-    if (ctx.res.headers.get('Cache-Control') !== 'no-cache' && data) {
-        data.update_time = dayjs().format('YYYY-MM-DD HH:mm:ss');
-        ctx.set('data', data);
-        const body = JSON.stringify(data);
-        await cache.set(cacheKey, body);
-    }
-    await cache.set(pathKey, '0');
 };
 
 export default middleware;

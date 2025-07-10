@@ -5,20 +5,16 @@ import { Keyv } from 'keyv';
 
 import { config } from '@/config';
 
+const memoryStore = new Keyv({
+    store: new CacheableMemory({ lruSize: 5000 })
+});
+
+const redisStore = new Keyv({
+    store: new KeyvRedis(config.cache.redis)
+});
+
 const cache = createCache({
-    stores: [
-        new Keyv({
-            store: new CacheableMemory({ lruSize: 5000 })
-        }),
-        // Redis Store (conditional)
-        ...(config.cache.redis
-            ? [
-                  new Keyv({
-                      store: new KeyvRedis(config.cache.redis)
-                  })
-              ]
-            : [])
-    ],
+    stores: [memoryStore, ...(config.cache.redis ? [redisStore] : [])],
     ttl: config.cache.ttl,
     nonBlocking: true
 });
