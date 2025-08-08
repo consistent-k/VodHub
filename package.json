@@ -20,7 +20,7 @@
         "@hono/zod-openapi": "^0.19.9",
         "@keyv/redis": "^4.6.0",
         "axios": "^1.10.0",
-        "cache-manager": "^7.0.1",
+        "cache-manager": "^7.1.1",
         "cacheable": "^1.10.1",
         "cheerio": "^1.1.0",
         "cross-env": "^7.0.3",
