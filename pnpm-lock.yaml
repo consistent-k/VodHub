@@ -21,8 +21,8 @@ importers:
         specifier: ^1.10.0
         version: 1.10.0
       cache-manager:
-        specifier: ^7.0.1
-        version: 7.0.1
+        specifier: ^7.2.0
+        version: 7.2.0
       cacheable:
         specifier: ^1.10.1
         version: 1.10.1
@@ -568,6 +568,9 @@ packages:
   '@keyv/serialize@1.0.3':
     resolution: {integrity: sha512-qnEovoOp5Np2JDGonIDL6Ayihw0RhnRh6vxPuHo4RDn1UOzwEo4AeIfpL6UGIrsceWrCMiVPgwRjbHu4vYFc3g==}
 
+  '@keyv/serialize@1.1.0':
+    resolution: {integrity: sha512-RlDgexML7Z63Q8BSaqhXdCYNBy/JQnqYIwxofUrNLGCblOMHp+xux2Q8nLMLlPpgHQPoU0Do8Z6btCpRBEqZ8g==}
+
   '@napi-rs/wasm-runtime@0.2.11':
     resolution: {integrity: sha512-9DPkXtvHydrcOsopiYpUgPHpmj0HWZKMUnL2dZqpvC42lsratuBG06V5ipyno0fUek5VlFsNQ+AcFATSrJXgMA==}
 
@@ -903,8 +906,8 @@ packages:
     resolution: {integrity: sha512-b6Ilus+c3RrdDk+JhLKUAQfzzgLEPy6wcXqS7f/xe1EETvsDP6GORG7SFuOs6cID5YkqchW/LXZbX5bc8j7ZcQ==}
     engines: {node: '>=8'}
 
-  cache-manager@7.0.1:
-    resolution: {integrity: sha512-Hd7FOyTtwhwLgkKeKQWEw6Ixj63VKuUWYwkGgL6g6Q7eISW6uxci5+DtUXlqI0gtbLCPPdhL1+HP9Zht27DbrA==}
+  cache-manager@7.2.0:
+    resolution: {integrity: sha512-GRv0Ji8Xgqtrg1Mmi4ygYpIt+SOApQNjJb5+rYIl+5y3u+tyBf+Csx79LL4wQjKLio63A6x1OpuBzhMzRv9jJg==}
 
   cacheable@1.10.1:
     resolution: {integrity: sha512-Fa2BZY0CS9F0PFc/6aVA6tgpOdw+hmv9dkZOlHXII5v5Hw+meJBIWDcPrG9q/dXxGcNbym5t77fzmawrBQfTmQ==}
@@ -1930,6 +1933,9 @@ packages:
 
   keyv@5.3.4:
     resolution: {integrity: sha512-ypEvQvInNpUe+u+w8BIcPkQvEqXquyyibWE/1NB5T2BTzIpS5cGEV1LZskDzPSTvNAaT4+5FutvzlvnkxOSKlw==}
+
+  keyv@5.5.0:
+    resolution: {integrity: sha512-QG7qR2tijh1ftOvClut4YKKg1iW6cx3GZsKoGyJPxHkGWK9oJhG9P3j5deP0QQOGDowBMVQFaP+Vm4NpGYvmIQ==}
 
   kuler@2.0.0:
     resolution: {integrity: sha512-Xq9nH7KlWZmXAtodXDDRE7vs6DU1gTU8zYDHDiWLSip45Egwq3plLHzPn27NgvzL2r1LMPC1vdqh98sQxtqj4A==}
@@ -3202,6 +3208,8 @@ snapshots:
     dependencies:
       buffer: 6.0.3
 
+  '@keyv/serialize@1.1.0': {}
+
   '@napi-rs/wasm-runtime@0.2.11':
     dependencies:
       '@emnapi/core': 1.4.4
@@ -3564,9 +3572,9 @@ snapshots:
 
   cac@6.7.14: {}
 
-  cache-manager@7.0.1:
+  cache-manager@7.2.0:
     dependencies:
-      keyv: 5.3.4
+      keyv: 5.5.0
 
   cacheable@1.10.1:
     dependencies:
@@ -4722,6 +4730,10 @@ snapshots:
   keyv@5.3.4:
     dependencies:
       '@keyv/serialize': 1.0.3
+
+  keyv@5.5.0:
+    dependencies:
+      '@keyv/serialize': 1.1.0
 
   kuler@2.0.0: {}
 
