@@ -34,7 +34,7 @@
         "lodash": "^4.17.21",
         "query-string": "^9.2.2",
         "tsdown": "^0.12.9",
-        "winston": "^3.17.0"
+        "winston": "^3.18.3"
     },
     "devDependencies": {
         "@babel/core": "^7.28.0",
