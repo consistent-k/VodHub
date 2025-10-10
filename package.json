@@ -21,7 +21,7 @@
         "@keyv/redis": "^4.6.0",
         "axios": "^1.10.0",
         "cache-manager": "^7.0.1",
-        "cacheable": "^1.10.1",
+        "cacheable": "^2.1.0",
         "cheerio": "^1.1.0",
         "cross-env": "^7.0.3",
         "crypto-js": "^4.2.0",
