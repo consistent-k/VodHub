@@ -24,8 +24,8 @@ importers:
         specifier: ^7.0.1
         version: 7.0.1
       cacheable:
-        specifier: ^1.10.1
-        version: 1.10.1
+        specifier: ^2.1.1
+        version: 2.1.1
       cheerio:
         specifier: ^1.1.0
         version: 1.1.0
@@ -221,6 +221,15 @@ packages:
   '@babel/types@7.28.0':
     resolution: {integrity: sha512-jYnje+JyZG5YThjHiF28oT4SIZLnYOcSBb6+SDaFIyzDVSkXQmQQYclJ2R+YxcdmK0AX6x1E5OQNtuh3jHDrUg==}
     engines: {node: '>=6.9.0'}
+
+  '@cacheable/memoize@2.0.3':
+    resolution: {integrity: sha512-hl9wfQgpiydhQEIv7fkjEzTGE+tcosCXLKFDO707wYJ/78FVOlowb36djex5GdbSyeHnG62pomYLMuV/OT8Pbw==}
+
+  '@cacheable/memory@2.0.3':
+    resolution: {integrity: sha512-R3UKy/CKOyb1LZG/VRCTMcpiMDyLH7SH3JrraRdK6kf3GweWCOU3sgvE13W3TiDRbxnDKylzKJvhUAvWl9LQOA==}
+
+  '@cacheable/utils@2.1.0':
+    resolution: {integrity: sha512-ZdxfOiaarMqMj+H7qwlt5EBKWaeGihSYVHdQv5lUsbn8MJJOTW82OIwirQ39U5tMZkNvy3bQE+ryzC+xTAb9/g==}
 
   '@colors/colors@1.6.0':
     resolution: {integrity: sha512-Ir+AOibqzrIsL6ajt3Rz3LskB7OiMVHqltZmspbW/TJuTVuyOMirVqAkjfY6JISiLHgyNqicAC8AyHHGzNd/dA==}
@@ -559,6 +568,12 @@ packages:
   '@jridgewell/trace-mapping@0.3.29':
     resolution: {integrity: sha512-uw6guiW/gcAGPDhLmd77/6lW8QLeiV5RUTsAX46Db6oLhGaVj4lhnPwb184s1bkc8kdVg/+h988dro8GRDpmYQ==}
 
+  '@keyv/bigmap@1.1.0':
+    resolution: {integrity: sha512-MX7XIUNwVRK+hjZcAbNJ0Z8DREo+Weu9vinBOjGU1thEi9F6vPhICzBbk4CCf3eEefKRz7n6TfZXwUFZTSgj8Q==}
+    engines: {node: '>= 18'}
+    peerDependencies:
+      keyv: ^5.5.3
+
   '@keyv/redis@4.6.0':
     resolution: {integrity: sha512-FP3FP42RiQ3j0UC6f4Maf7ISTLAIivm37/SdfG5xvhqceMMq3kabtC6T4a2h5byMnh4S8PjP51DY/9CpyrcfsQ==}
     engines: {node: '>= 18'}
@@ -567,6 +582,9 @@ packages:
 
   '@keyv/serialize@1.0.3':
     resolution: {integrity: sha512-qnEovoOp5Np2JDGonIDL6Ayihw0RhnRh6vxPuHo4RDn1UOzwEo4AeIfpL6UGIrsceWrCMiVPgwRjbHu4vYFc3g==}
+
+  '@keyv/serialize@1.1.1':
+    resolution: {integrity: sha512-dXn3FZhPv0US+7dtJsIi2R+c7qWYiReoEh5zUntWCf4oSpMNib8FDhSoed6m3QyZdx5hK7iLFkYk3rNxwt8vTA==}
 
   '@napi-rs/wasm-runtime@0.2.11':
     resolution: {integrity: sha512-9DPkXtvHydrcOsopiYpUgPHpmj0HWZKMUnL2dZqpvC42lsratuBG06V5ipyno0fUek5VlFsNQ+AcFATSrJXgMA==}
@@ -906,8 +924,8 @@ packages:
   cache-manager@7.0.1:
     resolution: {integrity: sha512-Hd7FOyTtwhwLgkKeKQWEw6Ixj63VKuUWYwkGgL6g6Q7eISW6uxci5+DtUXlqI0gtbLCPPdhL1+HP9Zht27DbrA==}
 
-  cacheable@1.10.1:
-    resolution: {integrity: sha512-Fa2BZY0CS9F0PFc/6aVA6tgpOdw+hmv9dkZOlHXII5v5Hw+meJBIWDcPrG9q/dXxGcNbym5t77fzmawrBQfTmQ==}
+  cacheable@2.1.1:
+    resolution: {integrity: sha512-LmF4AXiSNdiRbI2UjH8pAp9NIXxeQsTotpEaegPiDcnN0YPygDJDV3l/Urc0mL72JWdATEorKqIHEx55nDlONg==}
 
   cachedir@2.3.0:
     resolution: {integrity: sha512-A+Fezp4zxnit6FanDmv9EqXNAi3vt9DWp51/71UEhXukb7QUuvtv9344h91dyAxuTLoSYJFU299qzR3tzwPAhw==}
@@ -1655,6 +1673,9 @@ packages:
   hookified@1.10.0:
     resolution: {integrity: sha512-dJw0492Iddsj56U1JsSTm9E/0B/29a1AuoSLRAte8vQg/kaTGF3IgjEWT8c8yG4cC10+HisE1x5QAwR0Xwc+DA==}
 
+  hookified@1.12.2:
+    resolution: {integrity: sha512-aokUX1VdTpI0DUsndvW+OiwmBpKCu/NgRsSSkuSY0zq8PY6Q6a+lmOfAFDXAAOtBqJELvcWY9L1EVtzjbQcMdg==}
+
   htmlparser2@10.0.0:
     resolution: {integrity: sha512-TwAZM+zE5Tq3lrEHvOlvwgj1XLWQCtaaibSN11Q+gGBAS7Y1uZSWwXXRe4iF6OXnaq1riyQAPFOBtYc77Mxq0g==}
 
@@ -1930,6 +1951,9 @@ packages:
 
   keyv@5.3.4:
     resolution: {integrity: sha512-ypEvQvInNpUe+u+w8BIcPkQvEqXquyyibWE/1NB5T2BTzIpS5cGEV1LZskDzPSTvNAaT4+5FutvzlvnkxOSKlw==}
+
+  keyv@5.5.3:
+    resolution: {integrity: sha512-h0Un1ieD+HUrzBH6dJXhod3ifSghk5Hw/2Y4/KHBziPlZecrFyE9YOTPU6eOs0V9pYl8gOs86fkr/KN8lUX39A==}
 
   kuler@2.0.0:
     resolution: {integrity: sha512-Xq9nH7KlWZmXAtodXDDRE7vs6DU1gTU8zYDHDiWLSip45Egwq3plLHzPn27NgvzL2r1LMPC1vdqh98sQxtqj4A==}
@@ -2256,6 +2280,10 @@ packages:
   punycode@2.3.1:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
+
+  qified@0.5.1:
+    resolution: {integrity: sha512-+BtFN3dCP+IaFA6IYNOu/f/uK1B8xD2QWyOeCse0rjtAebBmkzgd2d1OAXi3ikAzJMIBSdzZDNZ3wZKEUDQs5w==}
+    engines: {node: '>=20'}
 
   quansync@0.2.10:
     resolution: {integrity: sha512-t41VRkMYbkHyCYmOvx/6URnN80H7k4X0lLdBMGsz+maAwrJQYB1djpV6vHrQIBE0WBSGqhtEHrK9U3DWWH8v7A==}
@@ -2899,6 +2927,22 @@ snapshots:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.27.1
 
+  '@cacheable/memoize@2.0.3':
+    dependencies:
+      '@cacheable/utils': 2.1.0
+
+  '@cacheable/memory@2.0.3':
+    dependencies:
+      '@cacheable/memoize': 2.0.3
+      '@cacheable/utils': 2.1.0
+      '@keyv/bigmap': 1.1.0(keyv@5.5.3)
+      hookified: 1.12.2
+      keyv: 5.5.3
+
+  '@cacheable/utils@2.1.0':
+    dependencies:
+      keyv: 5.5.3
+
   '@colors/colors@1.6.0': {}
 
   '@commitlint/cli@19.8.1(@types/node@22.16.2)(typescript@5.8.3)':
@@ -3191,6 +3235,11 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.4
 
+  '@keyv/bigmap@1.1.0(keyv@5.5.3)':
+    dependencies:
+      hookified: 1.12.2
+      keyv: 5.5.3
+
   '@keyv/redis@4.6.0(keyv@5.3.4)':
     dependencies:
       '@redis/client': 1.6.1
@@ -3201,6 +3250,8 @@ snapshots:
   '@keyv/serialize@1.0.3':
     dependencies:
       buffer: 6.0.3
+
+  '@keyv/serialize@1.1.1': {}
 
   '@napi-rs/wasm-runtime@0.2.11':
     dependencies:
@@ -3568,10 +3619,14 @@ snapshots:
     dependencies:
       keyv: 5.3.4
 
-  cacheable@1.10.1:
+  cacheable@2.1.1:
     dependencies:
-      hookified: 1.10.0
-      keyv: 5.3.4
+      '@cacheable/memoize': 2.0.3
+      '@cacheable/memory': 2.0.3
+      '@cacheable/utils': 2.1.0
+      hookified: 1.12.2
+      keyv: 5.5.3
+      qified: 0.5.1
 
   cachedir@2.3.0: {}
 
@@ -4457,6 +4512,8 @@ snapshots:
 
   hookified@1.10.0: {}
 
+  hookified@1.12.2: {}
+
   htmlparser2@10.0.0:
     dependencies:
       domelementtype: 2.3.0
@@ -4722,6 +4779,10 @@ snapshots:
   keyv@5.3.4:
     dependencies:
       '@keyv/serialize': 1.0.3
+
+  keyv@5.5.3:
+    dependencies:
+      '@keyv/serialize': 1.1.1
 
   kuler@2.0.0: {}
 
@@ -5034,6 +5095,10 @@ snapshots:
   proxy-from-env@1.1.0: {}
 
   punycode@2.3.1: {}
+
+  qified@0.5.1:
+    dependencies:
+      hookified: 1.12.2
 
   quansync@0.2.10: {}
 
