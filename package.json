@@ -33,7 +33,7 @@
         "keyv": "^5.3.4",
         "lodash": "^4.17.21",
         "query-string": "^9.2.2",
-        "tsdown": "^0.12.9",
+        "tsdown": "^0.15.9",
         "winston": "^3.17.0"
     },
     "devDependencies": {
