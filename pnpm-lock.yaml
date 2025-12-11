@@ -24,8 +24,8 @@ importers:
         specifier: ^7.2.7
         version: 7.2.7
       cacheable:
-        specifier: ^1.10.4
-        version: 1.10.4
+        specifier: ^2.3.0
+        version: 2.3.0
       cross-env:
         specifier: ^7.0.3
         version: 7.0.3
@@ -211,6 +211,9 @@ packages:
   '@babel/types@7.28.5':
     resolution: {integrity: sha512-qQ5m48eI/MFLQ5PxQj4PFaprjyCTLI37ElWMmNs0K8Lk3dVeOdNpB3ks8jc7yM5CDmVC73eMVk/trk3fgmrUpA==}
     engines: {node: '>=6.9.0'}
+
+  '@cacheable/memory@2.0.6':
+    resolution: {integrity: sha512-7e8SScMocHxcAb8YhtkbMhGG+EKLRIficb1F5sjvhSYsWTZGxvg4KIDp8kgxnV2PUJ3ddPe6J9QESjKvBWRDkg==}
 
   '@cacheable/utils@2.3.2':
     resolution: {integrity: sha512-8kGE2P+HjfY8FglaOiW+y8qxcaQAfAhVML+i66XJR3YX5FtyDqn6Txctr3K2FrbxLKixRRYYBWMbuGciOhYNDg==}
@@ -566,6 +569,12 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
+  '@keyv/bigmap@1.3.0':
+    resolution: {integrity: sha512-KT01GjzV6AQD5+IYrcpoYLkCu1Jod3nau1Z7EsEuViO3TZGRacSbO9MfHmbJ1WaOXFtWLxPVj169cn2WNKPkIg==}
+    engines: {node: '>= 18'}
+    peerDependencies:
+      keyv: ^5.5.4
+
   '@keyv/redis@4.6.0':
     resolution: {integrity: sha512-FP3FP42RiQ3j0UC6f4Maf7ISTLAIivm37/SdfG5xvhqceMMq3kabtC6T4a2h5byMnh4S8PjP51DY/9CpyrcfsQ==}
     engines: {node: '>= 18'}
@@ -819,8 +828,8 @@ packages:
   cache-manager@7.2.7:
     resolution: {integrity: sha512-TKeeb9nSybk1e9E5yAiPVJ6YKdX9FYhwqqy8fBfVKAFVTJYZUNmeIvwjURW6+UikNsO6l2ta27thYgo/oumDsw==}
 
-  cacheable@1.10.4:
-    resolution: {integrity: sha512-Gd7ccIUkZ9TE2odLQVS+PDjIvQCdJKUlLdJRVvZu0aipj07Qfx+XIej7hhDrKGGoIxV5m5fT/kOJNJPQhQneRg==}
+  cacheable@2.3.0:
+    resolution: {integrity: sha512-HHiAvOBmlcR2f3SQ7kdlYD8+AUJG+wlFZ/Ze8tl1Vzvz0MdOh8IYA/EFU4ve8t1/sZ0j4MGi7ST5MoTwHessQA==}
 
   cachedir@2.3.0:
     resolution: {integrity: sha512-A+Fezp4zxnit6FanDmv9EqXNAi3vt9DWp51/71UEhXukb7QUuvtv9344h91dyAxuTLoSYJFU299qzR3tzwPAhw==}
@@ -2083,6 +2092,10 @@ packages:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
 
+  qified@0.5.3:
+    resolution: {integrity: sha512-kXuQdQTB6oN3KhI6V4acnBSZx8D2I4xzZvn9+wFLLFCoBNQY/sFnCW6c43OL7pOQ2HvGV4lnWIXNmgfp7cTWhQ==}
+    engines: {node: '>=20'}
+
   query-string@9.3.1:
     resolution: {integrity: sha512-5fBfMOcDi5SA9qj5jZhWAcTtDfKF5WFdd2uD9nVNlbxVv1baq65aALy6qofpNEGELHvisjjasxQp7BlM9gvMzw==}
     engines: {node: '>=18'}
@@ -2650,6 +2663,13 @@ snapshots:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.28.5
 
+  '@cacheable/memory@2.0.6':
+    dependencies:
+      '@cacheable/utils': 2.3.2
+      '@keyv/bigmap': 1.3.0(keyv@5.5.5)
+      hookified: 1.14.0
+      keyv: 5.5.5
+
   '@cacheable/utils@2.3.2':
     dependencies:
       hashery: 1.3.0
@@ -2978,6 +2998,12 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
+  '@keyv/bigmap@1.3.0(keyv@5.5.5)':
+    dependencies:
+      hashery: 1.3.0
+      hookified: 1.14.0
+      keyv: 5.5.5
+
   '@keyv/redis@4.6.0(keyv@5.5.5)':
     dependencies:
       '@redis/client': 1.6.1
@@ -3284,10 +3310,13 @@ snapshots:
       '@cacheable/utils': 2.3.2
       keyv: 5.5.5
 
-  cacheable@1.10.4:
+  cacheable@2.3.0:
     dependencies:
+      '@cacheable/memory': 2.0.6
+      '@cacheable/utils': 2.3.2
       hookified: 1.14.0
       keyv: 5.5.5
+      qified: 0.5.3
 
   cachedir@2.3.0: {}
 
@@ -4645,6 +4674,10 @@ snapshots:
   proxy-from-env@1.1.0: {}
 
   punycode@2.3.1: {}
+
+  qified@0.5.3:
+    dependencies:
+      hookified: 1.14.0
 
   query-string@9.3.1:
     dependencies:
