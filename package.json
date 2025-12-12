@@ -39,7 +39,7 @@
         "@babel/eslint-parser": "^7.28.5",
         "@babel/eslint-plugin": "^7.27.1",
         "@commitlint/cli": "^19.8.1",
-        "@commitlint/config-conventional": "^19.8.1",
+        "@commitlint/config-conventional": "^20.2.0",
         "@ecomfe/eslint-config": "^8.0.0",
         "@types/crypto-js": "^4.2.2",
         "@types/lodash": "^4.17.21",
