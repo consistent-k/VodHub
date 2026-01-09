@@ -28,7 +28,7 @@
         "directory-import": "^3.3.2",
         "dotenv": "^17.2.3",
         "hono": "^4.10.8",
-        "ioredis": "^5.8.2",
+        "ioredis": "^5.9.1",
         "keyv": "^5.5.5",
         "lodash": "^4.17.21",
         "query-string": "^9.3.1",
