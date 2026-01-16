@@ -16,7 +16,7 @@
         "commit": "git-cz"
     },
     "dependencies": {
-        "@hono/node-server": "^1.19.7",
+        "@hono/node-server": "^1.19.9",
         "@hono/zod-openapi": "^0.19.10",
         "@keyv/redis": "^4.6.0",
         "axios": "^1.13.2",
