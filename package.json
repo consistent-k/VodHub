@@ -38,7 +38,7 @@
         "@babel/core": "^7.29.0",
         "@babel/eslint-parser": "^7.28.6",
         "@babel/eslint-plugin": "^7.27.1",
-        "@commitlint/cli": "^19.8.1",
+        "@commitlint/cli": "^20.4.3",
         "@commitlint/config-conventional": "^19.8.1",
         "@ecomfe/eslint-config": "^8.0.0",
         "@types/crypto-js": "^4.2.2",
