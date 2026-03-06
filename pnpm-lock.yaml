@@ -73,8 +73,8 @@ importers:
         specifier: ^19.8.1
         version: 19.8.1(@types/node@25.3.3)(typescript@5.9.3)
       '@commitlint/config-conventional':
-        specifier: ^19.8.1
-        version: 19.8.1
+        specifier: ^20.4.3
+        version: 20.4.3
       '@ecomfe/eslint-config':
         specifier: ^8.0.0
         version: 8.0.0(@babel/core@7.29.0)(@babel/eslint-parser@7.28.6(@babel/core@7.29.0)(eslint@8.57.1))(@babel/eslint-plugin@7.27.1(@babel/eslint-parser@7.28.6(@babel/core@7.29.0)(eslint@8.57.1))(eslint@8.57.1))(@typescript-eslint/eslint-plugin@5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1)(typescript@5.9.3))(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.9.3))(eslint-plugin-import@2.32.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.9.3))(eslint@8.57.1))(eslint@8.57.1)
@@ -224,8 +224,8 @@ packages:
     engines: {node: '>=v18'}
     hasBin: true
 
-  '@commitlint/config-conventional@19.8.1':
-    resolution: {integrity: sha512-/AZHJL6F6B/G959CsMAzrPKKZjeEiAVifRyEwXxcT6qtqbPwGw+iQxmNS+Bu+i09OCtdNRW6pNpBvgPrtMr9EQ==}
+  '@commitlint/config-conventional@20.4.3':
+    resolution: {integrity: sha512-9RtLySbYQAs8yEqWEqhSZo9nYhbm57jx7qHXtgRmv/nmeQIjjMcwf6Dl+y5UZcGWgWx435TAYBURONaJIuCjWg==}
     engines: {node: '>=v18'}
 
   '@commitlint/config-validator@19.8.1':
@@ -304,8 +304,8 @@ packages:
     resolution: {integrity: sha512-/yCrWGCoA1SVKOks25EGadP9Pnj0oAIHGpl2wH2M2Y46dPM2ueb8wyCVOD7O3WCTkaJ0IkKvzhl1JY7+uCT2Dw==}
     engines: {node: '>=v18'}
 
-  '@commitlint/types@20.4.0':
-    resolution: {integrity: sha512-aO5l99BQJ0X34ft8b0h7QFkQlqxC6e7ZPVmBKz13xM9O8obDaM1Cld4sQlJDXXU/VFuUzQ30mVtHjVz74TuStw==}
+  '@commitlint/types@20.4.3':
+    resolution: {integrity: sha512-51OWa1Gi6ODOasPmfJPq6js4pZoomima4XLZZCrkldaH2V5Nb3bVhNXPeT6XV0gubbainSpTw4zi68NqAeCNCg==}
     engines: {node: '>=v18'}
 
   '@dabh/diagnostics@2.0.8':
@@ -952,9 +952,9 @@ packages:
     resolution: {integrity: sha512-ROjNchA9LgfNMTTFSIWPzebCwOGFdgkEq45EnvvrmSLvCtAw0HSmrCs7/ty+wAeYUZyNay0YMUNYFTRL72PkBQ==}
     engines: {node: '>=16'}
 
-  conventional-changelog-conventionalcommits@7.0.2:
-    resolution: {integrity: sha512-NKXYmMR/Hr1DevQegFB4MwfM5Vv0m4UIxKZTTYuD98lpTknaZlSRrDOG4X7wIXpGkfsYxZTghUN+Qq+T0YQI7w==}
-    engines: {node: '>=16'}
+  conventional-changelog-conventionalcommits@9.3.0:
+    resolution: {integrity: sha512-kYFx6gAyjSIMwNtASkI3ZE99U1fuVDJr0yTYgVy+I2QG46zNZfl2her+0+eoviG82c5WQvW1jMt1eOQTeJLodA==}
+    engines: {node: '>=18'}
 
   conventional-commit-types@3.0.0:
     resolution: {integrity: sha512-SmmCYnOniSsAa9GqWOeLqc179lfr5TRu5b4QFDkbsrJ5TZjPJx85wtOr3zn+1dbeNiXDKGPbZ72IKbPhLXh/Lg==}
@@ -1426,6 +1426,7 @@ packages:
   git-raw-commits@4.0.0:
     resolution: {integrity: sha512-ICsMM1Wk8xSGMowkOmPrzo2Fgmfo4bMHLNX6ytHjajRJUqvHOw/TFapQ+QG75c3X/tTDDhOSRPGC52dDbNM8FQ==}
     engines: {node: '>=16'}
+    deprecated: This package is no longer maintained. For the JavaScript API, please use @conventional-changelog/git-client instead.
     hasBin: true
 
   glob-parent@5.1.2:
@@ -1438,7 +1439,7 @@ packages:
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
-    deprecated: Glob versions prior to v9 are no longer supported
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   global-directory@4.0.1:
     resolution: {integrity: sha512-wHTUcDUoZ1H5/0iVqEudYW4/kAlN5cZ3j/bXn0Dpbizl9iaUVeWSHqiOjsgk6OW2bkLclbBjzewBz6weQ1zA2Q==}
@@ -2691,10 +2692,10 @@ snapshots:
       - '@types/node'
       - typescript
 
-  '@commitlint/config-conventional@19.8.1':
+  '@commitlint/config-conventional@20.4.3':
     dependencies:
-      '@commitlint/types': 19.8.1
-      conventional-changelog-conventionalcommits: 7.0.2
+      '@commitlint/types': 20.4.3
+      conventional-changelog-conventionalcommits: 9.3.0
 
   '@commitlint/config-validator@19.8.1':
     dependencies:
@@ -2703,7 +2704,7 @@ snapshots:
 
   '@commitlint/config-validator@20.4.0':
     dependencies:
-      '@commitlint/types': 20.4.0
+      '@commitlint/types': 20.4.3
       ajv: 8.18.0
     optional: true
 
@@ -2759,7 +2760,7 @@ snapshots:
       '@commitlint/config-validator': 20.4.0
       '@commitlint/execute-rule': 20.0.0
       '@commitlint/resolve-extends': 20.4.0
-      '@commitlint/types': 20.4.0
+      '@commitlint/types': 20.4.3
       cosmiconfig: 9.0.1(typescript@5.9.3)
       cosmiconfig-typescript-loader: 6.2.0(@types/node@25.3.3)(cosmiconfig@9.0.1(typescript@5.9.3))(typescript@5.9.3)
       is-plain-obj: 4.1.0
@@ -2798,7 +2799,7 @@ snapshots:
   '@commitlint/resolve-extends@20.4.0':
     dependencies:
       '@commitlint/config-validator': 20.4.0
-      '@commitlint/types': 20.4.0
+      '@commitlint/types': 20.4.3
       global-directory: 4.0.1
       import-meta-resolve: 4.2.0
       lodash.mergewith: 4.6.2
@@ -2823,11 +2824,10 @@ snapshots:
       '@types/conventional-commits-parser': 5.0.2
       chalk: 5.6.2
 
-  '@commitlint/types@20.4.0':
+  '@commitlint/types@20.4.3':
     dependencies:
       conventional-commits-parser: 6.3.0
       picocolors: 1.1.1
-    optional: true
 
   '@dabh/diagnostics@2.0.8':
     dependencies:
@@ -3031,8 +3031,7 @@ snapshots:
 
   '@rtsao/scc@1.1.0': {}
 
-  '@simple-libs/stream-utils@1.2.0':
-    optional: true
+  '@simple-libs/stream-utils@1.2.0': {}
 
   '@so-ric/colorspace@1.1.6':
     dependencies:
@@ -3443,7 +3442,7 @@ snapshots:
     dependencies:
       compare-func: 2.0.0
 
-  conventional-changelog-conventionalcommits@7.0.2:
+  conventional-changelog-conventionalcommits@9.3.0:
     dependencies:
       compare-func: 2.0.0
 
@@ -3460,7 +3459,6 @@ snapshots:
     dependencies:
       '@simple-libs/stream-utils': 1.2.0
       meow: 13.2.0
-    optional: true
 
   convert-source-map@2.0.0: {}
 
@@ -4490,8 +4488,7 @@ snapshots:
 
   meow@12.1.1: {}
 
-  meow@13.2.0:
-    optional: true
+  meow@13.2.0: {}
 
   merge-stream@2.0.0: {}
 
