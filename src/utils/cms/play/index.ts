@@ -1,10 +1,11 @@
-import { Context } from 'hono';
+import type { Context } from 'hono';
 
 import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
 import { PLAY_MESSAGE } from '@/constant/message';
+import type { Namespace } from '@/types';
 import logger from '@/utils/logger';
 
-export const handler = async (ctx: Context, namespace) => {
+export const handler = async (ctx: Context, namespace: Namespace) => {
     ctx.res.headers.set('Cache-Control', 'no-cache');
     try {
         const body = await ctx.req.json();
@@ -31,7 +32,7 @@ export const handler = async (ctx: Context, namespace) => {
             data: []
         };
     } catch (error) {
-        logger.error(`${PLAY_MESSAGE.ERROR} - ${namespace.name} - ${error}`);
+        logger.error(`${PLAY_MESSAGE.ERROR} - ${namespace.name} - ${error instanceof Error ? error.message : String(error)}`);
         return {
             code: SYSTEM_ERROR_CODE,
             message: PLAY_MESSAGE.ERROR,

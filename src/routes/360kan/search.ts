@@ -1,4 +1,4 @@
-import { Context } from 'hono';
+import type { Context } from 'hono';
 
 import { namespace } from './namespace';
 import request from './request';
@@ -107,17 +107,14 @@ const handler = async (ctx: Context) => {
         const { data, code } = res;
 
         if (code === 0) {
-            let newList: SearchData[] = [];
-            data.longData.rows.forEach((item) => {
-                newList.push({
-                    type_name: item.cat_name,
-                    type_id: item.cat_id,
-                    vod_id: `${item.en_id}+${item.cat_id}`,
-                    vod_name: item.titleTxt,
-                    vod_pic: !item.cover.startsWith('http') ? `https:${item.cover}` : item.cover,
-                    vod_remarks: item.coverInfo.duration
-                });
-            });
+            const newList: SearchData[] = data.longData.rows.map((item) => ({
+                type_name: item.cat_name,
+                type_id: item.cat_id,
+                vod_id: `${item.en_id}+${item.cat_id}`,
+                vod_name: item.titleTxt,
+                vod_pic: !item.cover.startsWith('http') ? `https:${item.cover}` : item.cover,
+                vod_remarks: item.coverInfo.duration
+            }));
 
             return {
                 code: SUCCESS_CODE,
@@ -134,7 +131,7 @@ const handler = async (ctx: Context) => {
         };
     } catch (error) {
         ctx.res.headers.set('Cache-Control', 'no-cache');
-        logger.error(`${SEARCH_MESSAGE.ERROR} - ${namespace.name} - ${error}`);
+        logger.error(`${SEARCH_MESSAGE.ERROR} - ${namespace.name} - ${error instanceof Error ? error.message : String(error)}`);
         return {
             code: SYSTEM_ERROR_CODE,
             message: SEARCH_MESSAGE.ERROR,

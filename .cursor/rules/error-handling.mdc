@@ -1,0 +1,82 @@
+---
+description: Error handling patterns, status codes, and logging rules
+globs: ["src/**/*.ts", "src/**/*.tsx"]
+alwaysApply: true
+---
+
+# Error Handling Rules
+
+## Status Codes
+
+Always use the constants from `@/constant/code`:
+
+| Constant | Value | Meaning |
+|---|---|---|
+| `SUCCESS_CODE` | `0` | Successful response |
+| `ERROR_CODE` | `-1` | Business logic error (upstream returned non-success) |
+| `SYSTEM_ERROR_CODE` | `-2` | Exception/catch error |
+
+## Handler Error Pattern
+
+Every handler must follow this structure. Never throw errors to the framework:
+
+```typescript
+import { SUCCESS_CODE, ERROR_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
+import { SEARCH_MESSAGE } from '@/constant/message';
+import logger from '@/utils/logger';
+
+const handler = async (ctx) => {
+    try {
+        logger.info(`${SEARCH_MESSAGE.INFO} - ${namespace.name}`);
+
+        const res = await someRequest(/* ... */);
+
+        if (res.code === 1) {
+            // Success path
+            return {
+                code: SUCCESS_CODE,
+                message: SEARCH_MESSAGE.SUCCESS,
+                data: transformData(res)
+            };
+        }
+
+        // Upstream returned non-success
+        logger.error(`${SEARCH_MESSAGE.ERROR} - ${namespace.name} - ${JSON.stringify(res)}`);
+        return {
+            code: ERROR_CODE,
+            message: SEARCH_MESSAGE.ERROR,
+            data: []
+        };
+    } catch (error) {
+        // Exception path — prevent caching failed responses
+        ctx.res.headers.set('Cache-Control', 'no-cache');
+        logger.error(`${SEARCH_MESSAGE.ERROR} - ${namespace.name} - ${error}`);
+        return {
+            code: SYSTEM_ERROR_CODE,
+            message: SEARCH_MESSAGE.ERROR,
+            data: []
+        };
+    }
+};
+```
+
+## Key Rules
+
+- **Never throw** — always return a structured `{ code, message, data }` object
+- **Set no-cache on errors** — `ctx.res.headers.set('Cache-Control', 'no-cache')` in catch blocks to prevent caching failed responses
+- **Log every error** — use `logger.error()` including the namespace name for traceability
+- **Empty data on failure** — always return `data: []` on error
+- **Use message constants** — import from `@/constant/message` (e.g., `HOME_MESSAGE`, `SEARCH_MESSAGE`, `DETAIL_MESSAGE`)
+- **Log info on entry** — `logger.info()` at the start of each handler with the action and namespace name
+
+## CMS vs Custom Error Handling
+
+- **CMS handlers** (`utils/cms/*/index.ts`): Check `res.code === 1` for success (CMS convention)
+- **Custom handlers**: Implement the same try/catch/return pattern inline in the route file
+
+## Logging
+
+Use the logger from `@/utils/logger` (Winston-based). Available methods:
+- `logger.info()` — normal operations
+- `logger.error()` — all error cases
+- Logger is configured in `src/config/index.ts` with file output and timestamps

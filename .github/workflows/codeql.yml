@@ -1,0 +1,29 @@
+name: CodeQL
+
+on:
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
+    schedule:
+        - cron: '0 6 * * 1'
+
+jobs:
+    analyze:
+        runs-on: ubuntu-latest
+
+        permissions:
+            security-events: write
+
+        steps:
+            - name: 检查代码
+              uses: actions/checkout@v4
+
+            - name: 初始化 CodeQL
+              uses: github/codeql-action/init@v3
+              with:
+                  languages: javascript-typescript
+                  queries: security-extended
+
+            - name: CodeQL 扫描
+              uses: github/codeql-action/analyze@v3

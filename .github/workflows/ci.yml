@@ -1,0 +1,61 @@
+name: CI
+
+on:
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
+
+jobs:
+    lint-and-typecheck:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: 检查代码
+              uses: actions/checkout@v4
+
+            - name: 安装 pnpm
+              uses: pnpm/action-setup@v4
+
+            - name: 安装 Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 24
+                  cache: pnpm
+
+            - name: 安装依赖
+              run: pnpm install --frozen-lockfile
+
+            - name: ESLint 检查
+              run: pnpm lint
+
+            - name: TypeScript 类型检查
+              run: pnpm typecheck
+
+            - name: Prettier 格式检查
+              run: pnpm format:check
+
+    commitlint:
+        if: github.event_name == 'pull_request'
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: 检查代码
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: 安装 pnpm
+              uses: pnpm/action-setup@v4
+
+            - name: 安装 Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 24
+                  cache: pnpm
+
+            - name: 安装依赖
+              run: pnpm install --frozen-lockfile
+
+            - name: Commitlint 检查
+              run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose

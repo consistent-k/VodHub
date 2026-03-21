@@ -1,22 +1,21 @@
-import { Context } from 'hono';
+import type { Context } from 'hono';
 
 import request from '../request';
 
 import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
 import { CATEGORY_MESSAGE } from '@/constant/message';
 import { USER_AGENT_CHROME } from '@/constant/userAgent';
-import { CategoryVodData } from '@/types';
-import { CMSDetailData } from '@/types/cms';
+import type { CategoryVodData, Namespace } from '@/types';
+import type { CMSDetailData } from '@/types/cms';
 import logger from '@/utils/logger';
 
-export const handler = async (ctx: Context, namespace) => {
+export const handler = async (ctx: Context, namespace: Namespace) => {
     try {
         const body = await ctx.req.json();
         logger.info(`${CATEGORY_MESSAGE.INFO} - ${namespace.name} - ${JSON.stringify(body)}`);
         const { id, page, filters } = body;
-        // filters: { class, area, lang, year }
 
-        let res = await request.get<CMSDetailData>(`${namespace.url}/api.php/provide/vod`, {
+        const res = await request.get<CMSDetailData>(`${namespace.url}/api.php/provide/vod`, {
             params: {
                 ac: 'detail',
                 t: id,
@@ -56,7 +55,7 @@ export const handler = async (ctx: Context, namespace) => {
         };
     } catch (error) {
         ctx.res.headers.set('Cache-Control', 'no-cache');
-        logger.error(`${CATEGORY_MESSAGE.ERROR} - ${namespace.name} - ${error}`);
+        logger.error(`${CATEGORY_MESSAGE.ERROR} - ${namespace.name} - ${error instanceof Error ? error.message : String(error)}`);
         return {
             code: SYSTEM_ERROR_CODE,
             message: CATEGORY_MESSAGE.ERROR,

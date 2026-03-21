@@ -1,0 +1,69 @@
+---
+description: General project overview, architecture, and development commands for VodHub
+globs: ["**/*.ts", "**/*.tsx"]
+alwaysApply: true
+---
+
+# VodHub General Rules
+
+## Project Overview
+
+VodHub is a video aggregation API service built with **Hono** on Node.js. It normalizes multiple video source providers into a unified REST API supporting categories, search, details, and playback. TypeScript throughout, pnpm as package manager.
+
+## Tech Stack
+
+- **Runtime**: Node.js >= 24, ESM (`"type": "module"` in package.json)
+- **Framework**: Hono (web framework) with `@hono/node-server`
+- **HTTP Client**: Axios
+- **Caching**: cache-manager with in-memory LRU + optional Redis via Keyv
+- **Logging**: Winston
+- **Utilities**: lodash, dayjs, CryptoJS, query-string
+
+## Project Structure
+
+```
+src/
+  index.ts          # Server entry: boots @hono/node-server
+  app.tsx           # Hono app: global middleware + route mounting
+  api/              # OpenAPI metadata routes
+  config/           # App config (port, cache TTL, banned keywords)
+  constant/         # Status codes, messages, user-agents, word lists
+  middleware/        # Cache middleware, JSON response middleware
+  routes/           # Provider route directories (auto-discovered)
+    registry.ts     # Dynamic route loader using directory-import
+  types/            # Core types (Namespace, Route, HomeData, etc.)
+  utils/            # Shared CMS handlers, cache, logger, filters
+```
+
+## Development Commands
+
+```bash
+pnpm install          # Install dependencies
+pnpm dev              # Start dev server with hot reload (tsx watch)
+pnpm start            # Start server without watch
+```
+
+No test framework is configured. Linting and type checking:
+
+```bash
+npx eslint src/ --ext .ts,.tsx        # Lint
+npx eslint src/ --ext .ts,.tsx --fix  # Lint with auto-fix
+npx prettier --cache --write "src/**/*.{ts,tsx}"  # Format
+npx tsc --noEmit                      # Type check
+```
+
+Commits use **commitizen** with conventional commits. Run `pnpm commit` for the interactive prompt.
+
+## Route URL Pattern
+
+All routes follow: `GET/POST /api/vodhub/<provider>/<action>`
+
+Actions per provider: `home`, `homeVod`, `category`, `detail`, `play`, `search`
+
+## Global Middleware Order
+
+1. `cors()` - CORS handling
+2. `trimTrailingSlash()` - Trailing slash normalization
+3. `compress()` - Response compression
+4. `jsonReturn` - JSON response serialization
+5. `cache` - Redis/memory caching with deduplication

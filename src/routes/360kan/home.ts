@@ -1,91 +1,24 @@
+import type { Context } from 'hono';
+
 import { namespace } from './namespace';
 
 import { SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
 import { HOME_MESSAGE } from '@/constant/message';
-import { HomeData, HomeRoute } from '@/types';
+import type { HomeData, HomeRoute } from '@/types';
 import { filterHomeData } from '@/utils/filters';
 import logger from '@/utils/logger';
 
-const YearList = [
-    {
-        label: '全部',
-        value: ''
-    },
-    {
-        label: '2024',
-        value: '2024'
-    },
-    {
-        label: '2023',
-        value: '2023'
-    },
-    {
-        label: '2022',
-        value: '2022'
-    },
-    {
-        label: '2021',
-        value: '2021'
-    },
-    {
-        label: '2020',
-        value: '2020'
-    },
-    {
-        label: '2019',
-        value: '2019'
-    },
-    {
-        label: '2018',
-        value: '2018'
-    },
-    {
-        label: '2017',
-        value: '2017'
-    },
-    {
-        label: '2016',
-        value: '2016'
-    },
-    {
-        label: '2015',
-        value: '2015'
-    },
-    {
-        label: '2014',
-        value: '2014'
-    },
-    {
-        label: '2013',
-        value: '2013'
-    },
-    {
-        label: '2012',
-        value: '2012'
-    },
-    {
-        label: '2010',
-        value: '2010'
-    },
-    {
-        label: '2009',
-        value: '2009'
-    },
-    {
-        label: '2008',
-        value: '2008'
-    },
-    {
-        label: '2007',
-        value: '2007'
-    },
-    {
-        label: '更早',
-        value: 'lt_year'
-    }
+const currentYear = new Date().getFullYear();
+const yearOptions = [
+    { label: '全部', value: '' },
+    ...Array.from({ length: currentYear - 2006 }, (_, i) => {
+        const year = currentYear - i;
+        return { label: String(year), value: String(year) };
+    }),
+    { label: '更早', value: 'lt_year' }
 ];
 
-const handler = async (ctx) => {
+const handler = async (ctx: Context) => {
     try {
         logger.info(`${HOME_MESSAGE.INFO} - ${namespace.name}`);
         const newList: HomeData[] = [
@@ -237,7 +170,7 @@ const handler = async (ctx) => {
                     },
                     {
                         type: 'year',
-                        children: YearList
+                        children: yearOptions
                     },
                     {
                         type: 'order',
@@ -398,7 +331,7 @@ const handler = async (ctx) => {
                     },
                     {
                         type: 'year',
-                        children: YearList
+                        children: yearOptions
                     },
                     {
                         type: 'order',
@@ -727,7 +660,7 @@ const handler = async (ctx) => {
                     },
                     {
                         type: 'year',
-                        children: YearList
+                        children: yearOptions
                     },
                     {
                         type: 'area',
@@ -774,7 +707,7 @@ const handler = async (ctx) => {
         };
     } catch (error) {
         ctx.res.headers.set('Cache-Control', 'no-cache');
-        logger.error(`${HOME_MESSAGE.ERROR} - ${namespace.name} - ${error}`);
+        logger.error(`${HOME_MESSAGE.ERROR} - ${namespace.name} - ${error instanceof Error ? error.message : String(error)}`);
         return {
             code: SYSTEM_ERROR_CODE,
             message: HOME_MESSAGE.ERROR,

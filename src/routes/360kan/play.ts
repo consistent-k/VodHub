@@ -1,4 +1,4 @@
-import { Context } from 'hono';
+import type { Context } from 'hono';
 
 import { namespace } from './namespace';
 
@@ -14,7 +14,6 @@ const handler = async (ctx: Context) => {
         logger.info(`${PLAY_MESSAGE.INFO} - ${namespace.name} - ${JSON.stringify(body)}`);
 
         const { url } = body;
-        let play_type = '';
 
         if (url.length > 0) {
             return {
@@ -22,7 +21,7 @@ const handler = async (ctx: Context) => {
                 message: PLAY_MESSAGE.SUCCESS,
                 data: [
                     {
-                        play_type,
+                        play_type: '',
                         play_url: `https://jx.xmflv.com/?url=${url}`
                     }
                 ]
@@ -35,7 +34,7 @@ const handler = async (ctx: Context) => {
             data: []
         };
     } catch (error) {
-        logger.error(`${PLAY_MESSAGE.ERROR} - ${namespace.name} - ${error}`);
+        logger.error(`${PLAY_MESSAGE.ERROR} - ${namespace.name} - ${error instanceof Error ? error.message : String(error)}`);
         return {
             code: SYSTEM_ERROR_CODE,
             message: PLAY_MESSAGE.ERROR,

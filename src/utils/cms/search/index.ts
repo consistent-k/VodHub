@@ -1,16 +1,16 @@
-import { Context } from 'hono';
+import type { Context } from 'hono';
 
 import request from '../request';
 
 import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
 import { SEARCH_MESSAGE } from '@/constant/message';
 import { USER_AGENT_CHROME } from '@/constant/userAgent';
-import { SearchData } from '@/types';
-import { CMSDetailData } from '@/types/cms';
+import type { Namespace, SearchData } from '@/types';
+import type { CMSDetailData } from '@/types/cms';
 import { filterSearchData } from '@/utils/filters';
 import logger from '@/utils/logger';
 
-export const handler = async (ctx: Context, namespace) => {
+export const handler = async (ctx: Context, namespace: Namespace) => {
     try {
         const body = await ctx.req.json();
         logger.info(`${SEARCH_MESSAGE.INFO} - ${namespace.name} - ${JSON.stringify(body)}`);
@@ -56,7 +56,7 @@ export const handler = async (ctx: Context, namespace) => {
         };
     } catch (error) {
         ctx.res.headers.set('Cache-Control', 'no-cache');
-        logger.error(`${SEARCH_MESSAGE.ERROR} - ${namespace.name} - ${error}`);
+        logger.error(`${SEARCH_MESSAGE.ERROR} - ${namespace.name} - ${error instanceof Error ? error.message : String(error)}`);
         return {
             code: SYSTEM_ERROR_CODE,
             message: SEARCH_MESSAGE.ERROR,

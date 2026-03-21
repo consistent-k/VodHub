@@ -1,19 +1,19 @@
-import { Context } from 'hono';
+import type { Context } from 'hono';
 
 import request from '../request';
 
 import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
 import { HOME_MESSAGE } from '@/constant/message';
 import { USER_AGENT_CHROME } from '@/constant/userAgent';
-import { HomeData } from '@/types';
-import { CMSHomeData } from '@/types/cms';
+import type { HomeData, Namespace } from '@/types';
+import type { CMSHomeData } from '@/types/cms';
 import { filterHomeData } from '@/utils/filters';
 import logger from '@/utils/logger';
 
-export const handler = async (ctx: Context, namespace) => {
+export const handler = async (ctx: Context, namespace: Namespace) => {
     try {
         logger.info(`${HOME_MESSAGE.INFO} - ${namespace.name}`);
-        let res = await request.get<CMSHomeData>(`${namespace.url}/api.php/provide/vod`, {
+        const res = await request.get<CMSHomeData>(`${namespace.url}/api.php/provide/vod`, {
             params: {
                 ac: 'list'
             },
@@ -47,7 +47,7 @@ export const handler = async (ctx: Context, namespace) => {
         };
     } catch (error) {
         ctx.res.headers.set('Cache-Control', 'no-cache');
-        logger.error(`${HOME_MESSAGE.ERROR} - ${namespace.name} - ${error}`);
+        logger.error(`${HOME_MESSAGE.ERROR} - ${namespace.name} - ${error instanceof Error ? error.message : String(error)}`);
         return {
             code: SYSTEM_ERROR_CODE,
             message: HOME_MESSAGE.ERROR,
