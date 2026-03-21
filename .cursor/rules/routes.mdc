@@ -1,0 +1,105 @@
+---
+description: Rules for creating and modifying provider routes in VodHub
+globs: ["src/routes/**/*.ts"]
+alwaysApply: false
+---
+
+# Provider Route Rules
+
+## Creating a New CMS Provider (Recommended)
+
+For standard CMS sources, only `namespace.ts` and `index.ts` are needed:
+
+1. Create `src/routes/<provider-name>/` directory
+2. Add `namespace.ts` with provider metadata
+3. Add `index.ts` that uses the factory:
+   ```typescript
+   import { namespace } from './namespace';
+   import { createCMSRoutes } from '@/utils/cms/factory';
+   export const routes = createCMSRoutes(namespace);
+   ```
+4. Routes auto-register via `directory-import` in `registry.ts`
+
+## namespace.ts Pattern
+
+```typescript
+import type { Namespace } from '@/types';
+
+export const namespace: Namespace = {
+    name: 'Provider Name',
+    url: 'https://example.com',
+    description: 'Provider description'
+};
+```
+
+## Creating a Custom Provider (e.g., 360kan)
+
+For non-CMS sources, create individual route files. Each file exports a single `route` object:
+
+```
+src/routes/<provider>/
+  namespace.ts
+  home.ts
+  homeVod.ts
+  category.ts
+  detail.ts
+  play.ts
+  search.ts
+```
+
+Route file pattern:
+
+```typescript
+import type { Context } from 'hono';
+import { namespace } from './namespace';
+import { SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
+import { HOME_MESSAGE } from '@/constant/message';
+import type { HomeRoute, HomeData } from '@/types';
+import { filterHomeData } from '@/utils/filters';
+import logger from '@/utils/logger';
+
+const handler = async (ctx: Context) => {
+    try {
+        logger.info(`${HOME_MESSAGE.INFO} - ${namespace.name}`);
+        // ... custom logic to fetch and transform data
+        return {
+            code: SUCCESS_CODE,
+            message: HOME_MESSAGE.SUCCESS,
+            data: filterHomeData(newList)
+        };
+    } catch (error) {
+        ctx.res.headers.set('Cache-Control', 'no-cache');
+        logger.error(`${HOME_MESSAGE.ERROR} - ${namespace.name} - ${error instanceof Error ? error.message : String(error)}`);
+        return {
+            code: SYSTEM_ERROR_CODE,
+            message: HOME_MESSAGE.ERROR,
+            data: []
+        };
+    }
+};
+
+export const route: HomeRoute = {
+    path: '/home',
+    name: 'home',
+    example: '/360kan/home',
+    description: '首页分类列表',
+    handler
+};
+```
+
+## Route Object Shape
+
+Every route must conform to its typed `RouteItem<T>`:
+- `path`: string or string[] — URL path segment(s)
+- `name`: string — route identifier (matches filename)
+- `example`: string — example URL path
+- `description`: string — what the route does
+- `handler`: (ctx: Context) => Promise<T> | T
+- `method?`: 'GET' | 'POST' — defaults to GET
+
+## Registry Auto-Discovery
+
+The registry (`src/routes/registry.ts`) auto-discovers routes via `directory-import`:
+- `namespace` export → provider metadata
+- `routes` export → array of route objects (from factory)
+- `route` export → single route object (custom provider)

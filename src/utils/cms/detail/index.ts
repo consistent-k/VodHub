@@ -1,28 +1,25 @@
-import { Context } from 'hono';
+import type { Context } from 'hono';
 
 import request from '../request';
 
 import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
 import { DETAIL_MESSAGE } from '@/constant/message';
 import { USER_AGENT_CHROME } from '@/constant/userAgent';
+import type { Namespace } from '@/types';
 import { DetailData, VodPlayList } from '@/types';
-import { CMSDetailData } from '@/types/cms';
+import type { CMSDetailData } from '@/types/cms';
 import { formatVodContent } from '@/utils/format';
 import logger from '@/utils/logger';
 
-function parseEpisodes(str): VodPlayList['urls'] {
+function parseEpisodes(str: string): VodPlayList['urls'] {
     const arr = str.split('#')?.filter((item) => item);
-    const episodes: VodPlayList['urls'] = [];
-    arr.forEach((item) => {
-        episodes.push({
-            name: item.split('$')[0],
-            url: item.split('$')[1]
-        });
-    });
-    return episodes;
+    return arr.map((item) => ({
+        name: item.split('$')[0],
+        url: item.split('$')[1]
+    }));
 }
 
-export const handler = async (ctx: Context, namespace) => {
+export const handler = async (ctx: Context, namespace: Namespace) => {
     try {
         const body = await ctx.req.json();
         logger.info(`${DETAIL_MESSAGE.INFO} - ${namespace.name} - ${JSON.stringify(body)}`);
@@ -77,7 +74,7 @@ export const handler = async (ctx: Context, namespace) => {
         };
     } catch (error) {
         ctx.res.headers.set('Cache-Control', 'no-cache');
-        logger.error(`${DETAIL_MESSAGE.ERROR} - ${namespace.name} - ${error}`);
+        logger.error(`${DETAIL_MESSAGE.ERROR} - ${namespace.name} - ${error instanceof Error ? error.message : String(error)}`);
         return {
             code: SYSTEM_ERROR_CODE,
             message: DETAIL_MESSAGE.ERROR,

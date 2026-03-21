@@ -1,4 +1,4 @@
-import { Context } from 'hono';
+import type { Context } from 'hono';
 
 import { namespace } from './namespace';
 import request from './request';
@@ -76,7 +76,7 @@ const handler = async (ctx: Context) => {
 
         const { id } = body;
 
-        let tid_list = id.split('+');
+        const tid_list = id.split('+');
 
         const res = await request.get<DetailDataOrigin>(`${namespace.url}/v1/detail`, {
             params: {
@@ -102,14 +102,15 @@ const handler = async (ctx: Context) => {
             };
 
             for (const playFormat of data.playlink_sites) {
-                let vodItems: VodPlayList['urls'] = [];
-                let items = data.playlinksdetail[playFormat];
-                let episodeUrl = items.default_url;
-                let episodeName = items.quality || items.title || '默认';
-                vodItems.push({
-                    name: episodeName,
-                    url: episodeUrl
-                });
+                const items = data.playlinksdetail[playFormat];
+                const episodeUrl = items.default_url;
+                const episodeName = items.quality || items.title || '默认';
+                const vodItems: VodPlayList['urls'] = [
+                    {
+                        name: episodeName,
+                        url: episodeUrl
+                    }
+                ];
 
                 if (vodItems.length > 0) {
                     const playlist: VodPlayList = {
@@ -135,7 +136,7 @@ const handler = async (ctx: Context) => {
         };
     } catch (error) {
         ctx.res.headers.set('Cache-Control', 'no-cache');
-        logger.error(`${DETAIL_MESSAGE.ERROR} - ${namespace.name} - ${error}`);
+        logger.error(`${DETAIL_MESSAGE.ERROR} - ${namespace.name} - ${error instanceof Error ? error.message : String(error)}`);
         return {
             code: SYSTEM_ERROR_CODE,
             message: DETAIL_MESSAGE.ERROR,

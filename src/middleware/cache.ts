@@ -14,15 +14,15 @@ const middleware: MiddlewareHandler = async (ctx, next) => {
     let bodyHash = '';
 
     if (method === 'POST') {
-        const body = await ctx.req.json();
-        ctx.set('parsedBody', body);
+        const clonedReq = ctx.req.raw.clone();
+        const body = await clonedReq.json();
         bodyHash = '-' + CryptoJS.MD5(JSON.stringify(body)).toString(Hex);
     }
 
     const cacheKey = `vod-hub:redis-cache:${path}${bodyHash}`;
     const pathKey = `vod-hub:path-requested:${path}${bodyHash}`;
 
-    const isRequesting = await cache.get(pathKey); // 判断是否正在请求
+    const isRequesting = await cache.get(pathKey);
 
     if (isRequesting === '1') {
         let retryTimes = 10;
@@ -41,13 +41,17 @@ const middleware: MiddlewareHandler = async (ctx, next) => {
         }
     }
 
-    const value: string | null = await cache.get(cacheKey);
+    const value = await cache.get(cacheKey);
 
     if (value) {
         ctx.status(200);
         ctx.header('Vod-Hub-Cache-Status', 'HIT');
         logger.info(`Cache hit for ${ctx.req.method} ${ctx.req.path}`);
-        ctx.set('data', JSON.parse(value));
+        try {
+            ctx.set('data', JSON.parse(value as string));
+        } catch {
+            logger.error(`Cache parse error for ${cacheKey}`);
+        }
         await next();
         return;
     }
@@ -62,6 +66,7 @@ const middleware: MiddlewareHandler = async (ctx, next) => {
             await cache.set(cacheKey, JSON.stringify(data));
         }
     } catch (error) {
+        logger.error(`Cache middleware error for ${path}: ${error instanceof Error ? error.message : String(error)}`);
         throw error;
     } finally {
         await cache.set(pathKey, '0');

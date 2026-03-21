@@ -5,7 +5,7 @@ import winston from 'winston';
 import { config } from '@/config';
 
 const logger = winston.createLogger({
-    level: config.looger.level,
+    level: config.logger.level,
     format: winston.format.combine(
         winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss.SSS' }),
         winston.format.printf((info) =>
@@ -16,7 +16,7 @@ const logger = winston.createLogger({
             })
         )
     ),
-    transports: config.looger.createFile
+    transports: config.logger.createFile
         ? [
               new winston.transports.File({
                   filename: path.resolve('logs/error.log'),
@@ -31,7 +31,7 @@ if (process.env.NODE_ENV !== 'production') {
     logger.add(
         new winston.transports.Console({
             format: winston.format.printf((info) => {
-                const infoLevel = winston.format.colorize().colorize(info.level, config.looger.showTimestamp ? `[${info.timestamp}] ${info.level}` : info.level);
+                const infoLevel = winston.format.colorize().colorize(info.level, config.logger.showTimestamp ? `[${info.timestamp}] ${info.level}` : info.level);
                 return `${infoLevel}: ${info.message}`;
             }),
             silent: false

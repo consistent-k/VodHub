@@ -1,13 +1,11 @@
 import type { Context } from 'hono';
 
 // namespace
-interface Namespace {
+export interface Namespace {
     name: string;
     url?: string;
     description?: string;
 }
-
-export type { Namespace };
 
 // route
 interface RouteItem<T> {

@@ -1,0 +1,74 @@
+---
+description: Code style, formatting, naming conventions, imports, and type rules
+globs: ["src/**/*.ts", "src/**/*.tsx"]
+alwaysApply: true
+---
+
+# Code Style Rules
+
+## Formatting (Prettier)
+
+- Single quotes for strings
+- No trailing commas
+- 4-space indentation (`tabWidth: 4`)
+- 200 character print width
+- LF line endings
+- Always use semicolons
+
+## Imports
+
+```typescript
+// Node built-ins — use node: prefix
+import { join } from 'node:path';
+
+// External packages
+import axios from 'axios';
+import { Hono } from 'hono';
+
+// Internal modules — use @/ alias for src/
+import { namespace } from '@/types';
+import { SUCCESS_CODE } from '@/constant/code';
+
+// Relative imports — within same provider directory
+import { namespace } from './namespace';
+```
+
+- Import groups must be separated by blank lines: builtins → externals → internals
+- Alphabetize imports within each group
+- Use `import type` for type-only imports: `import type { Namespace } from '@/types'`
+
+## Naming Conventions
+
+| Item | Convention | Example |
+|---|---|---|
+| Variables, functions, parameters | `camelCase` | `getLocalhostAddress`, `cacheKey` |
+| Types, interfaces, classes | `PascalCase` | `HomeData`, `RouteItem`, `CMSResponse` |
+| Constants | `UPPER_SNAKE_CASE` | `SUCCESS_CODE`, `BANNED_KEYWORDS` |
+| Handler functions in routes | Always `handler` | `const handler = async (ctx) => { ... }` |
+| Route files | Standard names | `namespace.ts`, `home.ts`, `category.ts`, `detail.ts`, `play.ts`, `search.ts` |
+
+## Type System
+
+- Define shared types in `src/types/`
+- Use `RouteItem<T>` generic for typed route definitions:
+  ```typescript
+  type HomeRoute = RouteItem<{ code: number; data: HomeData[] }>;
+  type SearchRoute = RouteItem<{ code: number; data: SearchData[] }>;
+  ```
+- Use `Namespace` type for provider metadata
+- `noImplicitAny` is `false` — explicit types not enforced everywhere, but prefer them for public APIs
+- Avoid using `any` — ESLint rule `@typescript-eslint/no-explicit-any` is set to `"error"`
+
+## Exports
+
+- **Named exports only** — no default exports (except custom error classes)
+- Each route file exports a `route` object conforming to the typed `Route` interface
+- Each namespace file exports a `namespace` object conforming to `Namespace`
+- Handler functions in utils use `export const handler`
+
+## General Rules
+
+- No comments unless explicitly requested
+- Use `const` over `let`; avoid `var`
+- Prefer `async/await` over `.then()` chains
+- The project uses ESM — use `import`/`export`, not `require()`

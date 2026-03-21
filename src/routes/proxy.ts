@@ -1,22 +1,40 @@
 import { Hono } from 'hono';
+import type { Context } from 'hono';
 import queryString from 'query-string';
 
 import { omitHeaders } from '@/utils/headers';
+import logger from '@/utils/logger';
+
+const ALLOWED_PROXY_TARGETS = (process.env.ALLOWED_PROXY_TARGETS || '').split(',').filter(Boolean);
 
 const app = new Hono();
 
-async function handleProxyRequest(ctx, method = 'GET') {
+function isAllowedTarget(target: string): boolean {
+    if (ALLOWED_PROXY_TARGETS.length === 0) {
+        return false;
+    }
+    try {
+        const url = new URL(target);
+        return ALLOWED_PROXY_TARGETS.some((allowed) => url.hostname.endsWith(allowed));
+    } catch {
+        return false;
+    }
+}
+
+async function handleProxyRequest(ctx: Context, method = 'GET') {
     const query = ctx.req.query();
     const strParams = queryString.stringify(query);
     const target = ctx.req.header('x-proxy-target') || '';
     const path = ctx.req.header('x-proxy-path');
 
-    // 检查必要的 headers 是否存在
     if (!target) {
         return ctx.json({ error: 'header x-proxy-target is required' }, 400);
     }
     if (!path) {
         return ctx.json({ error: 'header x-proxy-path is required' }, 400);
+    }
+    if (!isAllowedTarget(target)) {
+        return ctx.json({ error: 'target not allowed' }, 403 as const);
     }
 
     const headers = ctx.req.header();
@@ -34,13 +52,13 @@ async function handleProxyRequest(ctx, method = 'GET') {
         });
 
         if (!response.ok) {
-            return ctx.json({ error: 'Failed to proxy request' }, response.status);
+            return ctx.json({ error: 'Failed to proxy request' }, response.status as 400 | 500);
         }
 
-        const newResponse = new Response(response.body, response);
-        return newResponse;
+        const { status, statusText, headers: resHeaders } = response;
+        return new Response(response.body, { status, statusText, headers: resHeaders });
     } catch (error) {
-        console.error('Proxy request failed:', error);
+        logger.error(`Proxy request failed: ${error instanceof Error ? error.message : String(error)}`);
         return ctx.json({ error: 'Proxy request failed' }, 500);
     }
 }
