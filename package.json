@@ -31,6 +31,7 @@
         "prettier": "^3.8.1",
         "typescript-eslint": "^8.57.2"
     },
+    "packageManager": "pnpm@10.32.1",
     "config": {
         "commitizen": {
             "path": "./node_modules/cz-conventional-changelog"
