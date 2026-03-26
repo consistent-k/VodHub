@@ -1,0 +1,120 @@
+.loading-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+
+    &.fullscreen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--color-bg);
+        z-index: 9999;
+        padding: 0;
+    }
+}
+
+.loading-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.spinner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.size-small {
+    width: 32px;
+    height: 32px;
+}
+
+.size-default {
+    width: 48px;
+    height: 48px;
+}
+
+.size-large {
+    width: 64px;
+    height: 64px;
+}
+
+.spinner-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    animation: spin 1.5s linear infinite;
+
+    &:nth-child(1) {
+        width: 100%;
+        height: 100%;
+        border-top-color: var(--color-primary);
+        animation-delay: 0s;
+    }
+
+    &:nth-child(2) {
+        width: 75%;
+        height: 75%;
+        border-right-color: var(--color-primary-light);
+        animation-delay: 0.15s;
+        animation-direction: reverse;
+    }
+
+    &:nth-child(3) {
+        width: 50%;
+        height: 50%;
+        border-bottom-color: var(--color-primary);
+        animation-delay: 0.3s;
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-text {
+    color: var(--color-text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+
+.dots {
+    display: inline-block;
+    width: 18px;
+    text-align: left;
+}
+
+/* 减少动画偏好 */
+@media (prefers-reduced-motion: reduce) {
+    .spinner-ring {
+        animation: none;
+        border-color: var(--color-primary);
+        opacity: 0.6;
+
+        &:nth-child(2) {
+            border-color: var(--color-primary-light);
+            opacity: 0.4;
+        }
+
+        &:nth-child(3) {
+            border-color: var(--color-primary);
+            opacity: 0.2;
+        }
+    }
+
+    .dots {
+        animation: none;
+    }
+}

@@ -2,123 +2,174 @@
 
 ## Project Overview
 
-VodHub is a video aggregation API service built with **Hono** (web framework) on Node.js. It normalizes multiple video source providers into a unified REST API supporting categories, search, details, and playback. TypeScript throughout. pnpm as package manager.
+VodHub is a **pnpm monorepo** with two apps:
+- **`apps/backend`** (`@vodhub/backend`): Hono-based video aggregation API. Normalizes multiple video source providers into a unified REST API (categories, search, details, playback). Node >= 24, ESM.
+- **`apps/frontend`** (`@vodhub/frontend`): Next.js 16 + React 19 video player app. Ant Design 6, Zustand, SCSS Modules with multi-theme support.
 
 ## Build / Dev Commands
 
 ```bash
-pnpm install          # Install dependencies
-pnpm dev              # Start dev server with hot reload (tsx watch)
-pnpm start            # Start server without watch
+pnpm install              # Install all dependencies
+pnpm dev                  # Start both backend + frontend dev servers
+pnpm dev:backend          # Backend only (tsx watch)
+pnpm dev:frontend         # Frontend only (next dev)
+
+# Linting
+pnpm lint                 # Lint all apps (pnpm -r lint)
+pnpm --filter @vodhub/backend lint        # Backend only
+pnpm --filter @vodhub/backend lint:fix    # Backend auto-fix
+
+# Type checking
+pnpm typecheck            # Typecheck all apps (pnpm -r typecheck)
+
+# Formatting
+pnpm format               # Prettier write on apps/*/src/**/*.{ts,tsx}
+pnpm format:check         # Prettier check
+
+# Backend start (no watch)
+pnpm --filter @vodhub/backend start
+
+# Frontend build
+pnpm --filter @vodhub/frontend build
+
+# Commits (interactive, conventional)
+pnpm commit
 ```
 
-There is **no test framework** configured in this project. Do not assume one exists.
+There is **no test framework** configured. Do not assume one exists.
 
-### Linting & Formatting
+Lint-staged runs automatically on commit via Husky. Commit messages are validated by commitlint (conventional commits).
 
-No npm scripts for lint/format. Run directly:
-
-```bash
-npx eslint src/ --ext .ts,.tsx        # Lint
-npx eslint src/ --ext .ts,.tsx --fix  # Lint with auto-fix
-npx prettier --cache --write "src/**/*.{ts,tsx}"  # Format
-```
-
-Lint-staged runs automatically on commit via Husky for `.ts`, `.tsx`, `.js`, `.md`, `.json` files.
-
-### Type Checking
-
-No `tsc` script in package.json. Run manually:
-
-```bash
-npx tsc --noEmit
-```
-
-### Commits
-
-Uses **commitizen** with conventional commits (`@commitlint/config-conventional`). Run `pnpm commit` to use the interactive prompt.
-
-## Architecture
+## Monorepo Structure
 
 ```
-src/
-  index.ts          # Server entry: boots @hono/node-server
-  app.tsx           # Hono app: global middleware + route mounting
-  api/              # OpenAPI metadata routes
-  config/           # App config (port, cache TTL, banned keywords)
-  constant/         # Status codes, messages, user-agents, word lists
-  middleware/        # Cache middleware, JSON response middleware
-  routes/           # Provider route directories (auto-discovered)
-    registry.ts     # Dynamic route loader using directory-import
-  types/            # Core types (Namespace, Route, HomeData, etc.)
-  utils/            # Shared CMS handlers, cache, logger, filters
+apps/
+  backend/
+    src/
+      index.ts          # Server entry: boots @hono/node-server
+      app.tsx            # Hono app: middleware + route mounting
+      api/               # OpenAPI metadata routes
+      config/            # App config (port, cache TTL, banned keywords)
+      constant/          # Status codes, messages, user-agents, word lists
+      middleware/         # Cache middleware, JSON response middleware
+      routes/            # Provider route directories (auto-discovered)
+        registry.ts      # Dynamic route loader using directory-import
+      types/             # Core types (Namespace, Route, HomeData, etc.)
+      utils/             # Shared CMS handlers, cache, logger, filters
+  frontend/
+    app/                 # Next.js App Router pages
+    components/          # Providers, video, icons, UI components
+    lib/                 # Constants, hooks, stores, themes, types, utils
+    services/            # API service layer
 ```
 
 Route URL pattern: `GET/POST /api/vodhub/<provider>/<action>`
 Actions per provider: `home`, `homeVod`, `category`, `detail`, `play`, `search`
 
-## Adding a New Provider Route
+## Adding a Backend Provider Route
 
 ### CMS-Based Provider (Recommended)
 
-For standard CMS sources, only `namespace.ts` and `index.ts` are needed:
+Only `namespace.ts` and `index.ts` are needed in `apps/backend/src/routes/<provider-name>/`:
 
-1. Create `src/routes/<provider-name>/` directory
-2. Add `namespace.ts` with provider metadata
-3. Add `index.ts` that uses the factory:
-   ```typescript
-   import { namespace } from './namespace';
-   import { createCMSRoutes } from '@/utils/cms/factory';
-   export const routes = createCMSRoutes(namespace);
-   ```
-4. Routes auto-register via `directory-import` in `registry.ts`
+```typescript
+// namespace.ts
+import type { Namespace } from '@/types';
+export const namespace: Namespace = {
+    name: 'Provider Name',
+    url: 'https://example.com',
+    description: 'Provider description'
+};
+
+// index.ts
+import { namespace } from './namespace';
+import { createCMSRoutes } from '@/utils/cms/factory';
+export const routes = createCMSRoutes(namespace);
+```
+
+Routes auto-register via `directory-import` in `registry.ts`.
 
 ### Custom Provider
 
-For non-CMS sources (e.g., 360kan), create individual route files:
-`namespace.ts`, `home.ts`, `homeVod.ts`, `category.ts`, `detail.ts`, `play.ts`, `search.ts`
+For non-CMS sources, create individual route files:
+`namespace.ts`, `home.ts`, `homeVod.ts`, `category.ts`, `detail.ts`, `play.ts`, `search.ts`. Each exports a `route` object conforming to the typed `Route` interface.
 
 ## Code Style
 
 ### Formatting (Prettier)
-- Single quotes
-- No trailing commas
+- Single quotes, no trailing commas
 - 4-space indentation (`tabWidth: 4`)
-- 200 char print width
-- LF line endings
+- 200 char print width, LF line endings, semicolons always
 
-### Imports
-- Use `@/` path alias for `src/` (e.g., `import { namespace } from '@/types'`)
+### Imports (both apps)
+- Use `@/` path alias: backend maps to `src/`, frontend maps to app root
 - Relative imports within the same provider directory (e.g., `./namespace`)
 - Use `node:` prefix for Node built-ins (e.g., `import { join } from 'node:path'`)
-- Import order (enforced by ESLint): builtins → externals → internals, blank line between groups, alphabetized within groups
+- Import order (enforced by ESLint): **builtins → externals → internals**, blank line between groups, alphabetized within groups
+- Use `import type` for type-only imports
 
-### Naming
-- `camelCase` for variables, functions, parameters
-- `PascalCase` for types, interfaces, classes
-- `UPPER_SNAKE_CASE` for constants (e.g., `SUCCESS_CODE`, `BANNED_KEYWORDS`)
-- Handler functions always named `handler`
-- Route files use standard names: `namespace.ts`, `home.ts`, `category.ts`, `detail.ts`, `play.ts`, `search.ts`
+### Naming Conventions
+| Item | Convention | Example |
+|---|---|---|
+| Variables, functions, params | `camelCase` | `getLocalhostAddress`, `cacheKey` |
+| Types, interfaces, classes | `PascalCase` | `HomeData`, `RouteItem` |
+| Constants | `UPPER_SNAKE_CASE` | `SUCCESS_CODE`, `BANNED_KEYWORDS` |
+| Handler functions | Always `handler` | `const handler = async (ctx) => { ... }` |
+| Frontend components | PascalCase | `VodList`, `InitProvider` |
+| Frontend hooks | `use` prefix | `useIsMobile`, `useThemeStore` |
+| Frontend stores | `use` + `Store` suffix | `useSettingStore`, `useThemeStore` |
 
-### Types
-- Define shared types in `src/types/`
-- Use `RouteItem<T>` generic for typed route definitions (e.g., `type HomeRoute = RouteItem<{ code: number; data: HomeData[] }>`)
-- Use `Namespace` type for provider metadata
-- `noImplicitAny` is `false` — explicit type annotations are not enforced on all parameters, but prefer them for public APIs
+### Types (Backend)
+- Shared types in `apps/backend/src/types/`
+- Use `RouteItem<T>` generic: `type HomeRoute = RouteItem<{ code: number; data: HomeData[] }>`
+- `noImplicitAny` is `false`, but ESLint enforces `no-explicit-any: "error"`
+
+### Types (Frontend)
+- Shared types in `apps/frontend/lib/types/`
+- `any` is allowed (`no-explicit-any: off`)
+- Prefer `interface` for object types; API responses use generics
 
 ### Exports
-- **Named exports only** (no default exports, except custom error classes)
-- Each route file exports a `route` object conforming to the `Route` type
-- Each namespace file exports a `namespace` object conforming to `Namespace`
+- **Backend**: Named exports only (except `RequestInProgressError`)
+- **Frontend**: Components use `export default`; utilities/stores use named exports
 
-### Error Handling
-- Three status codes: `SUCCESS_CODE=0`, `ERROR_CODE=-1`, `SYSTEM_ERROR_CODE=-2`
-- Never throw errors to the framework — always return structured `{ code, message, data }` objects
-- On error, set `Cache-Control: no-cache` header to prevent caching failed responses
-- Log every error with `logger.error()` including namespace name
-- Use try/catch in every handler; return `data: []` on failure
+## Error Handling (Backend)
 
-### General Rules
+Three status codes: `SUCCESS_CODE=0`, `ERROR_CODE=-1`, `SYSTEM_ERROR_CODE=-2`
+
+Every handler must follow this pattern:
+```typescript
+const handler = async (ctx: Context) => {
+    try {
+        logger.info(`${ACTION_MESSAGE.INFO} - ${namespace.name}`);
+        const res = await someRequest();
+        if (res.code === 1) {
+            return { code: SUCCESS_CODE, message: ACTION_MESSAGE.SUCCESS, data: [...] };
+        }
+        logger.error(`${ACTION_MESSAGE.ERROR} - ${namespace.name} - ${JSON.stringify(res)}`);
+        return { code: ERROR_CODE, message: ACTION_MESSAGE.ERROR, data: [] };
+    } catch (error) {
+        ctx.res.headers.set('Cache-Control', 'no-cache');
+        logger.error(`${ACTION_MESSAGE.ERROR} - ${namespace.name} - ${error}`);
+        return { code: SYSTEM_ERROR_CODE, message: ACTION_MESSAGE.ERROR, data: [] };
+    }
+};
+```
+
+- Never throw — always return `{ code, message, data }`
+- Set `Cache-Control: no-cache` in catch blocks
+- Always return `data: []` on failure
+- Use message constants from `@/constant/message`
+- CMS handlers check `res.code === 1` for upstream success
+
+## Frontend Style Rules
+- Client components require `'use client'` directive
+- Use SCSS Modules (`index.module.scss`) with `vod-next-` class prefix
+- All colors must use CSS variables (e.g., `var(--color-bg-container)`) — never hardcode hex/rgba
+- State management: Zustand with `persist` middleware, stores in `lib/store/`
+- API calls: wrap in try/catch, use `request.get<T>` / `request.post<T>`
+
+## General Rules
 - No comments unless explicitly requested
 - Use `const` over `let`; avoid `var`
 - Prefer `async/await` over `.then()` chains

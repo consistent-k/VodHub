@@ -1,71 +1,45 @@
 {
-    "name": "vod-hub",
+    "name": "vodhub",
     "version": "0.1.0",
-    "keywords": [
-        "电影",
-        "视频",
-        "电视剧",
-        "综艺",
-        "动漫"
-    ],
+    "private": true,
     "type": "module",
     "scripts": {
-        "dev": "tsx watch --clear-screen=false src/index.ts",
-        "start": "tsx src/index.ts",
-        "lint": "eslint src/",
-        "lint:fix": "eslint src/ --fix",
-        "typecheck": "tsc --noEmit",
-        "format": "prettier --cache --write \"src/**/*.{ts,tsx}\"",
-        "format:check": "prettier --cache --check \"src/**/*.{ts,tsx}\"",
+        "dev": "pnpm --filter @vodhub/backend dev & pnpm --filter @vodhub/frontend dev",
+        "dev:backend": "pnpm --filter @vodhub/backend dev",
+        "dev:frontend": "pnpm --filter @vodhub/frontend dev",
+        "lint": "pnpm -r lint",
+        "typecheck": "pnpm -r typecheck",
+        "format": "prettier --cache --write \"apps/*/src/**/*.{ts,tsx}\"",
+        "format:check": "prettier --cache --check \"apps/*/src/**/*.{ts,tsx}\"",
         "prepare": "husky",
         "commit": "git-cz"
-    },
-    "dependencies": {
-        "@hono/node-server": "^1.19.11",
-        "@hono/zod-openapi": "^1.2.2",
-        "@keyv/redis": "^5.1.6",
-        "axios": "^1.13.6",
-        "cache-manager": "^7.2.8",
-        "cacheable": "^2.3.4",
-        "cross-env": "^10.1.0",
-        "crypto-js": "^4.2.0",
-        "dayjs": "^1.11.20",
-        "directory-import": "^3.3.2",
-        "dotenv": "^17.3.1",
-        "hono": "^4.12.8",
-        "ioredis": "^5.10.1",
-        "keyv": "^5.6.0",
-        "lodash": "^4.17.23",
-        "query-string": "^9.3.1",
-        "winston": "^3.19.0"
     },
     "devDependencies": {
         "@commitlint/cli": "^20.5.0",
         "@commitlint/config-conventional": "^20.5.0",
-        "@eslint/js": "^10.0.1",
-        "@types/crypto-js": "^4.2.2",
-        "@types/lodash": "^4.17.24",
-        "@types/node": "^25.3.3",
+        "@eslint/js": "^9.39.4",
         "commitizen": "^4.3.1",
         "cz-conventional-changelog": "^3.3.0",
-        "eslint": "^10.1.0",
-        "eslint-config-prettier": "^10.1.8",
+        "eslint": "^9.39.4",
+        "eslint-config-next": "^16.2.1",
+        "eslint-plugin-import": "^2.32.0",
         "eslint-plugin-import-x": "^4.16.2",
+        "eslint-plugin-prettier": "^5.5.5",
+        "eslint-plugin-unused-imports": "^4.4.1",
         "husky": "^9.1.7",
         "lint-staged": "^16.4.0",
         "prettier": "^3.8.1",
-        "tsx": "^4.21.0",
-        "typescript": "^5.9.3",
-        "typescript-eslint": "^8.57.1"
-    },
-    "engines": {
-        "node": ">=24",
-        "pnpm": ">=10"
+        "typescript-eslint": "^8.57.2"
     },
     "packageManager": "pnpm@10.32.1",
     "config": {
         "commitizen": {
             "path": "./node_modules/cz-conventional-changelog"
         }
+    },
+    "packageManager": "pnpm@10.32.1",
+    "engines": {
+        "node": ">=24",
+        "pnpm": ">=10"
     }
 }

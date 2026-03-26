@@ -1,0 +1,33 @@
+.theme-card {
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+
+    &:hover {
+        transform: translateY(-2px);
+    }
+}
+
+.theme-card-selected {
+    border-color: var(--ant-color-primary);
+    box-shadow: 0 0 0 2px var(--ant-color-primary-bg);
+}
+
+.theme-check {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: var(--ant-color-primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    z-index: 1;
+}
+
+.theme-preview {
+    border: 1px solid var(--ant-color-border-secondary);
+}

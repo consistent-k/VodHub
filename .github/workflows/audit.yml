@@ -1,0 +1,28 @@
+name: Security Audit
+
+on:
+    schedule:
+        - cron: '0 0 * * 1' # 每周一 UTC 00:00
+    workflow_dispatch:
+
+jobs:
+    audit:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - uses: pnpm/action-setup@v4
+
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 24
+                  cache: pnpm
+
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Audit
+              run: pnpm audit --audit-level=high

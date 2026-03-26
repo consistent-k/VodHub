@@ -1,0 +1,45 @@
+---
+description: Project overview and tech stack for the frontend
+globs: ["apps/frontend/**/*.ts", "apps/frontend/**/*.tsx", "apps/frontend/**/*.scss"]
+alwaysApply: true
+---
+
+# VodHub Frontend — Project Overview
+
+VodNext is the frontend of the VodHub monorepo, a video aggregation player built with Next.js.
+
+## Core Features
+- Next.js (React) with SSR and static generation
+- Aggregates multiple video sources, supports category browsing, search, playback
+- Multi-theme support (midnight, aurora, cyber)
+
+## Tech Stack
+- **Framework**: Next.js 16 + React 19 + TypeScript
+- **State Management**: Zustand + Valtio
+- **UI Library**: Ant Design 6
+- **Styling**: SCSS Modules + CSS variables (multi-theme)
+- **HTTP Client**: Axios
+- **Video Player**: xgplayer + HLS.js
+- **Package Manager**: pnpm (monorepo at root)
+
+## Development Tools
+- **Linting**: ESLint (eslint-config-next) + Prettier
+- **Git Hooks**: Husky + lint-staged
+- **Commits**: Commitlint + commitizen (conventional commits)
+
+## Environment Requirements
+- Node.js >= 24
+- pnpm >= 10
+
+## Development Commands
+
+```bash
+pnpm dev                          # Start both backend + frontend dev servers
+pnpm dev:frontend                 # Frontend only (next dev)
+pnpm --filter @vodhub/frontend build     # Production build (standalone)
+pnpm --filter @vodhub/frontend lint      # ESLint check
+pnpm --filter @vodhub/frontend typecheck # TypeScript type check
+pnpm format                       # Prettier write all apps
+pnpm format:check                 # Prettier check
+pnpm commit                       # Interactive conventional commit
+```

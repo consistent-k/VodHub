@@ -1,0 +1,27 @@
+frontend:
+    - changed-files:
+          - any-glob-to-any-file:
+                - 'apps/frontend/app/**'
+                - 'apps/frontend/components/**'
+
+backend:
+    - changed-files:
+          - any-glob-to-any-file:
+                - 'apps/backend/src/**'
+
+styles:
+    - changed-files:
+          - any-glob-to-any-file:
+                - '**/*.scss'
+                - '**/*.css'
+
+ci:
+    - changed-files:
+          - any-glob-to-any-file:
+                - '.github/**'
+
+dependencies:
+    - changed-files:
+          - any-glob-to-any-file:
+                - 'apps/*/package.json'
+                - 'pnpm-lock.yaml'

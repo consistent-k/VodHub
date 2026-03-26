@@ -1,0 +1,60 @@
+.vod-next-category {
+    height: 100%;
+    width: 100%;
+
+    &-filters {
+        background: var(--color-bg-container-alpha);
+        border-radius: 12px;
+        border: 1px solid var(--color-border);
+        margin-bottom: 24px;
+        overflow: hidden;
+    }
+
+    &-filter {
+        padding: 16px 20px;
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        border-bottom: 1px solid var(--color-border);
+
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+
+    &-label {
+        flex-shrink: 0;
+        color: var(--color-text-tertiary);
+        font-size: 13px;
+        min-width: 48px;
+        padding-top: 4px;
+    }
+
+    &-options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    &-option {
+        padding: 4px 12px;
+        border-radius: 6px;
+        font-size: 13px;
+        cursor: pointer;
+        transition: all 0.2s;
+        color: var(--color-text-secondary);
+        background: var(--color-bg-elevated-alpha);
+        border: 1px solid transparent;
+
+        &:hover {
+            color: var(--color-text);
+            background: var(--color-bg-elevated-hover);
+        }
+
+        &.active {
+            color: var(--color-primary);
+            background: var(--color-primary-alpha-low);
+            border-color: var(--color-primary-alpha-medium);
+        }
+    }
+}

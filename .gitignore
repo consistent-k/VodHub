@@ -27,5 +27,23 @@ lerna-debug.log*
 # misc
 .DS_Store
 
-#production
+# production
 /dist
+apps/*/dist/
+
+# next.js
+.next/
+apps/*/.next/
+
+# misc
+.DS_Store
+*.pem
+
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
