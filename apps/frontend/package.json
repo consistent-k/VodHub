@@ -49,6 +49,6 @@
         "eslint-plugin-prettier": "^5.5.5",
         "eslint-plugin-unused-imports": "^4.4.1",
         "postcss": "^8.5.8",
-        "typescript": "^5.9.3"
+        "typescript": "^6.0.2"
     }
 }
