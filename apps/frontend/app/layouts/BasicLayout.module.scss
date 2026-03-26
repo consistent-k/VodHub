@@ -1,0 +1,33 @@
+.vod-layout {
+    font-family: 'Righteous', 'Poppins', 'Microsoft YaHei', sans-serif;
+    height: 100%;
+    background: var(--color-bg);
+
+    &-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+    }
+
+    &-main {
+        flex: 1;
+        overflow-y: auto;
+        padding: 24px;
+    }
+
+    &-footer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 48px;
+        background: transparent;
+        color: var(--color-text-tertiary);
+        font-size: 13px;
+        gap: 8px;
+
+        &-divider {
+            opacity: 0.3;
+        }
+    }
+}

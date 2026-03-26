@@ -1,0 +1,66 @@
+import type { Context } from 'hono';
+
+import request from '../request';
+
+import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
+import { SEARCH_MESSAGE } from '@/constant/message';
+import { USER_AGENT_CHROME } from '@/constant/userAgent';
+import type { Namespace, SearchData } from '@/types';
+import type { CMSDetailData } from '@/types/cms';
+import { filterSearchData } from '@/utils/filters';
+import logger from '@/utils/logger';
+
+export const handler = async (ctx: Context, namespace: Namespace) => {
+    try {
+        const body = await ctx.req.json();
+        logger.info(`${SEARCH_MESSAGE.INFO} - ${namespace.name} - ${JSON.stringify(body)}`);
+
+        const { keyword } = body;
+
+        const res = await request.get<CMSDetailData>(`${namespace.url}/api.php/provide/vod`, {
+            params: {
+                ac: 'detail',
+                wd: keyword
+            },
+            headers: {
+                'User-Agent': USER_AGENT_CHROME,
+                Referer: `${namespace.url}/`
+            }
+        });
+
+        const { list, code } = res;
+
+        if (code === 1) {
+            const newList: SearchData[] = list.map((item) => {
+                return {
+                    type_id: item.type_id,
+                    type_name: item.type_name,
+                    vod_id: item.vod_id,
+                    vod_name: item.vod_name,
+                    vod_pic: item.vod_pic,
+                    vod_remarks: item.vod_remarks
+                };
+            });
+            return {
+                code: SUCCESS_CODE,
+                message: SEARCH_MESSAGE.SUCCESS,
+                data: filterSearchData(newList)
+            };
+        }
+
+        logger.error(`${SEARCH_MESSAGE.ERROR} - ${namespace.name} - ${JSON.stringify(res)}`);
+        return {
+            code: ERROR_CODE,
+            message: SEARCH_MESSAGE.ERROR,
+            data: []
+        };
+    } catch (error) {
+        ctx.res.headers.set('Cache-Control', 'no-cache');
+        logger.error(`${SEARCH_MESSAGE.ERROR} - ${namespace.name} - ${error instanceof Error ? error.message : String(error)}`);
+        return {
+            code: SYSTEM_ERROR_CODE,
+            message: SEARCH_MESSAGE.ERROR,
+            data: []
+        };
+    }
+};

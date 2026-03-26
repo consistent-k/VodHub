@@ -1,0 +1,36 @@
+version: '3.9'
+
+services:
+  backend:
+    build:
+      context: ./apps/backend
+      target: deps
+    image: vodhub/backend:dev
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./apps/backend:/app
+      - ./packages/shared:/app/packages/shared
+      - backend-node_modules:/app/node_modules
+    command: pnpm dev
+    environment:
+      - NODE_ENV=development
+
+  frontend:
+    build:
+      context: ./apps/frontend
+      target: deps
+    image: vodhub/frontend:dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./apps/frontend:/app
+      - ./packages/shared:/app/packages/shared
+      - frontend-node_modules:/app/node_modules
+    command: pnpm dev
+    environment:
+      - NODE_ENV=development
+
+volumes:
+  backend-node_modules:
+  frontend-node_modules:

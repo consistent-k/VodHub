@@ -1,0 +1,67 @@
+---
+description: General project overview, architecture, and development commands for the backend
+globs: ["apps/backend/**/*.ts", "apps/backend/**/*.tsx"]
+alwaysApply: true
+---
+
+# VodHub Backend — General Rules
+
+## Project Overview
+
+VodHub backend is a video aggregation API service built with **Hono** on Node.js. It is part of the VodHub pnpm monorepo (`apps/backend`). Normalizes multiple video source providers into a unified REST API supporting categories, search, details, and playback. TypeScript throughout, pnpm as package manager.
+
+## Tech Stack
+
+- **Runtime**: Node.js >= 24, ESM (`"type": "module"` in package.json)
+- **Framework**: Hono (web framework) with `@hono/node-server`
+- **HTTP Client**: Axios
+- **Caching**: cache-manager with in-memory LRU + optional Redis via Keyv
+- **Logging**: Winston
+- **Utilities**: lodash, dayjs, CryptoJS, query-string
+
+## Project Structure
+
+```
+apps/backend/src/
+  index.ts          # Server entry: boots @hono/node-server
+  app.tsx           # Hono app: global middleware + route mounting
+  api/              # OpenAPI metadata routes
+  config/           # App config (port, cache TTL, banned keywords)
+  constant/         # Status codes, messages, user-agents, word lists
+  middleware/        # Cache middleware, JSON response middleware
+  routes/           # Provider route directories (auto-discovered)
+    registry.ts     # Dynamic route loader using directory-import
+  types/            # Core types (Namespace, Route, HomeData, etc.)
+  utils/            # Shared CMS handlers, cache, logger, filters
+```
+
+## Development Commands
+
+```bash
+pnpm install                                # Install all dependencies (monorepo root)
+pnpm dev                                    # Start both backend + frontend
+pnpm dev:backend                            # Backend only (tsx watch)
+pnpm --filter @vodhub/backend start         # Start backend without watch
+pnpm --filter @vodhub/backend lint          # Lint backend
+pnpm --filter @vodhub/backend lint:fix      # Lint with auto-fix
+pnpm --filter @vodhub/backend typecheck     # Type check backend
+pnpm format                                 # Prettier write all apps
+pnpm format:check                           # Prettier check all apps
+pnpm commit                                 # Interactive conventional commit
+```
+
+No test framework is configured.
+
+## Route URL Pattern
+
+All routes follow: `GET/POST /api/vodhub/<provider>/<action>`
+
+Actions per provider: `home`, `homeVod`, `category`, `detail`, `play`, `search`
+
+## Global Middleware Order
+
+1. `cors()` - CORS handling
+2. `trimTrailingSlash()` - Trailing slash normalization
+3. `compress()` - Response compression
+4. `jsonReturn` - JSON response serialization
+5. `cache` - Redis/memory caching with deduplication

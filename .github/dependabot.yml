@@ -12,7 +12,18 @@ updates:
           interval: weekly
 
     - package-ecosystem: 'npm'
-      directory: '/'
+      directory: '/apps/backend'
+      schedule:
+          interval: monthly
+          day: friday
+          time: '12:00'
+          timezone: Asia/Singapore
+      open-pull-requests-limit: 10
+      labels:
+          - 'dependencies'
+
+    - package-ecosystem: 'npm'
+      directory: '/apps/frontend'
       schedule:
           interval: monthly
           day: friday
