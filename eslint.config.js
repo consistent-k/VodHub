@@ -2,7 +2,6 @@ import js from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import importX from 'eslint-plugin-import-x';
 import next from 'eslint-config-next';
-import importPlugin from 'eslint-plugin-import';
 import prettier from 'eslint-plugin-prettier';
 import unusedImports from 'eslint-plugin-unused-imports';
 
@@ -38,7 +37,7 @@ export default tseslint.config(
         plugins: {
             prettier,
             'unused-imports': unusedImports,
-            import: importPlugin
+            'import-x': importX
         },
         rules: {
             'no-unused-vars': [
@@ -52,7 +51,7 @@ export default tseslint.config(
             '@typescript-eslint/ban-ts-comment': 'off',
             'react-hooks/exhaustive-deps': 'off',
             'unused-imports/no-unused-imports': 'warn',
-            'import/order': [
+            'import-x/order': [
                 2,
                 {
                     groups: ['builtin', 'external', ['internal', 'parent', 'sibling', 'index'], 'unknown'],
