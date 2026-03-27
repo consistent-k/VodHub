@@ -11,11 +11,30 @@ jobs:
         runs-on: ubuntu-latest
         if: github.actor == 'dependabot[bot]'
         steps:
-            - name: Fetch Dependabot metadata
-              id: metadata
-              uses: dependabot/fetch-metadata@v2
+            - name: 检查代码
+              uses: actions/checkout@v4
               with:
-                  github-token: ${{ secrets.GITHUB_TOKEN }}
+                  ref: ${{ github.event.pull_request.head.ref }}
+                  repository: ${{ github.event.pull_request.head.repo.full_name }}
+
+            - name: 安装 pnpm
+              uses: pnpm/action-setup@v4
+
+            - name: 安装 Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 24
+                  cache: pnpm
+
+            - name: 更新 lockfile
+              run: |
+                  pnpm install --no-frozen-lockfile
+                  git diff --quiet && exit 0
+                  git config user.name "github-actions[bot]"
+                  git config user.email "github-actions[bot]@users.noreply.github.com"
+                  git add pnpm-lock.yaml
+                  git commit -m "chore: update pnpm-lock.yaml"
+                  git push
 
             - name: Approve PR
               run: gh pr review --approve "$PR_URL"
@@ -24,7 +43,6 @@ jobs:
                   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Enable auto-merge
-              if: steps.metadata.outputs.update-type != 'version-update:semver-major'
               run: gh pr merge --auto --squash "$PR_URL"
               env:
                   PR_URL: ${{ github.event.pull_request.html_url }}

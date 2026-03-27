@@ -6,29 +6,37 @@
 
 version: 2
 updates:
-    - package-ecosystem: 'devcontainers'
-      directory: '/'
+    - package-ecosystem: "devcontainers"
+      directory: "/"
       schedule:
           interval: weekly
 
-    - package-ecosystem: 'npm'
-      directory: '/apps/backend'
+    - package-ecosystem: "npm"
+      directory: "/apps/backend"
       schedule:
           interval: monthly
           day: friday
-          time: '12:00'
+          time: "12:00"
           timezone: Asia/Singapore
       open-pull-requests-limit: 10
       labels:
-          - 'dependencies'
+          - "dependencies"
+      groups:
+          all:
+              patterns:
+                  - "*"
 
-    - package-ecosystem: 'npm'
-      directory: '/apps/frontend'
+    - package-ecosystem: "npm"
+      directory: "/apps/frontend"
       schedule:
           interval: monthly
           day: friday
-          time: '12:00'
+          time: "12:00"
           timezone: Asia/Singapore
       open-pull-requests-limit: 10
       labels:
-          - 'dependencies'
+          - "dependencies"
+      groups:
+          all:
+              patterns:
+                  - "*"
