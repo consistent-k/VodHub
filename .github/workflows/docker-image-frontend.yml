@@ -38,7 +38,9 @@ jobs:
             - name: 构建并推送镜像
               uses: docker/build-push-action@v6
               with:
-                  context: ./apps/frontend
+                  context: .
+                  file: ./Dockerfile
+                  target: frontend
                   platforms: linux/amd64,linux/arm64
                   push: true
                   tags: ${{ steps.meta.outputs.tags }}

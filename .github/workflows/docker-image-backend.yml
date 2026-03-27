@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Docker Image (Backend)
 
 on:
     workflow_dispatch:
@@ -38,7 +38,9 @@ jobs:
             - name: 构建并推送镜像
               uses: docker/build-push-action@v6
               with:
-                  context: ./apps/backend
+                  context: .
+                  file: ./Dockerfile
+                  target: backend
                   platforms: linux/amd64,linux/arm64
                   push: true
                   tags: ${{ steps.meta.outputs.tags }}
