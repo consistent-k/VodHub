@@ -3,7 +3,6 @@
     "extends": ["config:recommended"],
     "timezone": "Asia/Singapore",
     "schedule": ["before 12pm on friday"],
-    "labels": ["dependencies"],
     "prConcurrentLimit": 10,
     "packageRules": [
         {
