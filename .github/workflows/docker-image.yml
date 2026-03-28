@@ -34,7 +34,7 @@ jobs:
 
             - name: 生成镜像标签
               id: meta-backend
-              uses: docker/metadata-action@v5
+              uses: docker/metadata-action@v6
               with:
                   images: |
                       consistentlee/vod_hub
@@ -84,7 +84,7 @@ jobs:
 
             - name: 生成镜像标签
               id: meta-frontend
-              uses: docker/metadata-action@v5
+              uses: docker/metadata-action@v6
               with:
                   images: |
                       consistentlee/vod_next
