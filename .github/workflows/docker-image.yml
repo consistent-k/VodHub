@@ -30,7 +30,7 @@ jobs:
                   driver-opts: image=moby/buildkit:latest
 
             - name: 设置QEMU
-              uses: docker/setup-qemu-action@v3
+              uses: docker/setup-qemu-action@v4
 
             - name: 生成镜像标签
               id: meta-backend
@@ -80,7 +80,7 @@ jobs:
                   driver-opts: image=moby/buildkit:latest
 
             - name: 设置QEMU
-              uses: docker/setup-qemu-action@v3
+              uses: docker/setup-qemu-action@v4
 
             - name: 生成镜像标签
               id: meta-frontend
