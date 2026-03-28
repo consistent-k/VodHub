@@ -7,13 +7,12 @@
     "prConcurrentLimit": 10,
     "packageRules": [
         {
-            "matchUpdateTypes": ["patch"],
+            "matchUpdateTypes": ["patch", "minor"],
             "automerge": true,
-            "automergeType": "pr",
             "platformAutomerge": true
         },
         {
-            "matchUpdateTypes": ["minor", "major"],
+            "matchUpdateTypes": ["major"],
             "automerge": false
         },
         {
