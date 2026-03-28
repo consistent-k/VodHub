@@ -14,7 +14,7 @@ jobs:
 
         steps:
             - name: 检查代码
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
 
             - name: 依赖变更审查
               uses: actions/dependency-review-action@v4
