@@ -43,7 +43,7 @@ jobs:
                       type=ref,event=tag
 
             - name: 构建并推送Backend镜像
-              uses: docker/build-push-action@v6
+              uses: docker/build-push-action@v7
               with:
                   context: .
                   file: ./Dockerfile
@@ -93,7 +93,7 @@ jobs:
                       type=ref,event=tag
 
             - name: 构建并推送Frontend镜像
-              uses: docker/build-push-action@v6
+              uses: docker/build-push-action@v7
               with:
                   context: .
                   file: ./Dockerfile
