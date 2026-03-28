@@ -1,6 +1,6 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-    "extends": ["config:recommended", "workspaces:monorepo"],
+    "extends": ["config:recommended"],
     "timezone": "Asia/Singapore",
     "schedule": ["before 12pm on friday"],
     "labels": ["dependencies"],
