@@ -1,0 +1,24 @@
+{
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": ["config:recommended", "workspaces:monorepo"],
+    "timezone": "Asia/Singapore",
+    "schedule": ["before 12pm on friday"],
+    "labels": ["dependencies"],
+    "prConcurrentLimit": 10,
+    "packageRules": [
+        {
+            "matchUpdateTypes": ["patch"],
+            "automerge": true,
+            "automergeType": "pr",
+            "platformAutomerge": true
+        },
+        {
+            "matchUpdateTypes": ["minor", "major"],
+            "automerge": false
+        },
+        {
+            "matchPackageNames": ["typescript", "@types/node"],
+            "groupName": "typescript"
+        }
+    ]
+}
