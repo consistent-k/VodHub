@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios';
-import { merge } from 'lodash';
+import { merge } from 'lodash-es';
 
 import { namespace } from './namespace';
 

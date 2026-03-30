@@ -43,6 +43,9 @@ apps/*/.next/
 # vercel
 .vercel
 
+# generated
+apps/backend/src/routes/registry.gen.ts
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

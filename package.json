@@ -4,6 +4,7 @@
     "private": true,
     "type": "module",
     "scripts": {
+        "build": "pnpm -r build",
         "dev": "pnpm --filter @vodhub/backend dev & pnpm --filter @vodhub/frontend dev",
         "dev:backend": "pnpm --filter @vodhub/backend dev",
         "dev:frontend": "pnpm --filter @vodhub/frontend dev",

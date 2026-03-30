@@ -29,7 +29,7 @@ export default tseslint.config(
                 }
             ]
         },
-        ignores: ['dist/', 'node_modules/', 'logs/']
+        ignores: ['dist/', 'node_modules/', 'logs/', '**/registry.gen.ts']
     },
     {
         files: ['apps/frontend/**/*.{ts,tsx,js,jsx}'],

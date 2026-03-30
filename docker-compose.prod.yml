@@ -3,6 +3,7 @@ services:
         build:
             context: .
             target: frontend
+        image: consistentlee/vod_next:latest
         ports:
             - '127.0.0.1:3000:3000'
         environment:
@@ -15,6 +16,7 @@ services:
         build:
             context: .
             target: backend
+        image: consistentlee/vod_hub:latest
         ports:
             - '127.0.0.1:8888:8888'
         environment:
