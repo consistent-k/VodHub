@@ -18,7 +18,7 @@
         "start:dev": "tsx src/index.ts",
         "lint": "eslint src/",
         "lint:fix": "eslint src/ --fix",
-        "typecheck": "tsc --noEmit",
+        "typecheck": "pnpm gen:routes && tsc --noEmit",
         "format": "prettier --cache --write \"src/**/*.{ts,tsx}\"",
         "format:check": "prettier --cache --check \"src/**/*.{ts,tsx}\""
     },
