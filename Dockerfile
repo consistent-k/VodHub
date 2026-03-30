@@ -6,8 +6,6 @@ RUN corepack enable
 # ==================== Dependencies ====================
 FROM base AS deps
 
-RUN apk add --no-cache python3 make g++
-
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/backend/package.json apps/backend/package.json
 COPY apps/frontend/package.json apps/frontend/package.json

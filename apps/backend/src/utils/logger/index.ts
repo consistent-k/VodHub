@@ -27,16 +27,14 @@ const logger = winston.createLogger({
         : []
 });
 
-if (process.env.NODE_ENV !== 'production') {
-    logger.add(
-        new winston.transports.Console({
-            format: winston.format.printf((info) => {
-                const infoLevel = winston.format.colorize().colorize(info.level, config.logger.showTimestamp ? `[${info.timestamp}] ${info.level}` : info.level);
-                return `${infoLevel}: ${info.message}`;
-            }),
-            silent: false
-        })
-    );
-}
+logger.add(
+    new winston.transports.Console({
+        format: winston.format.printf((info) => {
+            const infoLevel = winston.format.colorize().colorize(info.level, config.logger.showTimestamp ? `[${info.timestamp}] ${info.level}` : info.level);
+            return `${infoLevel}: ${info.message}`;
+        }),
+        silent: false
+    })
+);
 
 export default logger;
