@@ -2,7 +2,6 @@ import KeyvRedis from '@keyv/redis';
 import { createCache } from 'cache-manager';
 import { CacheableMemory } from 'cacheable';
 import { Keyv } from 'keyv';
-
 import { config } from '@/config';
 
 const memoryStore = new Keyv({

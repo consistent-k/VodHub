@@ -1,29 +1,26 @@
 <div align="center">
    <h1>VodHub</h1>
-   一个视频源聚合解决方案，包含后端接口服务和前端播放器
+   一个视频源聚合解决方案
 </div>
 
 ## 📋 项目简介
 
 VodHub 是一个完整的视频聚合解决方案，包含两个核心部分：
 
-- **后端 (VodHub)**: 电影、电视剧、动漫等视频接口聚合服务，转换多个视频源为标准统一输出
-- **前端 (VodNext)**: 视频源聚合播放器，提供分类、搜索、详情、播放等功能
+- **后端**: 电影、电视剧、动漫等视频接口聚合服务，转换多个视频源为标准统一输出、支持CMS视频源接入
+- **前端**: 视频源聚合播放器，提供分类、搜索、详情、播放等功能
 
 ## ✨ 功能特性
 
-### 后端服务 (VodHub)
+### 后端服务
 - 📦 开箱即用的接口服务
 - ⚙️ 转换多个视频源为标准输出，支持分类、搜索、详情、播放等功能
 - 🛡 使用 TypeScript 开发，保持输出接口的一致性
-- 📚 提供可直接部署的 Docker 镜像
 
-### 前端应用 (VodNext)
+### 前端应用
 - 📦 支持 VodHub 标准视频源
 - ⚙️ 提供视频分类、搜索、详情、播放等页面
 - 🐳 支持 PC、手机端页面自适应
-- 🌛 支持一键切换至暗黑模式
-- ⚙ 支持自定义网站名称
 
 ## 📸 界面展示
 
@@ -91,17 +88,17 @@ $ pnpm dev:frontend
 
 ```bash
 # 获取目前支持视频源名称列表
-curl --location --request GET 'http://localhost:8888/api/vodhub/namespace'
+curl --location --request GET 'http://127.0.0.1:8888/api/vodhub/namespace'
 ```
 
 ```bash
 # 通过首页获取分类
-curl --location --request GET 'http://localhost:8888/api/vodhub/{{vod_site}}/home'
+curl --location --request GET 'http://127.0.0.1:8888/api/vodhub/{{vod_site}}/home'
 ```
 
 ```bash
 # 按分类获取视频列表
-curl --location --request POST 'http://localhost:8888/api/vodhub/{{vod_site}}/category' \
+curl --location --request POST 'http://127.0.0.1:8888/api/vodhub/{{vod_site}}/category' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "id": 1,
@@ -112,7 +109,7 @@ curl --location --request POST 'http://localhost:8888/api/vodhub/{{vod_site}}/ca
 
 ```bash
 # 获取详情
-curl --location --request POST 'http://localhost:8888/api/vodhub/{{vod_site}}/detail' \
+curl --location --request POST 'http://127.0.0.1:8888/api/vodhub/{{vod_site}}/detail' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "id": "{{vod_id}}"
@@ -121,7 +118,7 @@ curl --location --request POST 'http://localhost:8888/api/vodhub/{{vod_site}}/de
 
 ```bash
 # 获取播放地址
-curl --location --request POST 'http://localhost:8888/api/vodhub/{{vod_site}}/play' \
+curl --location --request POST 'http://127.0.0.1:8888/api/vodhub/{{vod_site}}/play' \
 --header 'Content-Type: application/json' \
 --data-raw '{
    "url": "",
@@ -131,7 +128,7 @@ curl --location --request POST 'http://localhost:8888/api/vodhub/{{vod_site}}/pl
 
 ```bash
 # 关键词搜索
-curl --location --request POST 'http://localhost:8888/api/vodhub/{{vod_site}}/search' \
+curl --location --request POST 'http://127.0.0.1:8888/api/vodhub/{{vod_site}}/search' \
 --header 'Content-Type: application/json' \
 --data-raw '{
    "page": 1,
@@ -141,43 +138,112 @@ curl --location --request POST 'http://localhost:8888/api/vodhub/{{vod_site}}/se
 
 ## 💾 Docker 部署
 
-### 后端部署
-
-[![Docker Image Version](https://img.shields.io/docker/v/consistentlee/vod_hub?color=%23086DCD&label=docker%20image)](https://hub.docker.com/r/consistentlee/vod_hub)
-
-> 请确保已经安装了 Docker 环境并且配置了 DockerHub 的镜像加速器。
-
-```bash
-$ docker run -d -p 8888:8888 consistentlee/vod_hub:latest
-```
 
 ### Docker Compose 部署
+
+#### 镜像加速器配置
+为提高 Docker 镜像拉取速度，建议配置镜像加速器：
+
+1. **创建/修改 Docker 配置文件**：
+   ```bash
+   sudo mkdir -p /etc/docker
+   sudo tee /etc/docker/daemon.json <<-'EOF'
+   {
+     "registry-mirrors": [
+       "https://docker.mirrors.ustc.edu.cn",
+       "https://hub-mirror.c.163.com",
+       "https://mirror.baidubce.com"
+     ]
+   }
+   EOF
+   ```
+
+2. **重启 Docker 服务**：
+   ```bash
+   sudo systemctl daemon-reload
+   sudo systemctl restart docker
+   ```
+
+3. **验证配置**：
+   ```bash
+   docker info | grep -A 1 "Registry Mirrors"
+   ```
+
+#### 开发环境
+使用 `docker-compose.yml` 配置文件：
 
 ```bash
 $ docker-compose up -d
 ```
 
+#### 生产环境
+使用 `docker-compose.prod.yml` 配置文件，包含 Redis 缓存服务、日志持久化等生产环境优化：
+
+```bash
+$ docker-compose -f docker-compose.prod.yml up -d
+```
+
+**生产环境配置说明：**
+- **服务架构**：包含 frontend、backend、redis 三个服务
+- **端口映射**：
+  - 前端：127.0.0.1:3000 → 容器 80 端口（如需外部访问可改为 `3000:80`）
+  - 后端：127.0.0.1:8888 → 容器 8888 端口
+  - Redis：127.0.0.1:6379 → 容器 6379 端口（仅本地访问）
+- **环境变量**：
+  - `REDIS_URL=redis://redis:6379` - Redis 连接地址
+  - `CACHE_TTL=60000` - 缓存时间（毫秒）
+  - `BANNED_KEYWORDS=测试` - 禁用关键词
+- **数据持久化**：
+  - 后端日志：主机 `./logs` 目录映射到容器日志目录
+- **依赖关系**：backend 依赖 redis 服务启动
+
+**环境变量自定义：**
+可根据实际需求在 `docker-compose.prod.yml` 中修改环境变量值，或通过 `.env` 文件注入。
+
 ## 📂 项目结构
+
+VodHub 是一个基于 pnpm workspace 的 monorepo，采用现代化的前后端分离架构：
 
 ```
 VodHub/
 ├── apps/
-│   ├── backend/          # 后端服务 (VodHub)
+│   ├── backend/                    # 后端服务 (Hono + TypeScript)
 │   │   ├── src/
-│   │   │   ├── routes/   # 接口路由
-│   │   │   ├── utils/    # 工具函数
-│   │   │   └── types/    # 类型定义
+│   │   │   ├── api/                # API 入口和中间件
+│   │   │   ├── config/             # 配置文件
+│   │   │   ├── constant/           # 常量定义
+│   │   │   ├── middleware/         # 中间件（缓存、CORS、压缩等）
+│   │   │   ├── routes/             # 视频源路由（按提供商组织）
+│   │   │   ├── types/              # 后端专用类型定义
+│   │   │   └── utils/              # 工具函数（缓存、日志、CMS 工厂等）
+│   │   ├── Dockerfile              # 容器化配置
 │   │   └── package.json
-│   └── frontend/         # 前端应用 (VodNext)
-│       ├── app/          # Next.js 页面
-│       ├── components/   # 组件
-│       ├── lib/          # 工具库
+│   └── frontend/                   # 前端应用 (Vite + React 19 + React Router)
+│       ├── src/
+│       │   ├── components/         # 可复用组件（VodList、Player、Setting 等）
+│       │   ├── lib/                # 工具库（主题、状态管理、工具函数）
+│       │   ├── pages/              # React Router 页面路由
+│       │   ├── services/           # API 服务层
+│       │   └── App.tsx             # 应用根组件
+│       ├── conf/                   # 配置文件（nginx.conf）
+│       ├── index.html              # 入口 HTML
+│       ├── Dockerfile              # 容器化配置
 │       └── package.json
 ├── packages/
-│   └── shared/           # 共享类型和工具
-├── docker-compose.yml
-└── package.json
+│   └── shared/                     # 共享类型和工具
+│       ├── src/types/              # 核心类型定义（Namespace、API 响应等）
+│       └── package.json
+├── .github/workflows/              # CI/CD 流水线
+├── docker-compose.yml              # 开发环境 Docker 编排
+├── docker-compose.prod.yml         # 生产环境 Docker 编排（含 Redis）
+├── package.json                    # 根 package.json（workspace 配置）
+└── pnpm-workspace.yaml             # pnpm workspace 定义
 ```
+
+**架构亮点**：
+- **后端**：基于 Hono 的轻量级 API 服务，支持自动路由注册、多级缓存（内存+Redis）、统一的错误处理
+- **前端**：Vite + React 19 + React Router，Ant Design 6 UI 库，Zustand 状态管理，CSS 变量多主题支持
+- **共享**：通过 `@vodhub/shared` 包提供统一的类型定义，确保前后端类型安全
 
 ## 🛠 开发命令
 

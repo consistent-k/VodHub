@@ -1,8 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { merge } from 'lodash-es';
-
 import { namespace } from './namespace';
-
 import { USER_AGENT_CHROME } from '@/constant/userAgent';
 
 const request = axios.create({

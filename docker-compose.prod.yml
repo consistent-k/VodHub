@@ -1,23 +1,37 @@
 services:
-    frontend:
-        build:
-            context: .
-            target: frontend
-        image: consistentlee/vod_next:latest
-        ports:
-            - '127.0.0.1:3000:3000'
-        environment:
-            - NODE_ENV=production
-            - API_BASE_URL=http://backend:8888
-        depends_on:
-            - backend
+  frontend:
+    build:
+      context: .
+      target: runner
+      dockerfile: apps/frontend/Dockerfile
+    image: consistentlee/vod_next:latest
+    ports:
+      - '127.0.0.1:3000:80'
+    environment:
+      - NODE_ENV=production
+      - API_BASE_URL=http://backend:8888
+    depends_on:
+      - backend
 
-    backend:
-        build:
-            context: .
-            target: backend
-        image: consistentlee/vod_hub:latest
-        ports:
-            - '127.0.0.1:8888:8888'
-        environment:
-            - NODE_ENV=production
+  backend:
+    build:
+      context: .
+      target: runner
+      dockerfile: apps/backend/Dockerfile
+    image: consistentlee/vod_hub:latest
+    ports:
+      - '127.0.0.1:8888:8888'
+    environment:
+      - NODE_ENV=production
+      - REDIS_URL=redis://redis:6379
+      - CACHE_TTL=60000
+      - BANNED_KEYWORDS=测试
+    volumes:
+      - ./logs:/app/apps/backend/logs
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:alpine
+    ports:
+      - '127.0.0.1:6379:6379'

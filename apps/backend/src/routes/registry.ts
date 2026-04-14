@@ -1,9 +1,7 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-
 import { directoryImport } from 'directory-import';
 import { Hono, type Handler } from 'hono';
-
 import type { Namespace, Route } from '@/types';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -25,7 +23,8 @@ export let namespaces: Record<
 let app: Hono;
 
 if (isProduction) {
-    const mod = (await import('./registry.gen')) as { namespaces: typeof namespaces; default: Hono };
+    // eslint-disable-next-line
+    const mod = require('./registry.gen') as { namespaces: typeof namespaces; default: Hono };
     namespaces = mod.namespaces;
     app = mod.default;
 } else {

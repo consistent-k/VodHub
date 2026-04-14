@@ -1,0 +1,124 @@
+---
+description: Frontend coding conventions and style guide
+globs: ["apps/frontend/**/*.ts", "apps/frontend/**/*.tsx", "apps/frontend/**/*.scss"]
+alwaysApply: true
+---
+
+# Frontend Code Style Rules
+
+## TypeScript Rules
+- Strict mode (`strict: true`)
+- `any` is allowed (`@typescript-eslint/no-explicit-any: off`)
+- `@ts-ignore` is allowed (`@typescript-eslint/ban-ts-comment: off`)
+- Prefer `interface` for object types
+- API responses use generics (`async get<T>(url, config): Promise<T>`)
+
+## Naming Conventions
+| Item | Convention | Example |
+|---|---|---|
+| Components | PascalCase | `InitProvider`, `VodList` |
+| Hooks | camelCase + `use` prefix | `useIsMobile`, `useThemeStore` |
+| Stores | camelCase + `use` + `Store` suffix | `useSettingStore` |
+| Constants | UPPER_SNAKE_CASE | `DEFAULT_CONFIG` |
+| Types | PascalCase | `HomeData`, `VodListProps` |
+| Files | `.tsx` for components, `.ts` otherwise | |
+
+## Import Order
+Enforced by ESLint `import/order`:
+1. Node built-in modules
+2. External dependency packages
+3. Internal modules (`@/`), parent, sibling, index
+
+Blank line between each group, alphabetized within groups (case-insensitive).
+
+```typescript
+// Example
+import { Button } from 'antd';
+import { useNavigate } from 'react-router';
+import { useEffect } from 'react';
+
+import useSettingStore from '@/lib/store/useSettingStore';
+import { useVodSitesStore } from '@/lib/store/useVodSitesStore';
+```
+
+## Component Rules
+- Components are client-side by default (no `'use client'` directive needed)
+- Props defined with `interface` and destructured in params
+- Components use `export default`
+
+```typescript
+
+import { FC } from 'react';
+
+export interface MyComponentProps {
+    title: string;
+    onClick?: () => void;
+}
+
+const MyComponent: FC<MyComponentProps> = ({ title, onClick }) => {
+    return <div onClick={onClick}>{title}</div>;
+};
+
+export default MyComponent;
+```
+
+## Styling Rules
+- Use SCSS Modules (`index.module.scss`)
+- Class names use `vod-next-` prefix (historical naming convention)
+- **All colors must use CSS variables** — never hardcode hex/rgba values
+- Ant Design components are preferred
+
+```scss
+// Correct: CSS variables
+background: var(--color-bg-container);
+color: var(--color-text-secondary);
+border: 1px solid var(--color-border-secondary);
+
+// Wrong: hardcoded colors
+background: #0f0f23;
+color: #94a3b8;
+```
+
+Available CSS variables (defined in `globals.scss`):
+| Category | Variable | Description |
+|---|---|---|
+| Brand | `--color-primary` | Primary color |
+| Brand | `--color-primary-light` | Light primary |
+| Background | `--color-bg` | Page background |
+| Background | `--color-bg-container` | Container background |
+| Background | `--color-bg-elevated` | Elevated background |
+| Background | `--color-bg-container-alpha` | Semi-transparent container |
+| Background | `--color-bg-elevated-alpha` | Semi-transparent elevated |
+| Background | `--color-bg-elevated-hover` | Hover state background |
+| Text | `--color-text` | Primary text |
+| Text | `--color-text-secondary` | Secondary text |
+| Text | `--color-text-tertiary` | Tertiary text |
+| Border | `--color-border` | Border |
+| Border | `--color-border-secondary` | Secondary border |
+| State | `--color-primary-alpha-low` | Selected state |
+| State | `--color-primary-alpha-medium` | Border accent |
+| State | `--color-primary-alpha-hover` | Hover state |
+| State | `--color-primary-shadow` | Shadow |
+| Overlay | `--color-overlay` | Overlay background |
+| Overlay | `--color-overlay-border` | Overlay border |
+
+## Themes
+Three built-in themes defined in `lib/themes/index.ts`:
+- **midnight**: Dark with red accent
+- **aurora**: Light with cyan accent
+- **cyber**: Dark with purple accent
+
+Theme managed by `useThemeStore`, updates CSS variables and Ant Design theme config.
+
+## State Management
+- Zustand stores use `persist` middleware
+- Store file naming: `use{Name}Store.ts`
+- localStorage operations via `store2`
+
+## Error Handling
+- HTTP errors: rejected via interceptor (`Promise.reject(error)`)
+- API calls: wrap in try/catch, re-throw as `Promise.reject`
+- UI errors: display with Ant Design `message` component
+
+## Formatting (Prettier)
+- Single quotes, no trailing commas, 4-space indent, 200 char width, LF line endings, semicolons always

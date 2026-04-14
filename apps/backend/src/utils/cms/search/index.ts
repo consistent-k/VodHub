@@ -1,7 +1,5 @@
 import type { Context } from 'hono';
-
 import request from '../request';
-
 import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
 import { SEARCH_MESSAGE } from '@/constant/message';
 import { USER_AGENT_CHROME } from '@/constant/userAgent';
