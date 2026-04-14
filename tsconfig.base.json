@@ -1,13 +1,15 @@
 {
     "compilerOptions": {
+        "isolatedModules": true,
+        "target": "ES2022",
+        "lib": ["ES2022"],
         "module": "ESNext",
         "moduleResolution": "bundler",
+        "resolveJsonModule": true,
+        "allowJs": true,
         "strict": true,
         "esModuleInterop": true,
         "skipLibCheck": true,
-        "noEmit": true,
-        "incremental": true,
-        "resolveJsonModule": true,
-        "isolatedModules": true
+        "forceConsistentCasingInFileNames": true
     }
 }

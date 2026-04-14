@@ -46,8 +46,8 @@ jobs:
               uses: docker/build-push-action@v7
               with:
                   context: .
-                  file: ./Dockerfile
-                  target: backend
+                  file: ./apps/backend/Dockerfile
+                  target: runner
                   platforms: linux/amd64,linux/arm64
                   push: true
                   tags: ${{ steps.meta-backend.outputs.tags }}
@@ -96,8 +96,8 @@ jobs:
               uses: docker/build-push-action@v7
               with:
                   context: .
-                  file: ./Dockerfile
-                  target: frontend
+                  file: ./apps/frontend/Dockerfile
+                  target: runner
                   platforms: linux/amd64,linux/arm64
                   push: true
                   tags: ${{ steps.meta-frontend.outputs.tags }}

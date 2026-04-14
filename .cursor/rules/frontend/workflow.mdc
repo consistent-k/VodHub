@@ -1,0 +1,75 @@
+---
+description: Frontend development workflow and common tasks
+globs: ["apps/frontend/**/*.ts", "apps/frontend/**/*.tsx", "apps/frontend/**/*.scss"]
+alwaysApply: true
+---
+
+# Frontend Development Workflow
+
+## Commands
+
+```bash
+pnpm dev                          # Start both backend + frontend
+pnpm dev:frontend                 # Frontend only (vite dev)
+pnpm --filter @vodhub/frontend build     # Production build (standalone)
+pnpm --filter @vodhub/frontend lint      # ESLint check
+pnpm --filter @vodhub/frontend typecheck # TypeScript type check
+pnpm commit                       # Interactive conventional commit
+```
+
+## Git Workflow
+- **Commit format**: Conventional Commits (`feat:`, `fix:`, `docs:`, `refactor:`, etc.)
+- **Pre-commit**: Husky + lint-staged runs ESLint and Prettier automatically
+- **Commit validation**: commitlint verifies message format
+
+## New Feature Flow
+1. Create feature branch
+2. Create page in `pages/` (if needed)
+3. Create components in `components/`
+4. Add API calls in `services/`
+5. Add type definitions in `lib/types/`
+6. Run `pnpm --filter @vodhub/frontend lint`
+7. Commit with `pnpm commit`
+
+## Common Tasks
+
+### Adding a Page
+1. Create directory in `pages/` (e.g., `pages/newpage/`)
+2. Create `index.tsx`
+3. Components are client-side by default (no `'use client'` directive needed)
+4. Create `index.module.scss` for styles
+
+### Adding a Component
+1. Create directory in `components/` (e.g., `components/video/NewComponent/`)
+2. Create `index.tsx`
+3. Define and export Props interface
+4. Create `index.module.scss`
+5. Use `export default` for the component
+
+### Adding an API Call
+1. Define request/response types in `lib/types/`
+2. Add API function in `services/vodhub/`
+3. Use `request.get<T>` or `request.post<T>`
+4. Export in `services/index.ts`
+
+### Adding a Store
+1. Create `use{Name}Store.ts` in `lib/store/`
+2. Define interface and state types
+3. Create store with Zustand `create`
+4. Add `persist` middleware if persistence needed
+
+## Tips
+- **Browser console**: Use `console.log` for debugging
+- **Network**: Check `/api/vodhub/` proxy requests
+- **State**: Use React DevTools or Zustand DevTools
+
+## Performance
+- Use `React.memo` to avoid unnecessary re-renders
+- Use `useMemo` and `useCallback` for expensive computations
+- Use `React.lazy()` with `Suspense` for heavy components (e.g., video player)
+- Use `Suspense` for async loading
+
+## Notes
+- **Rendering**: Components are client-side by default (no SSR)
+- **Themes**: Styles must support light/dark themes via CSS variables
+- **Responsive**: Use Ant Design `Flex` and `Row/Col` for layout

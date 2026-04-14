@@ -25,7 +25,8 @@ export let namespaces: Record<
 let app: Hono;
 
 if (isProduction) {
-    const mod = (await import('./registry.gen')) as { namespaces: typeof namespaces; default: Hono };
+    // eslint-disable-next-line
+    const mod = require('./registry.gen') as { namespaces: typeof namespaces; default: Hono };
     namespaces = mod.namespaces;
     app = mod.default;
 } else {

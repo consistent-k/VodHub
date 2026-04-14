@@ -1,4 +1,9 @@
 **/*.md
 **/*.svg
 **/*.html
-package.json
+**/*.yml
+**/*.yaml
+
+node_modules/
+dist/
+pnpm-lock.yaml

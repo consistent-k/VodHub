@@ -2,9 +2,9 @@ services:
     frontend:
         build:
             context: .
-            target: frontend
+            dockerfile: apps/frontend/Dockerfile
         ports:
-            - '127.0.0.1:3000:3000'
+            - '127.0.0.1:3000:80'
         environment:
             - NODE_ENV=production
             - API_BASE_URL=http://backend:8888
@@ -14,7 +14,7 @@ services:
     backend:
         build:
             context: .
-            target: backend
+            dockerfile: apps/backend/Dockerfile
         ports:
             - '127.0.0.1:8888:8888'
         environment:
