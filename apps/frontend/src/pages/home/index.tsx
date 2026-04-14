@@ -1,7 +1,9 @@
 import { uniq } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
+
 import styles from './index.module.scss';
+
 import { Loading } from '@/components/ui/Loading';
 import VodList from '@/components/video/VodList';
 import useSettingStore from '@/lib/store/useSettingStore';

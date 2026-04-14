@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router';
+
 import { Loading } from '@/components/ui/Loading';
 import useSettingStore from '@/lib/store/useSettingStore';
 import { useVodSitesStore } from '@/lib/store/useVodSitesStore';
@@ -13,7 +14,7 @@ export default function InitProvider({ children }: { children: React.ReactNode }
 
     useEffect(() => {
         if (!vod_hub_api || hasError) {
-            navigate('/setting');
+            navigate('/setting', { replace: true });
         }
     }, [vod_hub_api, navigate, hasError]);
 

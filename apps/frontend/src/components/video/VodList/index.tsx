@@ -1,5 +1,7 @@
 import { Image } from 'antd';
+
 import styles from './index.module.scss';
+
 import { CategoryVodData, HomeVodData, SearchData } from '@/lib/types';
 
 export interface VodListProps {

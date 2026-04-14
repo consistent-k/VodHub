@@ -2,8 +2,10 @@ import { Hono } from 'hono';
 import { compress } from 'hono/compress';
 import { cors } from 'hono/cors';
 import { trimTrailingSlash } from 'hono/trailing-slash';
+
 import proxy from './routes/proxy';
 import registry from './routes/registry';
+
 import api from '@/api';
 import cache from '@/middleware/cache';
 import jsonReturn from '@/middleware/jsonReturn';

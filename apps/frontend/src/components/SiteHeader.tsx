@@ -1,7 +1,9 @@
 import { SettingOutlined } from '@ant-design/icons';
 import { Button, Flex, Layout } from 'antd';
 import { useNavigate } from 'react-router';
+
 import styles from './index.module.scss';
+
 import VodSearch from '@/components/video/VodSearch';
 import VodSites from '@/components/video/VodSites';
 import useSettingStore from '@/lib/store/useSettingStore';

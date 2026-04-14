@@ -1,6 +1,7 @@
 import { App, ConfigProvider, theme as antdTheme } from 'antd';
 import zhCN from 'antd/lib/locale/zh_CN';
 import { useEffect } from 'react';
+
 import { useThemeStore } from '@/lib/store/useThemeStore';
 import { getTheme, ThemeCssVariables, ThemeId } from '@/lib/themes';
 

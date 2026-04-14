@@ -1,4 +1,5 @@
 import { OpenAPIHono } from '@hono/zod-openapi';
+
 import { route, handler } from '@/api/namespace';
 
 const app = new OpenAPIHono();

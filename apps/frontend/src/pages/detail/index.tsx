@@ -1,8 +1,10 @@
 import { App, Descriptions, Flex, Select, Typography } from 'antd';
 import { includes } from 'lodash';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { Suspense, useEffect, useMemo, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router';
+
 import styles from './index.module.scss';
+
 import { Loading } from '@/components/ui/Loading';
 import { PlayerProps } from '@/components/video/VodPalyer';
 import useIsMobile from '@/lib/hooks/useIsMobile';
@@ -101,14 +103,16 @@ const DetailPage: React.FC = () => {
         <div className={styles['vod-next-detail']}>
             <Flex vertical={isMobile} gap={24}>
                 <div className={styles['vod-next-detail-player']} style={{ width: isMobile ? '100%' : 'calc(100% - 400px)' }}>
-                    <PlayerComponent
-                        url={playerUrl}
-                        onError={(msg: string) => {
-                            message.error(msg);
-                        }}
-                        showType={playerShowType}
-                        style={{ width: '100%' }}
-                    />
+                    <Suspense fallback={<Loading />}>
+                        <PlayerComponent
+                            url={playerUrl}
+                            onError={(msg: string) => {
+                                message.error(msg);
+                            }}
+                            showType={playerShowType}
+                            style={{ width: '100%' }}
+                        />
+                    </Suspense>
                 </div>
 
                 <div className={styles['vod-next-detail-playlist']} style={{ flex: 1 }}>
@@ -124,7 +128,7 @@ const DetailPage: React.FC = () => {
                             })}
                             defaultActiveFirstOption
                             variant="borderless"
-                            defaultValue={activePlayList?.name}
+                            value={activePlayList?.name}
                             onChange={(value) => {
                                 const active = movieDetail?.vod_play_list.find((item: VodPlayList) => item.name === value);
                                 setActivePlayList(active);

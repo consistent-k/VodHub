@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router';
+
 import BasicLayout from './components/BasicLayout';
 import InitProvider from './components/InitProvider';
 import ThemeProvider from './components/ThemeProvider';
@@ -25,6 +26,7 @@ function App() {
                         <Route path="/category" element={<CategoryPage />} />
                         <Route path="/detail" element={<DetailPage />} />
                         <Route path="/setting" element={<SettingPage />} />
+                        <Route path="*" element={<Navigate to="/home" replace />} />
                     </Routes>
                 </BasicLayout>
             </InitProvider>

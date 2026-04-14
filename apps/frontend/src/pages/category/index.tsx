@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router';
 import store from 'store2';
+
 import styles from './index.module.scss';
+
 import { Loading } from '@/components/ui/Loading';
 import VodList from '@/components/video/VodList';
 import { CategoryVodData, Filter, FilterItem, HomeData } from '@/lib/types';
@@ -57,9 +59,11 @@ const CategoryPage = () => {
 
     useEffect(() => {
         if (typeof id === 'string' && id) {
-            getCategory(id, filters);
+            if (site) {
+                getCategory(id, filters);
+            }
         }
-    }, [filters, id]);
+    }, [filters, id, site]);
 
     const currentData: HomeData | undefined = useMemo(() => {
         const homeData: HomeData[] = store.get('vod_next_home_data') || [];

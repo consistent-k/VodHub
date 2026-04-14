@@ -24,8 +24,7 @@ services:
     environment:
       - NODE_ENV=production
       - REDIS_URL=redis://redis:6379
-      - CACHE_TTL=60000
-      - BANNED_KEYWORDS=测试
+      - CACHE_TTL=60
     volumes:
       - ./logs:/app/apps/backend/logs
     depends_on:

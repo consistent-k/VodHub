@@ -2,9 +2,11 @@ import { Layout } from 'antd';
 import dayjs from 'dayjs';
 import React, { PropsWithChildren, useMemo } from 'react';
 import { useLocation } from 'react-router';
+
 import styles from './BasicLayout.module.scss';
 import Disclaimer from './Disclaimer';
 import SiteHeader from './SiteHeader';
+
 import VodTypes from '@/components/video/VodTypes';
 import useSettingStore from '@/lib/store/useSettingStore';
 const { Content, Footer } = Layout;

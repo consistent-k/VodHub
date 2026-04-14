@@ -3,7 +3,9 @@ import { Button, Flex, Input, Modal, theme } from 'antd';
 import { debounce, trim } from 'lodash';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
+
 import VodList, { VodListProps } from '../VodList';
+
 import SearchIcon from '@/components/icons/SearchIcon';
 import { Loading } from '@/components/ui/Loading';
 import useIsMobile from '@/lib/hooks/useIsMobile';

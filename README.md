@@ -173,14 +173,14 @@ curl --location --request POST 'http://127.0.0.1:8888/api/vodhub/{{vod_site}}/se
 使用 `docker-compose.yml` 配置文件：
 
 ```bash
-$ docker-compose up -d
+$ docker compose up -d
 ```
 
 #### 生产环境
 使用 `docker-compose.prod.yml` 配置文件，包含 Redis 缓存服务、日志持久化等生产环境优化：
 
 ```bash
-$ docker-compose -f docker-compose.prod.yml up -d
+$ docker compose -f docker-compose.prod.yml up -d
 ```
 
 **生产环境配置说明：**
@@ -191,7 +191,7 @@ $ docker-compose -f docker-compose.prod.yml up -d
   - Redis：127.0.0.1:6379 → 容器 6379 端口（仅本地访问）
 - **环境变量**：
   - `REDIS_URL=redis://redis:6379` - Redis 连接地址
-  - `CACHE_TTL=60000` - 缓存时间（毫秒）
+  - `CACHE_TTL=60` - 缓存时间（秒）
   - `BANNED_KEYWORDS=测试` - 禁用关键词
 - **数据持久化**：
   - 后端日志：主机 `./logs` 目录映射到容器日志目录

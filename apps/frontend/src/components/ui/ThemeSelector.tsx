@@ -1,6 +1,8 @@
 import { CheckOutlined } from '@ant-design/icons';
 import { Card, Flex, Typography } from 'antd';
+
 import styles from './ThemeSelector.module.scss';
+
 import { useThemeStore } from '@/lib/store/useThemeStore';
 import { themeList, ThemeId } from '@/lib/themes';
 

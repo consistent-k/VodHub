@@ -1,7 +1,9 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+
 import { directoryImport } from 'directory-import';
 import { Hono, type Handler } from 'hono';
+
 import type { Namespace, Route } from '@/types';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));

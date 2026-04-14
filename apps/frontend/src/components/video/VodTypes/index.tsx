@@ -1,7 +1,9 @@
 import { useEffect, useState, useRef, useMemo } from 'react';
 import { useNavigate, useLocation, useSearchParams } from 'react-router';
 import store from 'store2';
+
 import styles from './index.module.scss';
+
 import { homeApi } from '@/services';
 
 interface VodTypesProps {

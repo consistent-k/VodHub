@@ -1,4 +1,5 @@
 import type { Context } from 'hono';
+
 import type { Namespace, Route } from '@/types';
 import { handler as categoryHandler } from '@/utils/cms/category';
 import { handler as detailHandler } from '@/utils/cms/detail';

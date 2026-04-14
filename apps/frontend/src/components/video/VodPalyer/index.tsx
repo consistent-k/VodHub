@@ -3,6 +3,7 @@ import { useRef } from 'react';
 import Player, { I18N } from 'xgplayer';
 import ZH from 'xgplayer/es/lang/zh-cn';
 import HlsPlugin from 'xgplayer-hls';
+
 import styles from './index.module.scss';
 import 'xgplayer/dist/index.min.css';
 
@@ -46,9 +47,17 @@ const VodPalyer: React.FC<PlayerProps> = (props) => {
                 }
             }
         });
+        xgInstanceRef.current = player;
         player.on('error', (e: any) => {
             onError?.(e.message);
         });
+
+        return () => {
+            player.destroy();
+            if (xgInstanceRef.current === player) {
+                xgInstanceRef.current = null;
+            }
+        };
     }, [url, showType]);
 
     useUnmount(() => {
