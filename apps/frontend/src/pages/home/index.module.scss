@@ -19,9 +19,10 @@
 
     &-title {
         font-size: 24px;
-        font-weight: 700;
+        font-weight: 600;
         color: var(--color-text);
-        letter-spacing: 0.02em;
+        letter-spacing: -0.96px;
+        line-height: 1.33;
         position: relative;
         display: inline-flex;
         align-items: center;
@@ -31,17 +32,16 @@
             content: '';
             width: 4px;
             height: 24px;
-            background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+            background: var(--color-primary);
             border-radius: 2px;
-            box-shadow: 0 0 12px rgba(225, 29, 72, 0.5);
         }
     }
 
     &-more {
-        font-size: 13px;
+        font-size: 14px;
+        font-weight: 500;
         color: var(--color-text-tertiary);
         cursor: pointer;
-        transition: color 0.2s;
         display: flex;
         align-items: center;
         gap: 4px;

@@ -20,9 +20,7 @@ export default function InitProvider({ children }: { children: React.ReactNode }
 
     useEffect(() => {
         if (!isInitialized && location.pathname !== '/setting') {
-            getVodTypes({
-                force: false
-            });
+            getVodTypes();
         }
     }, [getVodTypes, isInitialized, location.pathname]);
 

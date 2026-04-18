@@ -1,69 +1,74 @@
 import { Hono } from 'hono';
 import type { Context } from 'hono';
-import queryString from 'query-string';
 
-import { omitHeaders } from '@/utils/headers';
+import type { Namespace } from '@/types';
+import { handler as categoryHandler } from '@/utils/cms/category';
+import { handler as detailHandler } from '@/utils/cms/detail';
+import { handler as homeHandler } from '@/utils/cms/home';
+import { handler as homeVodHandler } from '@/utils/cms/homeVod';
+import { handler as playHandler } from '@/utils/cms/play';
+import { handler as searchHandler } from '@/utils/cms/search';
 import logger from '@/utils/logger';
-
-const ALLOWED_PROXY_TARGETS = (process.env.ALLOWED_PROXY_TARGETS || '').split(',').filter(Boolean);
 
 const app = new Hono();
 
-function isAllowedTarget(target: string): boolean {
-    if (ALLOWED_PROXY_TARGETS.length === 0) {
-        return false;
-    }
-    try {
-        const url = new URL(target);
-        return ALLOWED_PROXY_TARGETS.some((allowed) => url.hostname.endsWith(allowed));
-    } catch {
-        return false;
-    }
-}
+const createNamespace = (target: string): Namespace => ({
+    name: 'custom',
+    url: target
+});
 
-async function handleProxyRequest(ctx: Context, method = 'GET') {
-    const query = ctx.req.query();
-    const strParams = queryString.stringify(query);
+app.all('/', async (ctx: Context): Promise<Response> => {
     const target = ctx.req.header('x-proxy-target') || '';
-    const path = ctx.req.header('x-proxy-path');
+    const action = ctx.req.header('x-proxy-action') || '';
+
+    logger.info(`Proxy request: target=${target}, action=${action}`);
 
     if (!target) {
-        return ctx.json({ error: 'header x-proxy-target is required' }, 400);
-    }
-    if (!path) {
-        return ctx.json({ error: 'header x-proxy-path is required' }, 400);
-    }
-    if (!isAllowedTarget(target)) {
-        return ctx.json({ error: 'target not allowed' }, 403 as const);
+        return ctx.json({ code: -1, message: 'header x-proxy-target is required', data: [] });
     }
 
-    const headers = ctx.req.header();
-    const url = `${target}${path}?${strParams}`;
+    if (!action) {
+        return ctx.json({ code: -1, message: 'header x-proxy-action is required', data: [] });
+    }
 
-    try {
-        const response = await fetch(url, {
-            method,
-            headers: {
-                ...omitHeaders(headers, ['content-length', 'x-proxy-path', 'x-proxy-target']),
-                'Content-Type': 'application/json',
-                Referer: target
-            },
-            ...(method === 'POST' ? { body: JSON.stringify(await ctx.req.json()) } : {})
-        });
+    const namespace = createNamespace(target);
+    const method = ctx.req.method;
 
-        if (!response.ok) {
-            return ctx.json({ error: 'Failed to proxy request' }, response.status as 400 | 500);
+    let result: Response;
+
+    if (method === 'GET') {
+        switch (action) {
+            case 'list':
+                result = ctx.json(await homeHandler(ctx, namespace));
+                break;
+            case 'detail':
+                result = ctx.json(await homeVodHandler(ctx, namespace));
+                break;
+            default:
+                result = ctx.json({ code: -1, message: 'Unknown GET action: ' + action, data: [] });
+                break;
         }
-
-        const { status, statusText, headers: resHeaders } = response;
-        return new Response(response.body, { status, statusText, headers: resHeaders });
-    } catch (error) {
-        logger.error(`Proxy request failed: ${error instanceof Error ? error.message : String(error)}`);
-        return ctx.json({ error: 'Proxy request failed' }, 500);
+    } else {
+        switch (action) {
+            case 'detail':
+                result = ctx.json(await detailHandler(ctx, namespace));
+                break;
+            case 'play':
+                result = ctx.json(await playHandler(ctx, namespace));
+                break;
+            case 'search':
+                result = ctx.json(await searchHandler(ctx, namespace));
+                break;
+            case 'category':
+                result = ctx.json(await categoryHandler(ctx, namespace));
+                break;
+            default:
+                result = ctx.json({ code: -1, message: 'Unknown POST action: ' + action, data: [] });
+                break;
+        }
     }
-}
 
-app.get('/', async (ctx) => handleProxyRequest(ctx, 'GET'));
-app.post('/', async (ctx) => handleProxyRequest(ctx, 'POST'));
+    return result;
+});
 
 export default app;

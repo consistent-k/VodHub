@@ -1,16 +1,49 @@
 .vod-next-setting {
     height: 100%;
     width: 100%;
-    max-width: 800px;
     margin: 0 auto;
-    padding: 24px !important;
+    padding: 24px;
+    background: var(--color-bg);
+}
+
+.setting-page {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.setting-card {
+    background: var(--color-bg-container) !important;
+    border-radius: 8px !important;
+    box-shadow: var(--shadow-border) !important;
+    border: none !important;
+    transition: all 0.2s ease;
+
+    &:hover {
+        box-shadow: var(--shadow-card) !important;
+    }
+
+    .ant-card-head {
+        border-bottom: 1px solid var(--color-border) !important;
+        padding: 16px 24px !important;
+        min-height: auto !important;
+    }
+
+    .ant-card-head-title {
+        padding: 0 !important;
+        font-family: 'Geist', 'Inter', sans-serif;
+        font-feature-settings: 'liga' 1;
+    }
+
+    .ant-card-body {
+        padding: 24px !important;
+    }
 }
 
 .setting-form-content {
     color: var(--color-text-tertiary) !important;
     background-color: var(--color-bg-container) !important;
-    border-radius: 16px !important;
-    border: 1px solid var(--color-border) !important;
+    border-radius: 8px !important;
+    box-shadow: var(--shadow-border) !important;
     margin-top: 16px !important;
     padding: 24px !important;
 }
@@ -21,4 +54,75 @@
 
 .setting-divider {
     margin: 32px 0 24px;
+    border-color: var(--color-border) !important;
+}
+
+/* 表单样式覆盖 */
+:global(.ant-form-item-label) {
+    label {
+        font-family: 'Geist', 'Inter', sans-serif;
+        font-feature-settings: 'liga' 1;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--color-text-secondary);
+    }
+}
+
+:global(.ant-input),
+:global(.ant-select-selector) {
+    border-radius: 6px !important;
+    border: 1px solid var(--color-border) !important;
+    background: var(--color-bg-container) !important;
+    color: var(--color-text) !important;
+    font-family: 'Geist', 'Inter', sans-serif;
+    font-feature-settings: 'liga' 1;
+
+    &:hover {
+        border-color: var(--color-text-tertiary) !important;
+    }
+
+    &:focus {
+        border-color: var(--color-primary) !important;
+        box-shadow: 0 0 0 2px rgba(23, 23, 23, 0.1) !important;
+    }
+}
+
+:global(.ant-input::placeholder),
+:global(.ant-select-selection-placeholder) {
+    color: var(--color-text-tertiary) !important;
+}
+
+:global(.ant-btn) {
+    border-radius: 6px !important;
+    font-family: 'Geist', 'Inter', sans-serif;
+    font-feature-settings: 'liga' 1;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+:global(.ant-btn.ant-btn-default) {
+    background: var(--color-bg-container) !important;
+    border: 1px solid var(--color-border) !important;
+    color: var(--color-text) !important;
+
+    &:hover {
+        background: var(--color-bg-elevated) !important;
+        border-color: var(--color-text-tertiary) !important;
+    }
+}
+
+:global(.ant-btn.ant-btn-primary) {
+    background: var(--color-primary) !important;
+    border-color: var(--color-primary) !important;
+    color: #ffffff !important;
+
+    &:hover {
+        background: var(--color-primary-light) !important;
+        border-color: var(--color-primary-light) !important;
+    }
+}
+
+:global(.ant-card) {
+    font-family: 'Geist', 'Inter', sans-serif;
+    font-feature-settings: 'liga' 1;
 }

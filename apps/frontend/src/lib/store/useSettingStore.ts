@@ -1,19 +1,30 @@
-import store from 'store2';
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
-const useSettingStore = () => {
-    const setting = store.get('vod_next_setting') || {};
+interface SettingStore {
+    vod_hub_api: string;
+    site_name: string;
+    current_site: string;
+    updateSetting: (setting: { vod_hub_api: string; site_name: string; current_site: string }) => void;
+}
 
-    const updateSetting = (setting: { vod_hub_api: string; site_name: string; current_site: string }) => {
-        store.set('vod_next_setting', setting);
-    };
-
-    return {
-        setting,
-        current_site: setting.current_site,
-        vod_hub_api: setting.vod_hub_api,
-        site_name: setting.site_name,
-        updateSetting
-    };
-};
+const useSettingStore = create<SettingStore>()(
+    persist(
+        (set) => ({
+            vod_hub_api: '',
+            site_name: '',
+            current_site: '',
+            updateSetting: (setting) => set(setting)
+        }),
+        {
+            name: 'vod_next_setting',
+            partialize: (state) => ({
+                vod_hub_api: state.vod_hub_api,
+                site_name: state.site_name,
+                current_site: state.current_site
+            })
+        }
+    )
+);
 
 export default useSettingStore;

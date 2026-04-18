@@ -1,3 +1,6 @@
+import { ApiResponse } from '@vodhub/shared/types';
+
+import useCmsStore from '@/lib/store/useCmsStore';
 import { HomeData, HomeVodData, CategoryVodData, DetailData, PlayData, SearchData } from '@/lib/types';
 import request from '@/lib/utils/request';
 
@@ -7,7 +10,20 @@ interface VodHubResponse<T> {
     update_time: string;
 }
 
-// 定义接口类型
+const getCmsById = (id: string) => {
+    const { cmsList } = useCmsStore.getState();
+    return cmsList.find((cms) => cms.id === id);
+};
+
+const getCmsUrl = (site: string): string | undefined => {
+    if (site.startsWith('custom_')) {
+        const id = site.replace('custom_', '');
+        const cms = getCmsById(id);
+        return cms?.url;
+    }
+    return undefined;
+};
+
 export interface CategoryParams {
     id: string | number;
     page: number;
@@ -29,7 +45,6 @@ interface SearchParams {
     page: number;
 }
 
-// 获取namespace
 export const namespaceApi = () => {
     return request.get<
         Record<
@@ -42,39 +57,100 @@ export const namespaceApi = () => {
     >(`/namespace`);
 };
 
-// 获取首页分类
 export const homeApi = (site_name: string) => {
+    const cmsUrl = getCmsUrl(site_name);
+    if (cmsUrl) {
+        return request.get<ApiResponse<HomeData[]>>(`/proxy`, {
+            headers: {
+                'x-proxy-target': cmsUrl,
+                'x-proxy-action': 'list'
+            }
+        });
+    }
     return request.get<VodHubResponse<HomeData[]>>(`/${site_name}/home`);
 };
 
-// 最近更新
 export const homeVodApi = (site_name: string) => {
+    const cmsUrl = getCmsUrl(site_name);
+    if (cmsUrl) {
+        return request.get<ApiResponse<HomeVodData[]>>(`/proxy`, {
+            headers: {
+                'x-proxy-target': cmsUrl,
+                'x-proxy-action': 'detail'
+            }
+        });
+    }
     return request.get<VodHubResponse<HomeVodData[]>>(`/${site_name}/homeVod`);
 };
 
-// 按分类查询
 export const categoryApi = (site_name: string, data: CategoryParams) => {
+    const cmsUrl = getCmsUrl(site_name);
+    if (cmsUrl) {
+        return request.post<ApiResponse<CategoryVodData[]>>(`/proxy`, {
+            headers: {
+                'x-proxy-target': cmsUrl,
+                'x-proxy-action': 'category'
+            },
+            data: {
+                id: data.id,
+                page: data.page
+            }
+        });
+    }
     return request.post<VodHubResponse<CategoryVodData[]>>(`/${site_name}/category`, {
         data
     });
 };
 
-// 详情
 export const detailApi = (site_name: string, data: { id: string | number }) => {
+    const cmsUrl = getCmsUrl(site_name);
+    if (cmsUrl) {
+        return request.post<ApiResponse<DetailData[]>>(`/proxy`, {
+            headers: {
+                'x-proxy-target': cmsUrl,
+                'x-proxy-action': 'detail'
+            },
+            data: {
+                id: data.id
+            }
+        });
+    }
     return request.post<VodHubResponse<DetailData[]>>(`/${site_name}/detail`, {
         data
     });
 };
 
-// 获取播放地址
 export const playApi = (site_name: string, data: PlayParams) => {
+    const cmsUrl = getCmsUrl(site_name);
+    if (cmsUrl) {
+        return request.post<ApiResponse<PlayData[]>>(`/proxy`, {
+            headers: {
+                'x-proxy-target': cmsUrl,
+                'x-proxy-action': 'play'
+            },
+            data: {
+                url: data.url
+            }
+        });
+    }
     return request.post<VodHubResponse<PlayData[]>>(`/${site_name}/play`, {
         data
     });
 };
 
-// 搜索
 export const searchApi = (site_name: string, data: SearchParams) => {
+    const cmsUrl = getCmsUrl(site_name);
+    if (cmsUrl) {
+        return request.post<ApiResponse<SearchData[]>>(`/proxy`, {
+            headers: {
+                'x-proxy-target': cmsUrl,
+                'x-proxy-action': 'search'
+            },
+            data: {
+                keyword: data.keyword
+            }
+        });
+    }
     return request.post<VodHubResponse<SearchData[]>>(`/${site_name}/search`, {
         data
     });
