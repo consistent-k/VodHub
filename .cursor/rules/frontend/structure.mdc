@@ -15,6 +15,7 @@ apps/frontend/src/
     video/                # Video components (VodList, VodPalyer, VodSearch, VodSites, VodTypes)
     icons/                # Custom SVG icon components
     ui/                   # UI utilities (Loading, ThemeSelector)
+    cms-management/       # CMS management interface
   lib/                    # Business logic and utilities
     constant/             # Constants (llm.ts, site.ts, prompt.ts)
     hooks/                # Custom hooks
@@ -30,6 +31,8 @@ apps/frontend/src/
   services/               # API service layer
     index.ts              # Service exports
     vodhub/               # VodHub API calls
+  data/                   # Static data
+    builtin-cms.json      # Built-in video sources definition
   App.tsx                 # Application root component
   main.tsx                # Entry point
   globals.scss            # Global styles + CSS variables
@@ -68,4 +71,6 @@ apps/frontend/src/
 - Theme config: `lib/themes/index.ts`
 - Theme Provider: `components/providers/ThemeProvider.tsx`
 - Theme store: `lib/store/useThemeStore.ts`
-- Sites store: `lib/store/useVodSitesStore.ts`
+- Video Sources store: `lib/store/useVideoSourcesStore.ts`
+- CMS Management component: `components/cms-management/index.tsx`
+- Built-in CMS data: `src/data/builtin-cms.json`
