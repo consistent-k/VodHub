@@ -113,7 +113,8 @@ Theme managed by `useThemeStore`, updates CSS variables and Ant Design theme con
 ## State Management
 - Zustand stores use `persist` middleware
 - Store file naming: `use{Name}Store.ts`
-- localStorage operations via `store2`
+- localStorage operations via `persist` middleware (store2 removed)
+- Video Sources store replaces old `useCmsStore`: `useVideoSourcesStore.ts`
 
 ## Error Handling
 - HTTP errors: rejected via interceptor (`Promise.reject(error)`)

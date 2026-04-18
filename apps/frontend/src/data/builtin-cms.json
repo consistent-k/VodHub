@@ -1,0 +1,122 @@
+[
+    {
+        "id": "360zy",
+        "name": "360资源",
+        "url": "https://360zy.com",
+        "description": "360资源",
+        "enabled": true,
+        "type": "builtin",
+        "createdAt": "2026-04-18T00:00:00.000Z",
+        "updatedAt": "2026-04-18T00:00:00.000Z"
+    },
+    {
+        "id": "bdzy",
+        "name": "百度云资源",
+        "url": "https://api.apibdzy.com",
+        "description": "百度云资源",
+        "enabled": true,
+        "type": "builtin",
+        "createdAt": "2026-04-18T00:00:00.000Z",
+        "updatedAt": "2026-04-18T00:00:00.000Z"
+    },
+    {
+        "id": "bfzy",
+        "name": "暴风资源",
+        "url": "https://bfzyapi.com",
+        "description": "暴风资源",
+        "enabled": true,
+        "type": "builtin",
+        "createdAt": "2026-04-18T00:00:00.000Z",
+        "updatedAt": "2026-04-18T00:00:00.000Z"
+    },
+    {
+        "id": "feifan",
+        "name": "非凡资源",
+        "url": "https://cj.ffzyapi.com",
+        "description": "非凡资源",
+        "enabled": true,
+        "type": "builtin",
+        "createdAt": "2026-04-18T00:00:00.000Z",
+        "updatedAt": "2026-04-18T00:00:00.000Z"
+    },
+    {
+        "id": "guangsuzy",
+        "name": "光速资源",
+        "url": "https://api.guangsuapi.com",
+        "description": "光速资源",
+        "enabled": true,
+        "type": "builtin",
+        "createdAt": "2026-04-18T00:00:00.000Z",
+        "updatedAt": "2026-04-18T00:00:00.000Z"
+    },
+    {
+        "id": "hongniuzy",
+        "name": "红牛资源站",
+        "url": "https://www.hongniuzy2.com",
+        "description": "红牛资源站",
+        "enabled": true,
+        "type": "builtin",
+        "createdAt": "2026-04-18T00:00:00.000Z",
+        "updatedAt": "2026-04-18T00:00:00.000Z"
+    },
+    {
+        "id": "huyazy",
+        "name": "虎牙资源",
+        "url": "https://www.huyaapi.com",
+        "description": "虎牙资源",
+        "enabled": true,
+        "type": "builtin",
+        "createdAt": "2026-04-18T00:00:00.000Z",
+        "updatedAt": "2026-04-18T00:00:00.000Z"
+    },
+    {
+        "id": "ikunzy",
+        "name": "ikun资源",
+        "url": "https://ikunzyapi.com",
+        "description": "ikun资源",
+        "enabled": true,
+        "type": "builtin",
+        "createdAt": "2026-04-18T00:00:00.000Z",
+        "updatedAt": "2026-04-18T00:00:00.000Z"
+    },
+    {
+        "id": "lzzy",
+        "name": "量子资源",
+        "url": "https://cj.lziapi.com",
+        "description": "量子资源",
+        "enabled": true,
+        "type": "builtin",
+        "createdAt": "2026-04-18T00:00:00.000Z",
+        "updatedAt": "2026-04-18T00:00:00.000Z"
+    },
+    {
+        "id": "mdzy",
+        "name": "魔都资源网",
+        "url": "https://www.mdzyapi.com",
+        "description": "魔都资源网",
+        "enabled": true,
+        "type": "builtin",
+        "createdAt": "2026-04-18T00:00:00.000Z",
+        "updatedAt": "2026-04-18T00:00:00.000Z"
+    },
+    {
+        "id": "sdzy",
+        "name": "闪电资源",
+        "url": "https://sdzyapi.com",
+        "description": "闪电资源",
+        "enabled": true,
+        "type": "builtin",
+        "createdAt": "2026-04-18T00:00:00.000Z",
+        "updatedAt": "2026-04-18T00:00:00.000Z"
+    },
+    {
+        "id": "subozy",
+        "name": "速博资源",
+        "url": "https://subocaiji.com",
+        "description": "速博资源",
+        "enabled": true,
+        "type": "builtin",
+        "createdAt": "2026-04-18T00:00:00.000Z",
+        "updatedAt": "2026-04-18T00:00:00.000Z"
+    }
+]

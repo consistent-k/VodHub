@@ -6,21 +6,29 @@ alwaysApply: true
 
 # VodHub Frontend — Project Overview
 
-VodNext is the frontend of the VodHub monorepo, a video aggregation player built with Vite + React.
+VodHub frontend is the frontend of the VodHub pnpm monorepo, a video aggregation player built with Vite + React.
 
 ## Core Features
 - Vite + React Router (client-side rendering)
 - Aggregates multiple video sources, supports category browsing, search, playback
 - Multi-theme support (midnight, aurora, cyber)
+- Built-in CMS management interface
 
 ## Tech Stack
 - **Framework**: Vite + React 19 + React Router + TypeScript
-- **State Management**: Zustand + Valtio
+- **State Management**: Zustand
 - **UI Library**: Ant Design 6
 - **Styling**: SCSS Modules + CSS variables (multi-theme)
 - **HTTP Client**: Axios
 - **Video Player**: xgplayer + HLS.js
 - **Package Manager**: pnpm (monorepo at root)
+
+## Video Sources Management
+
+- **Store**: `lib/store/useVideoSourcesStore.ts` (Zustand + localStorage)
+- **Built-in Sources**: Defined in `src/data/builtin-cms.json`
+- **CMS Management UI**: `components/cms-management/index.tsx`
+- Features: Enable/disable built-in sources, full CRUD for custom sources
 
 ## Development Tools
 - **Linting**: ESLint + Prettier

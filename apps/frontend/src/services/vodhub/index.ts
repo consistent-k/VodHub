@@ -1,6 +1,7 @@
 import { ApiResponse } from '@vodhub/shared/types';
+import type { VideoSource } from '@vodhub/shared/types/video-source';
 
-import useCmsStore from '@/lib/store/useCmsStore';
+import useVideoSourcesStore from '@/lib/store/useVideoSourcesStore';
 import { HomeData, HomeVodData, CategoryVodData, DetailData, PlayData, SearchData } from '@/lib/types';
 import request from '@/lib/utils/request';
 
@@ -10,18 +11,30 @@ interface VodHubResponse<T> {
     update_time: string;
 }
 
-const getCmsById = (id: string) => {
-    const { cmsList } = useCmsStore.getState();
-    return cmsList.find((cms) => cms.id === id);
-};
+const getVideoSourceBySite = async (site: string): Promise<VideoSource | undefined> => {
+    const videoSourcesState = useVideoSourcesStore.getState();
 
-const getCmsUrl = (site: string): string | undefined => {
+    // 确保视频源已加载（处理冷启动场景）
+    if (videoSourcesState.videoSources.length === 0) {
+        await videoSourcesState.fetchVideoSources();
+    }
+
+    const { videoSources } = useVideoSourcesStore.getState();
+
+    // 只返回启用的视频源
+    const enabledSources = videoSources.filter((source) => source.enabled);
+
     if (site.startsWith('custom_')) {
         const id = site.replace('custom_', '');
-        const cms = getCmsById(id);
-        return cms?.url;
+        return enabledSources.find((source) => source.id === id && source.type === 'custom');
     }
-    return undefined;
+    // 内置视频源
+    return enabledSources.find((source) => source.id === site && source.type === 'builtin');
+};
+
+const getCmsUrl = async (site: string): Promise<string | undefined> => {
+    const source = await getVideoSourceBySite(site);
+    return source?.url;
 };
 
 export interface CategoryParams {
@@ -57,8 +70,8 @@ export const namespaceApi = () => {
     >(`/namespace`);
 };
 
-export const homeApi = (site_name: string) => {
-    const cmsUrl = getCmsUrl(site_name);
+export const homeApi = async (site_name: string) => {
+    const cmsUrl = await getCmsUrl(site_name);
     if (cmsUrl) {
         return request.get<ApiResponse<HomeData[]>>(`/proxy`, {
             headers: {
@@ -70,8 +83,8 @@ export const homeApi = (site_name: string) => {
     return request.get<VodHubResponse<HomeData[]>>(`/${site_name}/home`);
 };
 
-export const homeVodApi = (site_name: string) => {
-    const cmsUrl = getCmsUrl(site_name);
+export const homeVodApi = async (site_name: string) => {
+    const cmsUrl = await getCmsUrl(site_name);
     if (cmsUrl) {
         return request.get<ApiResponse<HomeVodData[]>>(`/proxy`, {
             headers: {
@@ -83,8 +96,8 @@ export const homeVodApi = (site_name: string) => {
     return request.get<VodHubResponse<HomeVodData[]>>(`/${site_name}/homeVod`);
 };
 
-export const categoryApi = (site_name: string, data: CategoryParams) => {
-    const cmsUrl = getCmsUrl(site_name);
+export const categoryApi = async (site_name: string, data: CategoryParams) => {
+    const cmsUrl = await getCmsUrl(site_name);
     if (cmsUrl) {
         return request.post<ApiResponse<CategoryVodData[]>>(`/proxy`, {
             headers: {
@@ -102,8 +115,8 @@ export const categoryApi = (site_name: string, data: CategoryParams) => {
     });
 };
 
-export const detailApi = (site_name: string, data: { id: string | number }) => {
-    const cmsUrl = getCmsUrl(site_name);
+export const detailApi = async (site_name: string, data: { id: string | number }) => {
+    const cmsUrl = await getCmsUrl(site_name);
     if (cmsUrl) {
         return request.post<ApiResponse<DetailData[]>>(`/proxy`, {
             headers: {
@@ -120,8 +133,8 @@ export const detailApi = (site_name: string, data: { id: string | number }) => {
     });
 };
 
-export const playApi = (site_name: string, data: PlayParams) => {
-    const cmsUrl = getCmsUrl(site_name);
+export const playApi = async (site_name: string, data: PlayParams) => {
+    const cmsUrl = await getCmsUrl(site_name);
     if (cmsUrl) {
         return request.post<ApiResponse<PlayData[]>>(`/proxy`, {
             headers: {
@@ -138,8 +151,8 @@ export const playApi = (site_name: string, data: PlayParams) => {
     });
 };
 
-export const searchApi = (site_name: string, data: SearchParams) => {
-    const cmsUrl = getCmsUrl(site_name);
+export const searchApi = async (site_name: string, data: SearchParams) => {
+    const cmsUrl = await getCmsUrl(site_name);
     if (cmsUrl) {
         return request.post<ApiResponse<SearchData[]>>(`/proxy`, {
             headers: {

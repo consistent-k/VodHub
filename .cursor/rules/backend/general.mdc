@@ -19,6 +19,22 @@ VodHub backend is a video aggregation API service built with **Hono** on Node.js
 - **Logging**: Winston
 - **Utilities**: lodash, dayjs, CryptoJS, query-string
 
+## Provider Architecture
+
+### Built-in Provider
+- **360kan** – the only remaining hard-coded video source provider
+
+### Custom CMS Providers
+- User-defined CMS sources managed via frontend CMS management interface
+- Dynamically proxied through the `/api/vodhub/proxy` endpoint
+- Handlers created via CMS Factory Pattern (`createCMSRoutes()` in `utils/cms/factory.ts`)
+
+### Proxy API
+- **Endpoint**: `ALL /api/vodhub/proxy`
+- **Headers**:
+  - `x-proxy-target`: Target CMS base URL
+  - `x-proxy-action`: Action to translate to target CMS's API format
+
 ## Project Structure
 
 ```
@@ -34,6 +50,15 @@ apps/backend/src/
   types/            # Core types (Namespace, Route, HomeData, etc.)
   utils/            # Shared CMS handlers, cache, logger, filters
 ```
+
+## Shared Package
+
+Core TypeScript types in `packages/shared/src/types/`:
+- `Namespace` – provider metadata
+- `HomeData`, `HomeVodData`, `CategoryVodData` – data structures
+- `DetailData`, `PlayData`, `SearchData` – response types
+- `ApiResponse<T>` – standard API response wrapper
+- `VideoSource`, `VideoSourceType`, `BuiltinVideoSource`, `CustomVideoSource` – video source types
 
 ## Development Commands
 
@@ -65,3 +90,10 @@ Actions per provider: `home`, `homeVod`, `category`, `detail`, `play`, `search`
 3. `compress()` - Response compression
 4. `jsonReturn` - JSON response serialization
 5. `cache` - Redis/memory caching with deduplication
+
+## Caching System
+
+- Two-level cache: memory LRU + optional Redis via Keyv
+- Deduplication: prevents concurrent identical requests
+- Cache key format: `vod-hub:redis-cache:${path}${bodyHash}`
+- Error responses: set `Cache-Control: 'no-cache'` to prevent caching failures

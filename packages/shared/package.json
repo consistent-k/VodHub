@@ -8,6 +8,6 @@
     "exports": {
         ".": "./src/index.ts",
         "./types": "./src/types/index.ts",
-        "./types/custom-cms": "./src/types/custom-cms.ts"
+        "./types/video-source": "./src/types/video-source.ts"
     }
 }
