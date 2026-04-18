@@ -5,10 +5,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Project Overview
 
 VodHub is a pnpm monorepo with two applications:
-- **Backend** (`apps/backend`): Hono‑based video aggregation API that normalizes multiple video source providers into a unified REST API (categories, search, details, playback). Node.js ≥ 24, ESM.
-- **Frontend** (`apps/frontend`): Vite + React 19 + React Router video player application with Ant Design 6, Zustand state management, and multi‑theme support.
+- **Backend** (`apps/backend`): Hono‑based video aggregation API with a single built‑in provider (`360kan`) and support for custom CMS addresses via a proxy system, providing a unified REST API (categories, search, details, playback). Node.js ≥ 24, ESM.
+- **Frontend** (`apps/frontend`): Vite + React 19 + React Router video player application with Ant Design 6, Zustand state management, multi‑theme support, and integrated CMS management.
 
-A shared package (`packages/shared`) provides core TypeScript types used by both apps.
+A shared package (`packages/shared`) provides core TypeScript types used by both apps, including video source definitions.
 
 ## Common Development Commands
 
@@ -53,14 +53,20 @@ pnpm --filter @vodhub/frontend typecheck # Type check frontend only
 - **Actions**: `home`, `homeVod`, `category`, `detail`, `play`, `search`
 - **Auto‑discovery**: Routes are automatically registered via `directory‑import` in `apps/backend/src/routes/registry.ts`
 - **Production optimization**: Routes are pre‑generated to `registry.gen.ts` for faster startup
+- **Current Built‑in Provider**: Only `360kan` remains as the single built‑in video source provider; all other hard‑coded providers have been removed
 
 ### Provider Types
-1. **CMS Providers** (Recommended): Only need `namespace.ts` and `index.ts` using `createCMSRoutes()` factory
-2. **Custom Providers**: Individual route files (`home.ts`, `category.ts`, etc.) with custom logic
+1. **Built‑in Provider**: `360kan` – the only remaining hard‑coded video source provider
+2. **Custom CMS Providers**: User‑defined CMS sources managed via the frontend CMS management interface, dynamically proxied through the `/api/vodhub/proxy` endpoint
+3. **CMS Factory Pattern**: The `createCMSRoutes()` factory in `apps/backend/src/utils/cms/factory.ts` dynamically creates route handlers for custom CMS addresses
 
 ### CMS Management & Proxy
 - **Proxy API**: `ALL /api/vodhub/proxy` – forwards requests to user‑defined CMS URLs using `x-proxy-target` and `x-proxy-action` headers to translate actions to the target CMS's API format
-- **Frontend store**: CMS configurations are managed locally via `useCmsStore` (Zustand + localStorage) for immediate UI updates; backend API synchronization may be added in the future.
+- **Video Source Store**: CMS and video source configurations are managed locally via `useVideoSourcesStore` (Zustand + localStorage), which replaces the old `useCmsStore`
+- **Video Source Types**: Two categories:
+  1. **Built‑in Sources**: Pre‑configured video sources defined in `apps/frontend/src/data/builtin‑cms.json` (e.g., 360kan)
+  2. **Custom Sources**: User‑defined CMS addresses with full CRUD support
+- **CMS Factory**: The `createCMSRoutes()` factory dynamically generates route handlers for custom CMS addresses, enabling flexible video source management without hard‑coded backend routes
 
 ### Middleware Order
 1. `cors()` – CORS handling
@@ -184,8 +190,13 @@ Three built‑in themes defined in `lib/themes/index.ts`:
 
 ### CMS Management UI
 - Component: `components/cms‑management/index.tsx`
-- Store: `lib/store/useCmsStore.ts` (localStorage only)
-- Allows adding, editing, deleting, and testing custom CMS sources
+- Store: `lib/store/useVideoSourcesStore.ts` (Zustand + localStorage) – replaces the old `useCmsStore`
+- Data Source: Built‑in video sources defined in `apps/frontend/src/data/builtin‑cms.json`
+- Features:
+  - Table display of all video sources (built‑in + custom)
+  - Enable/disable built‑in video sources
+  - Full CRUD operations for custom video sources
+  - Integration with site selector components
 - Changes are persisted locally in localStorage; backend API synchronization may be added in the future
 
 ## Shared Types
@@ -195,6 +206,12 @@ Core types defined in `packages/shared/src/types/index.ts`:
 - `HomeData`, `HomeVodData`, `CategoryVodData` – data structures
 - `DetailData`, `PlayData`, `SearchData` – response types
 - `ApiResponse<T>` – standard API response wrapper
+
+Video source types defined in `packages/shared/src/types/video‑source.ts` (formerly `custom‑cms.ts`):
+- `VideoSource` – unified type for both built‑in and custom video sources
+- `VideoSourceType` – enum: `'builtin' | 'custom'`
+- `BuiltinVideoSource` – pre‑configured video source definition
+- `CustomVideoSource` – user‑defined CMS address configuration
 
 ## Deployment
 
@@ -225,6 +242,7 @@ Core types defined in `packages/shared/src/types/index.ts`:
 | Frontend components | `PascalCase` | `VodList` |
 | Frontend hooks | `use` prefix | `useIsMobile` |
 | Frontend stores | `use` + `Store` suffix | `useSettingStore` |
+| Video source store | `use` + `Store` suffix | `useVideoSourcesStore` |
 | Backend handler functions | `handler` | `const handler = async (ctx) => { … }` |
 
 ### Git Workflow
@@ -243,3 +261,7 @@ Core types defined in `packages/shared/src/types/index.ts`:
 - CMS handlers check `res.code === 1` for upstream success
 - All error responses return `data: []` (empty array)
 - Route handlers must never throw – always return structured response
+- **Architecture Update**: The system now uses a single built‑in provider (`360kan`) with support for custom CMS addresses via the proxy system
+- **Video Source Management**: Frontend manages video sources through `useVideoSourcesStore`, replacing the old `useCmsStore`
+- **Built‑in Sources**: Pre‑configured video sources are defined in `apps/frontend/src/data/builtin‑cms.json` and can be enabled/disabled by users
+- **Proxy Routes**: Custom CMS addresses are dynamically handled through `/api/vodhub/proxy` using the CMS factory pattern

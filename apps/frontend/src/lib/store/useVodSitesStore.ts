@@ -2,7 +2,7 @@ import { SelectProps } from 'antd';
 import store from 'store2';
 import { create } from 'zustand';
 
-import useCmsStore from './useCmsStore';
+import useVideoSourcesStore from './useVideoSourcesStore';
 
 import { namespaceApi } from '@/services';
 
@@ -40,15 +40,22 @@ export const useVodSitesStore = create<VodSitesStore>((set) => ({
                 });
             });
 
-            // 获取启用的自定义CMS并添加到站点列表
-            // 直接从 useCmsStore 获取，因为使用了 persist 中间件
-            const cmsState = useCmsStore.getState();
-            const enabledCms = cmsState.cmsList.filter((cms) => cms.enabled);
-            enabledCms.forEach((cms) => {
-                newSites.push({
-                    label: cms.name,
-                    value: `custom_${cms.id}`
-                });
+            // 从视频源store获取启用的视频源
+            const videoSourcesState = useVideoSourcesStore.getState();
+            const enabledVideoSources = videoSourcesState.videoSources.filter((source) => source.enabled);
+
+            enabledVideoSources.forEach((source) => {
+                if (source.type === 'builtin') {
+                    newSites.push({
+                        label: source.name,
+                        value: source.id
+                    });
+                } else if (source.type === 'custom') {
+                    newSites.push({
+                        label: source.name,
+                        value: `custom_${source.id}`
+                    });
+                }
             });
 
             store.set(CACHE_KEY, {

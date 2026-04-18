@@ -1,6 +1,7 @@
 import { ApiResponse } from '@vodhub/shared/types';
+import type { VideoSource } from '@vodhub/shared/types/video-source';
 
-import useCmsStore from '@/lib/store/useCmsStore';
+import useVideoSourcesStore from '@/lib/store/useVideoSourcesStore';
 import { HomeData, HomeVodData, CategoryVodData, DetailData, PlayData, SearchData } from '@/lib/types';
 import request from '@/lib/utils/request';
 
@@ -10,18 +11,19 @@ interface VodHubResponse<T> {
     update_time: string;
 }
 
-const getCmsById = (id: string) => {
-    const { cmsList } = useCmsStore.getState();
-    return cmsList.find((cms) => cms.id === id);
+const getVideoSourceBySite = (site: string): VideoSource | undefined => {
+    const { videoSources } = useVideoSourcesStore.getState();
+    if (site.startsWith('custom_')) {
+        const id = site.replace('custom_', '');
+        return videoSources.find((source) => source.id === id && source.type === 'custom');
+    }
+    // 内置视频源
+    return videoSources.find((source) => source.id === site && source.type === 'builtin');
 };
 
 const getCmsUrl = (site: string): string | undefined => {
-    if (site.startsWith('custom_')) {
-        const id = site.replace('custom_', '');
-        const cms = getCmsById(id);
-        return cms?.url;
-    }
-    return undefined;
+    const source = getVideoSourceBySite(site);
+    return source?.url;
 };
 
 export interface CategoryParams {

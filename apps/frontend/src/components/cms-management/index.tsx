@@ -1,10 +1,10 @@
 import { PlusOutlined, EditOutlined, DeleteOutlined, EyeOutlined, ReloadOutlined } from '@ant-design/icons';
-import type { CustomCms, CreateCustomCmsInput } from '@vodhub/shared/types/custom-cms';
+import type { VideoSource, CreateVideoSourceInput } from '@vodhub/shared/types/video-source';
 import { Button, Table, Tag, Space, Modal, Form, Input, Switch, message, Popconfirm, Typography, Descriptions } from 'antd';
 import { useEffect, useState } from 'react';
 
-import useCmsStore from '@/lib/store/useCmsStore';
 import useSettingStore from '@/lib/store/useSettingStore';
+import useVideoSourcesStore from '@/lib/store/useVideoSourcesStore';
 import { useVodSitesStore } from '@/lib/store/useVodSitesStore';
 
 const { Text } = Typography;
@@ -12,16 +12,16 @@ const { Text } = Typography;
 const CmsManagement = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isViewModalOpen, setIsViewModalOpen] = useState(false);
-    const [editingCms, setEditingCms] = useState<CustomCms | null>(null);
-    const [viewingCms, setViewingCms] = useState<CustomCms | null>(null);
+    const [editingCms, setEditingCms] = useState<VideoSource | null>(null);
+    const [viewingCms, setViewingCms] = useState<VideoSource | null>(null);
     const [form] = Form.useForm();
 
-    const { cmsList, isLoading, error, fetchCmsList, addCms, updateCms, deleteCms, clearError } = useCmsStore();
+    const { videoSources, isLoading, error, fetchVideoSources, addVideoSource, updateVideoSource, deleteVideoSource, toggleVideoSource, clearError } = useVideoSourcesStore();
     const { vod_hub_api, site_name, current_site, updateSetting } = useSettingStore();
     const { getVodTypes } = useVodSitesStore();
 
     useEffect(() => {
-        fetchCmsList();
+        fetchVideoSources();
     }, []);
 
     useEffect(() => {
@@ -31,13 +31,17 @@ const CmsManagement = () => {
         }
     }, [error]);
 
+    // 合并内置CMS和自定义CMS列表
+    const mergedCmsList = videoSources.map((source) => ({ ...source, isBuiltin: source.type === 'builtin' }));
+    const mergedLoading = isLoading;
+
     const handleAdd = () => {
         setEditingCms(null);
         form.resetFields();
         setIsModalOpen(true);
     };
 
-    const handleEdit = (cms: CustomCms) => {
+    const handleEdit = (cms: VideoSource) => {
         setEditingCms(cms);
         form.setFieldsValue({
             name: cms.name,
@@ -48,14 +52,14 @@ const CmsManagement = () => {
         setIsModalOpen(true);
     };
 
-    const handleView = (cms: CustomCms) => {
+    const handleView = (cms: VideoSource) => {
         setViewingCms(cms);
         setIsViewModalOpen(true);
     };
 
     const handleDelete = async (id: string) => {
         try {
-            await deleteCms(id);
+            await deleteVideoSource(id);
             message.success('删除成功');
 
             // 如果当前选中的站点是被删除的CMS，则清除选中
@@ -77,7 +81,7 @@ const CmsManagement = () => {
     const handleModalOk = async () => {
         try {
             const values = await form.validateFields();
-            const input: CreateCustomCmsInput = {
+            const input: CreateVideoSourceInput = {
                 name: values.name,
                 url: values.url,
                 description: values.description,
@@ -85,7 +89,7 @@ const CmsManagement = () => {
             };
 
             if (editingCms) {
-                await updateCms({ ...input, id: editingCms.id });
+                await updateVideoSource({ ...input, id: editingCms.id });
                 message.success('更新成功');
 
                 // 如果当前选中的站点是被禁用的CMS，则清除选中
@@ -97,7 +101,7 @@ const CmsManagement = () => {
                     });
                 }
             } else {
-                await addCms(input);
+                await addVideoSource(input);
                 message.success('添加成功');
             }
 
@@ -121,12 +125,27 @@ const CmsManagement = () => {
         setViewingCms(null);
     };
 
+    const handleToggleBuiltin = async (id: string) => {
+        try {
+            await toggleVideoSource(id);
+            // 刷新站点列表
+            await getVodTypes();
+        } catch (error) {
+            // 错误已在store中处理
+        }
+    };
+
     const columns = [
+        {
+            title: '类型',
+            key: 'type',
+            render: (_: any, record: VideoSource) => (record.type === 'builtin' ? <Tag color="blue">内置</Tag> : <Tag color="green">自定义</Tag>)
+        },
         {
             title: '名称',
             dataIndex: 'name',
             key: 'name',
-            render: (text: string, record: CustomCms) => (
+            render: (text: string, record: VideoSource) => (
                 <Space>
                     <Text strong>{text}</Text>
                     {!record.enabled && <Tag color="default">已禁用</Tag>}
@@ -153,7 +172,12 @@ const CmsManagement = () => {
             title: '状态',
             dataIndex: 'enabled',
             key: 'enabled',
-            render: (enabled: boolean) => <Tag color={enabled ? 'success' : 'default'}>{enabled ? '启用' : '禁用'}</Tag>
+            render: (enabled: boolean, record: VideoSource) =>
+                record.type === 'builtin' ? (
+                    <Switch checked={enabled} onChange={() => handleToggleBuiltin(record.id)} checkedChildren="启用" unCheckedChildren="禁用" />
+                ) : (
+                    <Tag color={enabled ? 'success' : 'default'}>{enabled ? '启用' : '禁用'}</Tag>
+                )
         },
         {
             title: '创建时间',
@@ -164,13 +188,23 @@ const CmsManagement = () => {
         {
             title: '操作',
             key: 'action',
-            render: (_: any, record: CustomCms) => (
+            render: (_: any, record: VideoSource) => (
                 <Space size="small">
                     <Button type="text" size="small" icon={<EyeOutlined />} onClick={() => handleView(record)} />
-                    <Button type="text" size="small" icon={<EditOutlined />} onClick={() => handleEdit(record)} />
-                    <Popconfirm title="确定要删除这个CMS地址吗？" onConfirm={() => handleDelete(record.id)} okText="确定" cancelText="取消">
-                        <Button type="text" size="small" danger icon={<DeleteOutlined />} />
-                    </Popconfirm>
+                    {record.type === 'builtin' ? (
+                        // 内置视频源只能查看，不能编辑/删除
+                        <Button type="text" size="small" icon={<EditOutlined />} disabled title="内置视频源不可编辑" />
+                    ) : (
+                        <Button type="text" size="small" icon={<EditOutlined />} onClick={() => handleEdit(record)} />
+                    )}
+                    {record.type === 'builtin' ? (
+                        // 内置视频源不能删除
+                        <Button type="text" size="small" icon={<DeleteOutlined />} disabled title="内置视频源不可删除" />
+                    ) : (
+                        <Popconfirm title="确定要删除这个CMS地址吗？" onConfirm={() => handleDelete(record.id)} okText="确定" cancelText="取消">
+                            <Button type="text" size="small" danger icon={<DeleteOutlined />} />
+                        </Popconfirm>
+                    )}
                 </Space>
             )
         }
@@ -183,7 +217,7 @@ const CmsManagement = () => {
                     <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
                         添加CMS地址
                     </Button>
-                    <Button icon={<ReloadOutlined />} onClick={fetchCmsList} loading={isLoading}>
+                    <Button icon={<ReloadOutlined />} onClick={fetchVideoSources} loading={mergedLoading}>
                         刷新
                     </Button>
                 </Space>
@@ -191,9 +225,9 @@ const CmsManagement = () => {
 
             <Table
                 columns={columns}
-                dataSource={cmsList}
-                rowKey="id"
-                loading={isLoading}
+                dataSource={mergedCmsList}
+                rowKey={(record) => (record.isBuiltin ? `builtin_${record.id}` : `custom_${record.id}`)}
+                loading={mergedLoading}
                 pagination={{ pageSize: 10 }}
                 scroll={{
                     x: 'fit-content'
@@ -242,6 +276,7 @@ const CmsManagement = () => {
             >
                 {viewingCms && (
                     <Descriptions column={1} bordered>
+                        <Descriptions.Item label="类型">{viewingCms.type === 'builtin' ? <Tag color="blue">内置视频源</Tag> : <Tag color="green">自定义CMS</Tag>}</Descriptions.Item>
                         <Descriptions.Item label="ID">
                             <Text copyable>{viewingCms.id}</Text>
                         </Descriptions.Item>
