@@ -4,6 +4,20 @@ import { persist } from 'zustand/middleware';
 
 import builtinCmsData from '@/data/builtin-cms.json';
 
+// 安全的ID生成器：支持非安全上下文（HTTP/LAN环境）
+const generateId = (): string => {
+    try {
+        // 优先使用 crypto.randomUUID
+        if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+            return crypto.randomUUID();
+        }
+    } catch {
+        // 在非安全上下文中 crypto.randomUUID 会抛出异常
+    }
+    // 降级方案：时间戳 + 随机数
+    return `${Date.now()}-${Math.random().toString(36).substring(2, 15)}`;
+};
+
 interface VideoSourcesStore {
     // 状态
     videoSources: VideoSource[];
@@ -74,7 +88,7 @@ const useVideoSourcesStore = create<VideoSourcesStore>()(
                 set({ isLoading: true, error: null });
                 try {
                     const newSource: VideoSource = {
-                        id: crypto.randomUUID(),
+                        id: generateId(),
                         name: input.name,
                         url: input.url,
                         description: input.description || '',
@@ -166,9 +180,10 @@ const useVideoSourcesStore = create<VideoSourcesStore>()(
             // 切换视频源启用状态
             toggleVideoSource: async (id) => {
                 const source = get().getVideoSourceById(id);
-                if (source) {
-                    await get().updateVideoSource({ id, enabled: !source.enabled });
+                if (!source) {
+                    throw new Error('视频源未找到');
                 }
+                await get().updateVideoSource({ id, enabled: !source.enabled });
             },
 
             // 清除错误

@@ -128,6 +128,17 @@ const CmsManagement = () => {
     const handleToggleBuiltin = async (id: string) => {
         try {
             await toggleVideoSource(id);
+
+            // 如果当前选中的站点是被禁用的内置源，则清除选中
+            const toggledSource = videoSources.find((s) => s.id === id);
+            if (toggledSource && !toggledSource.enabled && current_site === id) {
+                updateSetting({
+                    vod_hub_api: vod_hub_api || '',
+                    site_name: site_name || '',
+                    current_site: ''
+                });
+            }
+
             // 刷新站点列表
             await getVodTypes();
         } catch (error) {

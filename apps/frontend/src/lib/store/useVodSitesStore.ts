@@ -40,9 +40,15 @@ export const useVodSitesStore = create<VodSitesStore>((set) => ({
                 });
             });
 
-            // 从视频源store获取启用的视频源
+            // 确保视频源已加载（处理冷启动场景）
             const videoSourcesState = useVideoSourcesStore.getState();
-            const enabledVideoSources = videoSourcesState.videoSources.filter((source) => source.enabled);
+            if (videoSourcesState.videoSources.length === 0) {
+                await videoSourcesState.fetchVideoSources();
+            }
+
+            // 从视频源store获取启用的视频源
+            const refreshedState = useVideoSourcesStore.getState();
+            const enabledVideoSources = refreshedState.videoSources.filter((source) => source.enabled);
 
             enabledVideoSources.forEach((source) => {
                 if (source.type === 'builtin') {

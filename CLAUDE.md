@@ -64,8 +64,8 @@ pnpm --filter @vodhub/frontend typecheck # Type check frontend only
 - **Proxy API**: `ALL /api/vodhub/proxy` – forwards requests to user‑defined CMS URLs using `x-proxy-target` and `x-proxy-action` headers to translate actions to the target CMS's API format
 - **Video Source Store**: CMS and video source configurations are managed locally via `useVideoSourcesStore` (Zustand + localStorage), which replaces the old `useCmsStore`
 - **Video Source Types**: Two categories:
-  1. **Built‑in Sources**: Pre‑configured video sources defined in `apps/frontend/src/data/builtin‑cms.json` (e.g., 360kan)
-  2. **Custom Sources**: User‑defined CMS addresses with full CRUD support
+  1. **Built-in Sources**: Pre-configured video sources defined in `apps/frontend/src/data/builtin-cms.json`
+  2. **Custom Sources**: User-defined CMS addresses with full CRUD support
 - **CMS Factory**: The `createCMSRoutes()` factory dynamically generates route handlers for custom CMS addresses, enabling flexible video source management without hard‑coded backend routes
 
 ### Middleware Order
@@ -189,9 +189,9 @@ Three built‑in themes defined in `lib/themes/index.ts`:
 - See `DESIGN.md` for Vercel‑inspired visual guidelines (colors, typography, shadows, component styling).
 
 ### CMS Management UI
-- Component: `components/cms‑management/index.tsx`
+- Component: `components/cms-management/index.tsx`
 - Store: `lib/store/useVideoSourcesStore.ts` (Zustand + localStorage) – replaces the old `useCmsStore`
-- Data Source: Built‑in video sources defined in `apps/frontend/src/data/builtin‑cms.json`
+- Data Source: Built-in video sources defined in `apps/frontend/src/data/builtin-cms.json`
 - Features:
   - Table display of all video sources (built‑in + custom)
   - Enable/disable built‑in video sources
@@ -207,11 +207,11 @@ Core types defined in `packages/shared/src/types/index.ts`:
 - `DetailData`, `PlayData`, `SearchData` – response types
 - `ApiResponse<T>` – standard API response wrapper
 
-Video source types defined in `packages/shared/src/types/video‑source.ts` (formerly `custom‑cms.ts`):
-- `VideoSource` – unified type for both built‑in and custom video sources
-- `VideoSourceType` – enum: `'builtin' | 'custom'`
-- `BuiltinVideoSource` – pre‑configured video source definition
-- `CustomVideoSource` – user‑defined CMS address configuration
+Video source types defined in `packages/shared/src/types/video-source.ts` (formerly `custom-cms.ts`):
+- `VideoSource` – unified type for both built-in and custom video sources
+- `VideoSourceType` – type alias: `'builtin' | 'custom'`
+- `BuiltinVideoSource` – pre-configured video source definition
+- `CustomVideoSource` – user-defined CMS address configuration
 
 ## Deployment
 
@@ -263,5 +263,5 @@ Video source types defined in `packages/shared/src/types/video‑source.ts` (for
 - Route handlers must never throw – always return structured response
 - **Architecture Update**: The system now uses a single built‑in provider (`360kan`) with support for custom CMS addresses via the proxy system
 - **Video Source Management**: Frontend manages video sources through `useVideoSourcesStore`, replacing the old `useCmsStore`
-- **Built‑in Sources**: Pre‑configured video sources are defined in `apps/frontend/src/data/builtin‑cms.json` and can be enabled/disabled by users
+- **Built-in Sources**: Pre-configured video sources are defined in `apps/frontend/src/data/builtin-cms.json` and can be enabled/disabled by users
 - **Proxy Routes**: Custom CMS addresses are dynamically handled through `/api/vodhub/proxy` using the CMS factory pattern

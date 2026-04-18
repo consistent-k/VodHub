@@ -1,13 +1,32 @@
-export interface VideoSource {
+// 视频源类型枚举
+export type VideoSourceType = 'builtin' | 'custom';
+
+// 内置视频源
+export interface BuiltinVideoSource {
     id: string;
     name: string;
     url: string;
     description?: string;
     enabled: boolean;
-    type: 'builtin' | 'custom';
+    type: 'builtin';
     createdAt: string;
     updatedAt: string;
 }
+
+// 自定义视频源
+export interface CustomVideoSource {
+    id: string;
+    name: string;
+    url: string;
+    description?: string;
+    enabled: boolean;
+    type: 'custom';
+    createdAt: string;
+    updatedAt: string;
+}
+
+// 视频源联合类型（支持类型收窄）
+export type VideoSource = BuiltinVideoSource | CustomVideoSource;
 
 export interface CreateVideoSourceInput {
     name: string;
