@@ -1,5 +1,6 @@
 .vod-layout {
-    font-family: 'Righteous', 'Poppins', 'Microsoft YaHei', sans-serif;
+    font-family: 'Geist', 'Inter', 'Microsoft YaHei', sans-serif;
+    font-feature-settings: 'liga' 1;
     height: 100%;
     background: var(--color-bg);
 
@@ -23,8 +24,10 @@
         height: 48px;
         background: transparent;
         color: var(--color-text-tertiary);
-        font-size: 13px;
+        font-size: 12px;
+        font-weight: 400;
         gap: 8px;
+        border-top: 1px solid var(--color-border);
 
         &-divider {
             opacity: 0.3;

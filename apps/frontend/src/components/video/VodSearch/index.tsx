@@ -180,7 +180,7 @@ const VodSearch: React.FC<VodSearchProps> = (props) => {
                     style={{
                         position: 'fixed',
                         inset: 0,
-                        backgroundColor: '#1a1c1f',
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
                         zIndex: 1000
                     }}
                 >

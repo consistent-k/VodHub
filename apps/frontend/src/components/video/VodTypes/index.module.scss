@@ -1,8 +1,9 @@
 .vod-types {
     background: var(--color-bg-container);
     backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--color-border-secondary);
+    border-bottom: 1px solid var(--color-border);
     position: relative;
+    padding: 0 24px;
 }
 
 .tabs-wrapper {
@@ -18,19 +19,20 @@
     width: 32px;
     height: 32px;
     background: var(--color-bg-elevated);
-    border: 1px solid var(--color-border-secondary);
-    border-radius: 8px;
+    border: none;
+    border-radius: 6px;
     color: var(--color-text-secondary);
     cursor: pointer;
     transition: all 0.2s ease;
     flex-shrink: 0;
     z-index: 2;
     margin: 0 8px;
+    box-shadow: var(--shadow-border);
 
     &:hover {
-        background: var(--color-border);
+        background: var(--color-bg-elevated-hover);
         color: var(--color-text);
-        border-color: var(--color-border);
+        box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.2);
     }
 
     &:active {
@@ -38,7 +40,7 @@
     }
 
     &:focus-visible {
-        outline: 2px solid var(--color-primary);
+        outline: 2px solid var(--focus-blue);
         outline-offset: 2px;
     }
 }
@@ -70,7 +72,7 @@
     padding: 10px 16px;
     background: transparent;
     border: none;
-    border-radius: 8px;
+    border-radius: 6px;
     color: var(--color-text-secondary);
     font-size: 14px;
     font-weight: 500;
@@ -85,13 +87,14 @@
     }
 
     &:focus-visible {
-        outline: 2px solid var(--color-primary);
+        outline: 2px solid var(--focus-blue);
         outline-offset: 2px;
     }
 
     &.active {
         color: var(--color-text);
         background: var(--color-primary-alpha-hover);
+        box-shadow: var(--shadow-border);
 
         .tab-label {
             font-weight: 600;
@@ -111,7 +114,7 @@
     transform: translateX(-50%);
     width: 20px;
     height: 3px;
-    background: linear-gradient(90deg, var(--color-primary), var(--color-primary-light));
+    background: var(--color-primary);
     border-radius: 2px;
     animation: slideIn 0.2s ease;
 }

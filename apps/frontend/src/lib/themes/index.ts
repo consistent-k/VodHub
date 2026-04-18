@@ -1,6 +1,6 @@
 import { ThemeConfig } from 'antd';
 
-export type ThemeId = 'midnight' | 'aurora' | 'cyber';
+export type ThemeId = 'vercel' | 'airbnb' | 'claude';
 
 export interface ThemeCssVariables {
     '--color-primary': string;
@@ -39,365 +39,367 @@ export interface ThemeDefinition {
 }
 
 export const themes: Record<ThemeId, ThemeDefinition> = {
-    midnight: {
-        id: 'midnight',
-        name: '午夜玫瑰',
-        description: '深邃暗夜，优雅玫瑰红',
-        isDark: true,
-        preview: {
-            primary: '#E11D48',
-            background: '#0F0F23',
-            accent: '#1E1B4B'
-        },
-        cssVariables: {
-            '--color-primary': '#E11D48',
-            '--color-primary-light': '#FB7185',
-            '--color-bg': '#000000',
-            '--color-bg-container': '#0F0F23',
-            '--color-bg-elevated': '#1E1B4B',
-            '--color-text': '#F8FAFC',
-            '--color-text-secondary': '#94A3B8',
-            '--color-text-tertiary': '#64748B',
-            '--color-border': '#334155',
-            '--color-border-secondary': 'rgba(51, 65, 85, 0.5)',
-            '--color-bg-container-alpha': 'rgba(15, 15, 35, 0.6)',
-            '--color-bg-elevated-alpha': 'rgba(30, 27, 75, 0.5)',
-            '--color-bg-elevated-hover': 'rgba(30, 27, 75, 0.8)',
-            '--color-primary-alpha-low': 'rgba(225, 29, 72, 0.1)',
-            '--color-primary-alpha-medium': 'rgba(225, 29, 72, 0.3)',
-            '--color-primary-alpha-hover': 'rgba(225, 29, 72, 0.12)',
-            '--color-primary-shadow': 'rgba(225, 29, 72, 0.4)',
-            '--color-overlay': 'rgba(0, 0, 0, 0.7)',
-            '--color-overlay-border': 'rgba(255, 255, 255, 0.1)'
-        },
-        config: {
-            algorithm: undefined,
-            token: {
-                colorPrimary: '#E11D48',
-                colorBgContainer: '#0F0F23',
-                colorBgElevated: '#1E1B4B',
-                colorBgLayout: '#000000',
-                colorText: '#F8FAFC',
-                colorTextSecondary: '#94A3B8',
-                colorTextTertiary: '#64748B',
-                colorBorder: '#334155',
-                colorBorderSecondary: 'rgba(51, 65, 85, 0.5)',
-                borderRadius: 12,
-                fontFamily: '"Righteous", "Poppins", Inter, Roboto, "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif'
-            },
-            components: {
-                Button: {
-                    colorPrimary: '#E11D48',
-                    borderRadius: 8,
-                    fontWeight: 600,
-                    primaryColor: '#F8FAFC'
-                },
-                Card: {
-                    borderRadiusLG: 16
-                },
-                Input: {
-                    hoverBorderColor: '#E11D48',
-                    activeBorderColor: '#E11D48',
-                    colorBgContainer: '#0F0F23',
-                    colorBorder: '#334155',
-                    colorText: '#F8FAFC',
-                    colorTextPlaceholder: '#64748B',
-                    activeShadow: '0 0 0 2px rgba(225, 29, 72, 0.2)'
-                },
-                Layout: {
-                    bodyBg: '#000000',
-                    headerBg: '#0F0F23',
-                    footerBg: '#000000',
-                    siderBg: '#0F0F23'
-                },
-                Collapse: {
-                    headerPadding: 0,
-                    contentPadding: 0
-                },
-                Tag: {
-                    colorBgContainer: '#1E1B4B',
-                    colorText: '#94A3B8'
-                },
-                Select: {
-                    colorBgContainer: '#0F0F23',
-                    colorBorder: '#334155',
-                    colorText: '#F8FAFC',
-                    colorTextPlaceholder: '#64748B',
-                    optionSelectedBg: 'rgba(225, 29, 72, 0.1)',
-                    optionSelectedColor: '#E11D48',
-                    optionActiveBg: 'rgba(30, 27, 75, 0.8)',
-                    selectorBg: '#0F0F23'
-                },
-                Tabs: {
-                    itemColor: '#64748B',
-                    itemSelectedColor: '#E11D48',
-                    itemHoverColor: '#F8FAFC',
-                    inkBarColor: '#E11D48',
-                    itemActiveColor: '#E11D48'
-                },
-                Steps: {
-                    colorPrimary: '#E11D48',
-                    colorText: '#F8FAFC',
-                    colorTextDescription: '#64748B',
-                    colorIcon: '#64748B',
-                    colorPrimaryBorder: '#E11D48'
-                },
-                Descriptions: {
-                    colorText: '#F8FAFC',
-                    colorTextSecondary: '#94A3B8',
-                    colorTextTertiary: '#64748B',
-                    labelColor: '#64748B',
-                    contentColor: '#94A3B8'
-                },
-                Typography: {
-                    colorText: '#94A3B8',
-                    colorTextSecondary: '#64748B'
-                },
-                Form: {
-                    labelColor: '#94A3B8',
-                    labelRequiredMarkColor: '#E11D48'
-                }
-            }
-        }
-    },
-    aurora: {
-        id: 'aurora',
-        name: '极光清新',
-        description: '清新明亮，极光配色',
+    vercel: {
+        id: 'vercel',
+        name: 'Vercel',
+        description: 'Vercel设计风格',
         isDark: false,
         preview: {
-            primary: '#0891B2',
-            background: '#F0FDFA',
-            accent: '#CCFBF1'
+            primary: '#171717',
+            background: '#ffffff',
+            accent: '#0072f5'
         },
         cssVariables: {
-            '--color-primary': '#0891B2',
-            '--color-primary-light': '#22D3EE',
-            '--color-bg': '#F8FAFC',
-            '--color-bg-container': '#FFFFFF',
-            '--color-bg-elevated': '#F0FDFA',
-            '--color-text': '#0F172A',
-            '--color-text-secondary': '#475569',
-            '--color-text-tertiary': '#64748B',
-            '--color-border': '#E2E8F0',
-            '--color-border-secondary': '#F1F5F9',
+            '--color-primary': '#171717',
+            '--color-primary-light': '#4d4d4d',
+            '--color-bg': '#ffffff',
+            '--color-bg-container': '#ffffff',
+            '--color-bg-elevated': '#fafafa',
+            '--color-text': '#171717',
+            '--color-text-secondary': '#4d4d4d',
+            '--color-text-tertiary': '#666666',
+            '--color-border': 'rgba(0, 0, 0, 0.08)',
+            '--color-border-secondary': 'rgba(0, 0, 0, 0.04)',
             '--color-bg-container-alpha': 'rgba(255, 255, 255, 0.85)',
-            '--color-bg-elevated-alpha': 'rgba(240, 253, 250, 0.7)',
-            '--color-bg-elevated-hover': 'rgba(204, 251, 241, 0.9)',
-            '--color-primary-alpha-low': 'rgba(8, 145, 178, 0.1)',
-            '--color-primary-alpha-medium': 'rgba(8, 145, 178, 0.3)',
-            '--color-primary-alpha-hover': 'rgba(8, 145, 178, 0.12)',
-            '--color-primary-shadow': 'rgba(8, 145, 178, 0.3)',
+            '--color-bg-elevated-alpha': 'rgba(250, 250, 250, 0.7)',
+            '--color-bg-elevated-hover': 'rgba(235, 235, 235, 0.9)',
+            '--color-primary-alpha-low': 'rgba(23, 23, 23, 0.1)',
+            '--color-primary-alpha-medium': 'rgba(23, 23, 23, 0.3)',
+            '--color-primary-alpha-hover': 'rgba(23, 23, 23, 0.12)',
+            '--color-primary-shadow': 'rgba(23, 23, 23, 0.1)',
             '--color-overlay': 'rgba(0, 0, 0, 0.5)',
             '--color-overlay-border': 'rgba(255, 255, 255, 0.2)'
         },
         config: {
             algorithm: undefined,
             token: {
-                colorPrimary: '#0891B2',
-                colorBgContainer: '#FFFFFF',
-                colorBgElevated: '#F0FDFA',
-                colorBgLayout: '#F8FAFC',
-                colorText: '#0F172A',
-                colorTextSecondary: '#475569',
-                colorTextTertiary: '#64748B',
-                colorBorder: '#E2E8F0',
-                colorBorderSecondary: '#F1F5F9',
-                borderRadius: 12,
-                fontFamily: '"Righteous", "Poppins", Inter, Roboto, "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif'
+                colorPrimary: '#171717',
+                colorBgContainer: '#ffffff',
+                colorBgElevated: '#fafafa',
+                colorBgLayout: '#ffffff',
+                colorText: '#171717',
+                colorTextSecondary: '#4d4d4d',
+                colorTextTertiary: '#666666',
+                colorBorder: 'rgba(0, 0, 0, 0.08)',
+                colorBorderSecondary: 'rgba(0, 0, 0, 0.04)',
+                borderRadius: 6,
+                fontFamily: '"Geist", "Inter", "Roboto", "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif'
             },
             components: {
                 Button: {
-                    colorPrimary: '#0891B2',
-                    borderRadius: 8,
-                    fontWeight: 600,
-                    primaryColor: '#FFFFFF'
+                    colorPrimary: '#171717',
+                    borderRadius: 6,
+                    fontWeight: 500,
+                    primaryColor: '#ffffff'
                 },
                 Card: {
-                    borderRadiusLG: 16
+                    borderRadiusLG: 8
                 },
                 Input: {
-                    hoverBorderColor: '#0891B2',
-                    activeBorderColor: '#0891B2',
-                    colorBgContainer: '#FFFFFF',
-                    colorBorder: '#E2E8F0',
-                    colorText: '#0F172A',
-                    colorTextPlaceholder: '#94A3B8',
-                    activeShadow: '0 0 0 2px rgba(8, 145, 178, 0.2)'
+                    hoverBorderColor: '#171717',
+                    activeBorderColor: '#171717',
+                    colorBgContainer: '#ffffff',
+                    colorBorder: 'rgba(0, 0, 0, 0.08)',
+                    colorText: '#171717',
+                    colorTextPlaceholder: '#666666',
+                    activeShadow: '0 0 0 1px rgba(23, 23, 23, 0.2)'
                 },
                 Layout: {
-                    bodyBg: '#F8FAFC',
-                    headerBg: '#FFFFFF',
-                    footerBg: '#F8FAFC',
-                    siderBg: '#FFFFFF'
+                    bodyBg: '#ffffff',
+                    headerBg: '#ffffff',
+                    footerBg: '#ffffff',
+                    siderBg: '#ffffff'
                 },
                 Collapse: {
                     headerPadding: 0,
                     contentPadding: 0
                 },
                 Tag: {
-                    colorBgContainer: '#CCFBF1',
-                    colorText: '#0F766E'
+                    colorBgContainer: '#ebf5ff',
+                    colorText: '#0068d6'
                 },
                 Select: {
-                    colorBgContainer: '#FFFFFF',
-                    colorBorder: '#E2E8F0',
-                    colorText: '#0F172A',
-                    colorTextPlaceholder: '#94A3B8',
-                    optionSelectedBg: 'rgba(8, 145, 178, 0.1)',
-                    optionSelectedColor: '#0891B2',
-                    optionActiveBg: 'rgba(204, 251, 241, 0.8)',
-                    selectorBg: '#FFFFFF'
+                    colorBgContainer: '#ffffff',
+                    colorBorder: 'rgba(0, 0, 0, 0.08)',
+                    colorText: '#171717',
+                    colorTextPlaceholder: '#666666',
+                    optionSelectedBg: 'rgba(23, 23, 23, 0.1)',
+                    optionSelectedColor: '#171717',
+                    optionActiveBg: 'rgba(235, 235, 235, 0.8)',
+                    selectorBg: '#ffffff'
                 },
                 Tabs: {
-                    itemColor: '#64748B',
-                    itemSelectedColor: '#0891B2',
-                    itemHoverColor: '#0F172A',
-                    inkBarColor: '#0891B2',
-                    itemActiveColor: '#0891B2'
+                    itemColor: '#666666',
+                    itemSelectedColor: '#171717',
+                    itemHoverColor: '#171717',
+                    inkBarColor: '#171717',
+                    itemActiveColor: '#171717'
                 },
                 Steps: {
-                    colorPrimary: '#0891B2',
-                    colorText: '#0F172A',
-                    colorTextDescription: '#64748B',
-                    colorIcon: '#64748B',
-                    colorPrimaryBorder: '#0891B2'
+                    colorPrimary: '#171717',
+                    colorText: '#171717',
+                    colorTextDescription: '#666666',
+                    colorIcon: '#666666',
+                    colorPrimaryBorder: '#171717'
                 },
                 Descriptions: {
-                    colorText: '#0F172A',
-                    colorTextSecondary: '#475569',
-                    colorTextTertiary: '#64748B',
-                    labelColor: '#64748B',
-                    contentColor: '#475569'
+                    colorText: '#171717',
+                    colorTextSecondary: '#4d4d4d',
+                    colorTextTertiary: '#666666',
+                    labelColor: '#666666',
+                    contentColor: '#4d4d4d'
                 },
                 Typography: {
-                    colorText: '#475569',
-                    colorTextSecondary: '#64748B'
+                    colorText: '#4d4d4d',
+                    colorTextSecondary: '#666666'
                 },
                 Form: {
-                    labelColor: '#475569',
-                    labelRequiredMarkColor: '#0891B2'
+                    labelColor: '#4d4d4d',
+                    labelRequiredMarkColor: '#171717'
                 }
             }
         }
     },
-    cyber: {
-        id: 'cyber',
-        name: '赛博霓虹',
-        description: '未来科技，霓虹紫光',
-        isDark: true,
+    airbnb: {
+        id: 'airbnb',
+        name: 'Airbnb',
+        description: 'Airbnb设计风格，纯白背景，Rausch红强调色',
+        isDark: false,
         preview: {
-            primary: '#7C3AED',
-            background: '#0F0F23',
-            accent: '#1E1B4B'
+            primary: '#ff385c',
+            background: '#ffffff',
+            accent: '#f2f2f2'
         },
         cssVariables: {
-            '--color-primary': '#7C3AED',
-            '--color-primary-light': '#A78BFA',
-            '--color-bg': '#000000',
-            '--color-bg-container': '#0F0F23',
-            '--color-bg-elevated': '#1E1B4B',
-            '--color-text': '#E2E8F0',
-            '--color-text-secondary': '#A5B4FC',
-            '--color-text-tertiary': '#818CF8',
-            '--color-border': '#312E81',
-            '--color-border-secondary': 'rgba(49, 46, 129, 0.5)',
-            '--color-bg-container-alpha': 'rgba(15, 15, 35, 0.6)',
-            '--color-bg-elevated-alpha': 'rgba(30, 27, 75, 0.5)',
-            '--color-bg-elevated-hover': 'rgba(30, 27, 75, 0.8)',
-            '--color-primary-alpha-low': 'rgba(124, 58, 237, 0.1)',
-            '--color-primary-alpha-medium': 'rgba(124, 58, 237, 0.3)',
-            '--color-primary-alpha-hover': 'rgba(124, 58, 237, 0.12)',
-            '--color-primary-shadow': 'rgba(124, 58, 237, 0.4)',
-            '--color-overlay': 'rgba(0, 0, 0, 0.7)',
-            '--color-overlay-border': 'rgba(255, 255, 255, 0.1)'
+            '--color-primary': '#ff385c',
+            '--color-primary-light': '#ff6b8b',
+            '--color-bg': '#ffffff',
+            '--color-bg-container': '#ffffff',
+            '--color-bg-elevated': '#f2f2f2',
+            '--color-text': '#222222',
+            '--color-text-secondary': '#6a6a6a',
+            '--color-text-tertiary': '#929292',
+            '--color-border': '#c1c1c1',
+            '--color-border-secondary': '#e8e8e8',
+            '--color-bg-container-alpha': 'rgba(255, 255, 255, 0.85)',
+            '--color-bg-elevated-alpha': 'rgba(242, 242, 242, 0.7)',
+            '--color-bg-elevated-hover': 'rgba(232, 232, 232, 0.9)',
+            '--color-primary-alpha-low': 'rgba(255, 56, 92, 0.1)',
+            '--color-primary-alpha-medium': 'rgba(255, 56, 92, 0.3)',
+            '--color-primary-alpha-hover': 'rgba(255, 56, 92, 0.12)',
+            '--color-primary-shadow': 'rgba(255, 56, 92, 0.4)',
+            '--color-overlay': 'rgba(0, 0, 0, 0.5)',
+            '--color-overlay-border': 'rgba(255, 255, 255, 0.2)'
         },
         config: {
             algorithm: undefined,
             token: {
-                colorPrimary: '#7C3AED',
-                colorBgContainer: '#0F0F23',
-                colorBgElevated: '#1E1B4B',
-                colorBgLayout: '#000000',
-                colorText: '#E2E8F0',
-                colorTextSecondary: '#A5B4FC',
-                colorTextTertiary: '#818CF8',
-                colorBorder: '#312E81',
-                colorBorderSecondary: 'rgba(49, 46, 129, 0.5)',
+                colorPrimary: '#ff385c',
+                colorBgContainer: '#ffffff',
+                colorBgElevated: '#f2f2f2',
+                colorBgLayout: '#ffffff',
+                colorText: '#222222',
+                colorTextSecondary: '#6a6a6a',
+                colorTextTertiary: '#929292',
+                colorBorder: '#c1c1c1',
+                colorBorderSecondary: '#e8e8e8',
                 borderRadius: 12,
-                fontFamily: '"Inter", "Poppins", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif'
+                fontFamily: '"Geist", "Inter", "Roboto", "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif'
             },
             components: {
                 Button: {
-                    colorPrimary: '#7C3AED',
+                    colorPrimary: '#ff385c',
                     borderRadius: 8,
                     fontWeight: 600,
-                    primaryColor: '#FFFFFF'
+                    primaryColor: '#ffffff'
                 },
                 Card: {
-                    borderRadiusLG: 16
+                    borderRadiusLG: 20,
+                    boxShadow: 'rgba(0,0,0,0.02) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 6px, rgba(0,0,0,0.1) 0px 4px 8px'
                 },
                 Input: {
-                    hoverBorderColor: '#7C3AED',
-                    activeBorderColor: '#7C3AED',
-                    colorBgContainer: '#0F0F23',
-                    colorBorder: '#312E81',
-                    colorText: '#E2E8F0',
-                    colorTextPlaceholder: '#818CF8',
-                    activeShadow: '0 0 0 2px rgba(124, 58, 237, 0.2)'
+                    hoverBorderColor: '#ff385c',
+                    activeBorderColor: '#ff385c',
+                    colorBgContainer: '#ffffff',
+                    colorBorder: '#c1c1c1',
+                    colorText: '#222222',
+                    colorTextPlaceholder: '#929292',
+                    activeShadow: '0 0 0 2px rgba(255, 56, 92, 0.2)'
                 },
                 Layout: {
-                    bodyBg: '#000000',
-                    headerBg: '#0F0F23',
-                    footerBg: '#000000',
-                    siderBg: '#0F0F23'
+                    bodyBg: '#ffffff',
+                    headerBg: '#ffffff',
+                    footerBg: '#ffffff',
+                    siderBg: '#ffffff'
                 },
                 Collapse: {
                     headerPadding: 0,
                     contentPadding: 0
                 },
                 Tag: {
-                    colorBgContainer: '#1E1B4B',
-                    colorText: '#A5B4FC'
+                    colorBgContainer: '#f2f2f2',
+                    colorText: '#6a6a6a'
                 },
                 Select: {
-                    colorBgContainer: '#0F0F23',
-                    colorBorder: '#312E81',
-                    colorText: '#E2E8F0',
-                    colorTextPlaceholder: '#818CF8',
-                    optionSelectedBg: 'rgba(124, 58, 237, 0.1)',
-                    optionSelectedColor: '#7C3AED',
-                    optionActiveBg: 'rgba(30, 27, 75, 0.8)',
-                    selectorBg: '#0F0F23'
+                    colorBgContainer: '#ffffff',
+                    colorBorder: '#c1c1c1',
+                    colorText: '#222222',
+                    colorTextPlaceholder: '#929292',
+                    optionSelectedBg: 'rgba(255, 56, 92, 0.1)',
+                    optionSelectedColor: '#ff385c',
+                    optionActiveBg: 'rgba(242, 242, 242, 0.8)',
+                    selectorBg: '#ffffff'
                 },
                 Tabs: {
-                    itemColor: '#818CF8',
-                    itemSelectedColor: '#7C3AED',
-                    itemHoverColor: '#E2E8F0',
-                    inkBarColor: '#7C3AED',
-                    itemActiveColor: '#7C3AED'
+                    itemColor: '#929292',
+                    itemSelectedColor: '#ff385c',
+                    itemHoverColor: '#222222',
+                    inkBarColor: '#ff385c',
+                    itemActiveColor: '#ff385c'
                 },
                 Steps: {
-                    colorPrimary: '#7C3AED',
-                    colorText: '#E2E8F0',
-                    colorTextDescription: '#818CF8',
-                    colorIcon: '#818CF8',
-                    colorPrimaryBorder: '#7C3AED'
+                    colorPrimary: '#ff385c',
+                    colorText: '#222222',
+                    colorTextDescription: '#929292',
+                    colorIcon: '#929292',
+                    colorPrimaryBorder: '#ff385c'
                 },
                 Descriptions: {
-                    colorText: '#E2E8F0',
-                    colorTextSecondary: '#A5B4FC',
-                    colorTextTertiary: '#818CF8',
-                    labelColor: '#818CF8',
-                    contentColor: '#A5B4FC'
+                    colorText: '#222222',
+                    colorTextSecondary: '#6a6a6a',
+                    colorTextTertiary: '#929292',
+                    labelColor: '#929292',
+                    contentColor: '#6a6a6a'
                 },
                 Typography: {
-                    colorText: '#A5B4FC',
-                    colorTextSecondary: '#818CF8'
+                    colorText: '#6a6a6a',
+                    colorTextSecondary: '#929292'
                 },
                 Form: {
-                    labelColor: '#A5B4FC',
-                    labelRequiredMarkColor: '#7C3AED'
+                    labelColor: '#6a6a6a',
+                    labelRequiredMarkColor: '#ff385c'
+                }
+            }
+        }
+    },
+    claude: {
+        id: 'claude',
+        name: 'Claude',
+        description: 'Claude设计风格，温暖中性色系，陶红色强调色',
+        isDark: false,
+        preview: {
+            primary: '#c96442',
+            background: '#f5f4ed',
+            accent: '#e8e6dc'
+        },
+        cssVariables: {
+            '--color-primary': '#c96442',
+            '--color-primary-light': '#d97757',
+            '--color-bg': '#f5f4ed',
+            '--color-bg-container': '#faf9f5',
+            '--color-bg-elevated': '#e8e6dc',
+            '--color-text': '#141413',
+            '--color-text-secondary': '#5e5d59',
+            '--color-text-tertiary': '#87867f',
+            '--color-border': '#f0eee6',
+            '--color-border-secondary': '#e8e6dc',
+            '--color-bg-container-alpha': 'rgba(250, 249, 245, 0.85)',
+            '--color-bg-elevated-alpha': 'rgba(232, 230, 220, 0.7)',
+            '--color-bg-elevated-hover': 'rgba(232, 230, 220, 0.9)',
+            '--color-primary-alpha-low': 'rgba(201, 100, 66, 0.1)',
+            '--color-primary-alpha-medium': 'rgba(201, 100, 66, 0.3)',
+            '--color-primary-alpha-hover': 'rgba(201, 100, 66, 0.12)',
+            '--color-primary-shadow': 'rgba(201, 100, 66, 0.4)',
+            '--color-overlay': 'rgba(0, 0, 0, 0.5)',
+            '--color-overlay-border': 'rgba(255, 255, 255, 0.2)'
+        },
+        config: {
+            algorithm: undefined,
+            token: {
+                colorPrimary: '#c96442',
+                colorBgContainer: '#faf9f5',
+                colorBgElevated: '#e8e6dc',
+                colorBgLayout: '#f5f4ed',
+                colorText: '#141413',
+                colorTextSecondary: '#5e5d59',
+                colorTextTertiary: '#87867f',
+                colorBorder: '#f0eee6',
+                colorBorderSecondary: '#e8e6dc',
+                borderRadius: 12,
+                fontFamily: '"Geist", "Inter", "Roboto", "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif'
+            },
+            components: {
+                Button: {
+                    colorPrimary: '#c96442',
+                    borderRadius: 8,
+                    fontWeight: 600,
+                    primaryColor: '#ffffff'
+                },
+                Card: {
+                    borderRadiusLG: 16,
+                    boxShadow: 'rgba(0,0,0,0.05) 0px 4px 24px'
+                },
+                Input: {
+                    hoverBorderColor: '#c96442',
+                    activeBorderColor: '#c96442',
+                    colorBgContainer: '#faf9f5',
+                    colorBorder: '#f0eee6',
+                    colorText: '#141413',
+                    colorTextPlaceholder: '#87867f',
+                    activeShadow: '0 0 0 2px rgba(201, 100, 66, 0.2)'
+                },
+                Layout: {
+                    bodyBg: '#f5f4ed',
+                    headerBg: '#faf9f5',
+                    footerBg: '#f5f4ed',
+                    siderBg: '#faf9f5'
+                },
+                Collapse: {
+                    headerPadding: 0,
+                    contentPadding: 0
+                },
+                Tag: {
+                    colorBgContainer: '#e8e6dc',
+                    colorText: '#5e5d59'
+                },
+                Select: {
+                    colorBgContainer: '#faf9f5',
+                    colorBorder: '#f0eee6',
+                    colorText: '#141413',
+                    colorTextPlaceholder: '#87867f',
+                    optionSelectedBg: 'rgba(201, 100, 66, 0.1)',
+                    optionSelectedColor: '#c96442',
+                    optionActiveBg: 'rgba(232, 230, 220, 0.8)',
+                    selectorBg: '#faf9f5'
+                },
+                Tabs: {
+                    itemColor: '#87867f',
+                    itemSelectedColor: '#c96442',
+                    itemHoverColor: '#141413',
+                    inkBarColor: '#c96442',
+                    itemActiveColor: '#c96442'
+                },
+                Steps: {
+                    colorPrimary: '#c96442',
+                    colorText: '#141413',
+                    colorTextDescription: '#87867f',
+                    colorIcon: '#87867f',
+                    colorPrimaryBorder: '#c96442'
+                },
+                Descriptions: {
+                    colorText: '#141413',
+                    colorTextSecondary: '#5e5d59',
+                    colorTextTertiary: '#87867f',
+                    labelColor: '#87867f',
+                    contentColor: '#5e5d59'
+                },
+                Typography: {
+                    colorText: '#5e5d59',
+                    colorTextSecondary: '#87867f'
+                },
+                Form: {
+                    labelColor: '#5e5d59',
+                    labelRequiredMarkColor: '#c96442'
                 }
             }
         }
@@ -405,7 +407,7 @@ export const themes: Record<ThemeId, ThemeDefinition> = {
 };
 
 export const getTheme = (themeId: ThemeId): ThemeDefinition => {
-    return themes[themeId] || themes.midnight;
+    return themes[themeId] || themes.vercel;
 };
 
 export const themeList: ThemeDefinition[] = Object.values(themes);

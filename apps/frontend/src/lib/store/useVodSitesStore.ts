@@ -2,6 +2,8 @@ import { SelectProps } from 'antd';
 import store from 'store2';
 import { create } from 'zustand';
 
+import useCmsStore from './useCmsStore';
+
 import { namespaceApi } from '@/services';
 
 interface VodSitesStore {
@@ -10,13 +12,12 @@ interface VodSitesStore {
     isInitialized: boolean; // 是否初始化
     sites: SelectProps['options'];
     setSites: (sites: VodSitesStore['sites']) => void;
-    getVodTypes: (options: { force: boolean }) => Promise<void>;
+    getVodTypes: () => Promise<void>;
     resetError: () => void;
     clearVodTypes: () => void;
 }
 
 const CACHE_KEY = 'vod_next_sites';
-const CACHE_DURATION = 1000 * 60 * 60; // 1小时
 
 export const useVodSitesStore = create<VodSitesStore>((set) => ({
     hasError: false,
@@ -28,18 +29,7 @@ export const useVodSitesStore = create<VodSitesStore>((set) => ({
     clearVodTypes: () => {
         set({ sites: [], isInitialized: false, hasError: false });
     },
-    getVodTypes: async ({ force = false }) => {
-        if (!force) {
-            // 检查缓存
-            const cached = store.get(CACHE_KEY);
-            if (cached) {
-                const { data, timestamp } = cached;
-                if (Date.now() - timestamp < CACHE_DURATION) {
-                    set({ sites: data, isInitialized: true });
-                    return;
-                }
-            }
-        }
+    getVodTypes: async () => {
         try {
             const res = await namespaceApi();
             const newSites: SelectProps['options'] = [];
@@ -47,6 +37,17 @@ export const useVodSitesStore = create<VodSitesStore>((set) => ({
                 newSites.push({
                     label: res[key].name || '',
                     value: key
+                });
+            });
+
+            // 获取启用的自定义CMS并添加到站点列表
+            // 直接从 useCmsStore 获取，因为使用了 persist 中间件
+            const cmsState = useCmsStore.getState();
+            const enabledCms = cmsState.cmsList.filter((cms) => cms.enabled);
+            enabledCms.forEach((cms) => {
+                newSites.push({
+                    label: cms.name,
+                    value: `custom_${cms.id}`
                 });
             });
 

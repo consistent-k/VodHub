@@ -76,9 +76,9 @@ const HomePage: React.FC = () => {
                     ) : (
                         <div className={styles['vod-next-home-empty']}>
                             <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M4 4H20V16H4V4Z" stroke="#64748B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                <path d="M8 20H16" stroke="#64748B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                <path d="M12 16V20" stroke="#64748B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                <path d="M4 4H20V16H4V4Z" stroke="#666666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                <path d="M8 20H16" stroke="#666666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                <path d="M12 16V20" stroke="#666666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                             <span>暂无数据</span>
                         </div>

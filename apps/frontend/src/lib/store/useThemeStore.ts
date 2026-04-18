@@ -12,7 +12,7 @@ interface ThemeStore {
 export const useThemeStore = create<ThemeStore>()(
     persist(
         (set) => ({
-            themeId: 'midnight' as ThemeId,
+            themeId: 'vercel' as ThemeId,
             setThemeId: (themeId: ThemeId) => set({ themeId })
         }),
         {

@@ -14,9 +14,7 @@ const { Header } = Layout;
 const SiteHeader = () => {
     const navigate = useNavigate();
 
-    const { current_site, setting, updateSetting } = useSettingStore();
-
-    const { site_name } = useSettingStore();
+    const { vod_hub_api, site_name, current_site, updateSetting } = useSettingStore();
 
     const { sites } = useVodSitesStore();
 
@@ -42,7 +40,7 @@ const SiteHeader = () => {
                     options={sites}
                     value={current_site}
                     onChange={(value) => {
-                        updateSetting({ ...setting, current_site: value });
+                        updateSetting({ vod_hub_api, site_name, current_site: value });
                         navigate('/home');
                     }}
                 />
