@@ -11,9 +11,14 @@ import logger from '@/utils/logger';
 
 export const handler = async (ctx: Context, namespace: Namespace) => {
     try {
-        const body = await ctx.req.json();
-        logger.info(`${CATEGORY_MESSAGE.INFO} - ${namespace.name} - ${JSON.stringify(body)}`);
-        const { id, page, filters } = body;
+        const id = ctx.req.query('id') || '';
+        const page = ctx.req.query('page') || '1';
+        const categoryClass = (ctx.req.query('class') || '') as string;
+        const area = ctx.req.query('area') || '';
+        const lang = ctx.req.query('lang') || '';
+        const year = ctx.req.query('year') || '';
+        const order = ctx.req.query('order') || '';
+        logger.info(`${CATEGORY_MESSAGE.INFO} - ${namespace.name} - id=${id}, page=${page}, class=${categoryClass}, area=${area}, lang=${lang}, year=${year}, order=${order}`);
 
         const res = await request.get<CMSDetailData>(`${namespace.url}/api.php/provide/vod`, {
             params: {
@@ -21,7 +26,11 @@ export const handler = async (ctx: Context, namespace: Namespace) => {
                 t: id,
                 pg: page,
                 pagesize: 50,
-                ...filters
+                h: order,
+                cat: categoryClass,
+                area,
+                lang,
+                year
             },
             headers: {
                 'User-Agent': USER_AGENT_CHROME,

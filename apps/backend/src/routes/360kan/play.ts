@@ -10,10 +10,9 @@ import logger from '@/utils/logger';
 const handler = async (ctx: Context) => {
     ctx.res.headers.set('Cache-Control', 'no-cache');
     try {
-        const body = await ctx.req.json();
-        logger.info(`${PLAY_MESSAGE.INFO} - ${namespace.name} - ${JSON.stringify(body)}`);
+        const url = ctx.req.query('url') || '';
 
-        const { url } = body;
+        logger.info(`${PLAY_MESSAGE.INFO} - ${namespace.name} - url=${url}`);
 
         if (url.length > 0) {
             return {
@@ -46,8 +45,8 @@ const handler = async (ctx: Context) => {
 export const route: PlayRoute = {
     path: '/play',
     name: 'play',
-    example: '/360kan/play',
+    example: '/360kan/play?url=xxx',
     description: `获取播放地址`,
     handler,
-    method: 'POST'
+    method: 'GET'
 };

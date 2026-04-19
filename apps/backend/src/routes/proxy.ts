@@ -17,55 +17,52 @@ const createNamespace = (target: string): Namespace => ({
     url: target
 });
 
-app.all('/', async (ctx: Context): Promise<Response> => {
+app.get('/', async (ctx: Context): Promise<Response> => {
     const target = ctx.req.header('x-proxy-target') || '';
     const action = ctx.req.header('x-proxy-action') || '';
 
     logger.info(`Proxy request: target=${target}, action=${action}`);
 
     if (!target) {
+        ctx.res.headers.set('Cache-Control', 'no-cache');
         return ctx.json({ code: -1, message: 'header x-proxy-target is required', data: [] });
     }
 
     if (!action) {
+        ctx.res.headers.set('Cache-Control', 'no-cache');
         return ctx.json({ code: -1, message: 'header x-proxy-action is required', data: [] });
     }
 
     const namespace = createNamespace(target);
-    const method = ctx.req.method;
 
     let result: Response;
 
-    if (method === 'GET') {
-        switch (action) {
-            case 'list':
-                result = ctx.json(await homeHandler(ctx, namespace));
-                break;
-            case 'detail':
-                result = ctx.json(await homeVodHandler(ctx, namespace));
-                break;
-            default:
-                result = ctx.json({ code: -1, message: 'Unknown GET action: ' + action, data: [] });
-                break;
-        }
-    } else {
-        switch (action) {
-            case 'detail':
-                result = ctx.json(await detailHandler(ctx, namespace));
-                break;
-            case 'play':
-                result = ctx.json(await playHandler(ctx, namespace));
-                break;
-            case 'search':
-                result = ctx.json(await searchHandler(ctx, namespace));
-                break;
-            case 'category':
-                result = ctx.json(await categoryHandler(ctx, namespace));
-                break;
-            default:
-                result = ctx.json({ code: -1, message: 'Unknown POST action: ' + action, data: [] });
-                break;
-        }
+    switch (action) {
+        case 'homeVod':
+            result = ctx.json(await homeVodHandler(ctx, namespace));
+            break;
+        case 'home':
+            result = ctx.json(await homeHandler(ctx, namespace));
+            break;
+        case 'detail':
+            result = ctx.json(await detailHandler(ctx, namespace));
+            break;
+        case 'category':
+            result = ctx.json(await categoryHandler(ctx, namespace));
+            ctx.res.headers.set('Cache-Control', 'no-cache');
+            break;
+        case 'play':
+            result = ctx.json(await playHandler(ctx, namespace));
+            ctx.res.headers.set('Cache-Control', 'no-cache');
+            break;
+        case 'search':
+            result = ctx.json(await searchHandler(ctx, namespace));
+            ctx.res.headers.set('Cache-Control', 'no-cache');
+            break;
+        default:
+            ctx.res.headers.set('Cache-Control', 'no-cache');
+            result = ctx.json({ code: -1, message: 'Unknown action: ' + action, data: [] });
+            break;
     }
 
     return result;

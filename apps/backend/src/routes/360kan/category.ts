@@ -42,19 +42,22 @@ interface CategoryDataOrigin {
 
 const handler = async (ctx: Context) => {
     try {
-        const body = await ctx.req.json();
-        logger.info(`${CATEGORY_MESSAGE.INFO} - ${namespace.name} - ${JSON.stringify(body)}`);
+        const id = ctx.req.query('id') || '';
+        const page = ctx.req.query('page') || '1';
+        const order = ctx.req.query('order') || 'rankhot';
+        const categoryClass = (ctx.req.query('class') || '') as string;
+        const year = ctx.req.query('year') || '';
+        const area = ctx.req.query('area') || '';
 
-        const { id, page, filters } = body;
-        // filters: { class, area, lang, year, order }
+        logger.info(`${CATEGORY_MESSAGE.INFO} - ${namespace.name} - id=${id}, page=${page}`);
 
         const res = await request.get<CategoryDataOrigin>(`${namespace.url}/v1/filter/list`, {
             params: {
                 catid: id,
-                rank: filters?.order || 'rankhot',
-                cat: filters?.class || '',
-                year: filters?.year || '',
-                area: filters?.area || '',
+                rank: order,
+                cat: categoryClass,
+                year,
+                area,
                 act: '',
                 size: 35,
                 pageno: page,
@@ -100,8 +103,8 @@ const handler = async (ctx: Context) => {
 export const route: CategoryRoute = {
     path: '/category',
     name: 'category',
-    example: '/360kan/category',
+    example: '/360kan/category?id=1&page=1',
     description: `获取分类列表`,
     handler,
-    method: 'POST'
+    method: 'GET'
 };

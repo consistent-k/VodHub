@@ -9,18 +9,20 @@ import logger from '@/utils/logger';
 const { Hex } = CryptoJS.enc;
 
 const middleware: MiddlewareHandler = async (ctx, next) => {
-    const method = ctx.req.method;
     const path = ctx.req.path;
-    let bodyHash = '';
+    const query = ctx.req.query();
+    const queryHash = '-' + CryptoJS.MD5(JSON.stringify(query)).toString(Hex);
 
-    if (method === 'POST') {
-        const clonedReq = ctx.req.raw.clone();
-        const body = await clonedReq.json();
-        bodyHash = '-' + CryptoJS.MD5(JSON.stringify(body)).toString(Hex);
+    let cacheKey = `vod-hub:redis-cache:${path}${queryHash}`;
+    let pathKey = `vod-hub:path-requested:${path}${queryHash}`;
+
+    if (path === '/api/vodhub/proxy' || path === '/proxy') {
+        const target = ctx.req.header('x-proxy-target') || '';
+        const action = ctx.req.header('x-proxy-action') || '';
+        const headerHash = '-' + CryptoJS.MD5(`${target}:${action}`).toString(Hex);
+        cacheKey = `vod-hub:redis-cache:${path}${headerHash}${queryHash}`;
+        pathKey = `vod-hub:path-requested:${path}${headerHash}${queryHash}`;
     }
-
-    const cacheKey = `vod-hub:redis-cache:${path}${bodyHash}`;
-    const pathKey = `vod-hub:path-requested:${path}${bodyHash}`;
 
     const isRequesting = await cache.get(pathKey);
 

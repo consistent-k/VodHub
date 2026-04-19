@@ -12,10 +12,9 @@ import logger from '@/utils/logger';
 
 export const handler = async (ctx: Context, namespace: Namespace) => {
     try {
-        const body = await ctx.req.json();
-        logger.info(`${SEARCH_MESSAGE.INFO} - ${namespace.name} - ${JSON.stringify(body)}`);
-
-        const { keyword } = body;
+        const keyword = ctx.req.query('keyword') || '';
+        const page = ctx.req.query('page') || '1';
+        logger.info(`${SEARCH_MESSAGE.INFO} - ${namespace.name} - keyword=${keyword}, page=${page}`);
 
         const res = await request.get<CMSDetailData>(`${namespace.url}/api.php/provide/vod`, {
             params: {

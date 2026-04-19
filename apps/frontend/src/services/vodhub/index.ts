@@ -14,21 +14,18 @@ interface VodHubResponse<T> {
 const getVideoSourceBySite = async (site: string): Promise<VideoSource | undefined> => {
     const videoSourcesState = useVideoSourcesStore.getState();
 
-    // 确保视频源已加载（处理冷启动场景）
     if (videoSourcesState.videoSources.length === 0) {
         await videoSourcesState.fetchVideoSources();
     }
 
     const { videoSources } = useVideoSourcesStore.getState();
 
-    // 只返回启用的视频源
     const enabledSources = videoSources.filter((source) => source.enabled);
 
     if (site.startsWith('custom_')) {
         const id = site.replace('custom_', '');
         return enabledSources.find((source) => source.id === id && source.type === 'custom');
     }
-    // 内置视频源
     return enabledSources.find((source) => source.id === site && source.type === 'builtin');
 };
 
@@ -41,11 +38,11 @@ export interface CategoryParams {
     id: string | number;
     page: number;
     limit: number;
-    filters?: {
-        area?: string;
-        lang?: string;
-        year?: string;
-    };
+    class?: string;
+    area?: string;
+    lang?: string;
+    year?: string;
+    order?: string;
 }
 
 interface PlayParams {
@@ -76,7 +73,7 @@ export const homeApi = async (site_name: string) => {
         return request.get<ApiResponse<HomeData[]>>(`/proxy`, {
             headers: {
                 'x-proxy-target': cmsUrl,
-                'x-proxy-action': 'list'
+                'x-proxy-action': 'home'
             }
         });
     }
@@ -89,82 +86,73 @@ export const homeVodApi = async (site_name: string) => {
         return request.get<ApiResponse<HomeVodData[]>>(`/proxy`, {
             headers: {
                 'x-proxy-target': cmsUrl,
-                'x-proxy-action': 'detail'
+                'x-proxy-action': 'homeVod'
             }
         });
     }
     return request.get<VodHubResponse<HomeVodData[]>>(`/${site_name}/homeVod`);
 };
 
-export const categoryApi = async (site_name: string, data: CategoryParams) => {
+export const categoryApi = async (site_name: string, params: CategoryParams) => {
     const cmsUrl = await getCmsUrl(site_name);
     if (cmsUrl) {
-        return request.post<ApiResponse<CategoryVodData[]>>(`/proxy`, {
+        return request.get<ApiResponse<CategoryVodData[]>>(`/proxy`, {
             headers: {
                 'x-proxy-target': cmsUrl,
                 'x-proxy-action': 'category'
             },
-            data: {
-                id: data.id,
-                page: data.page
-            }
+            params
         });
     }
-    return request.post<VodHubResponse<CategoryVodData[]>>(`/${site_name}/category`, {
-        data
+    return request.get<VodHubResponse<CategoryVodData[]>>(`/${site_name}/category`, {
+        params
     });
 };
 
-export const detailApi = async (site_name: string, data: { id: string | number }) => {
+export const detailApi = async (site_name: string, params: { id: string | number }) => {
     const cmsUrl = await getCmsUrl(site_name);
     if (cmsUrl) {
-        return request.post<ApiResponse<DetailData[]>>(`/proxy`, {
+        return request.get<ApiResponse<DetailData[]>>(`/proxy`, {
             headers: {
                 'x-proxy-target': cmsUrl,
                 'x-proxy-action': 'detail'
             },
-            data: {
-                id: data.id
-            }
+            params
         });
     }
-    return request.post<VodHubResponse<DetailData[]>>(`/${site_name}/detail`, {
-        data
+    return request.get<VodHubResponse<DetailData[]>>(`/${site_name}/detail`, {
+        params
     });
 };
 
-export const playApi = async (site_name: string, data: PlayParams) => {
+export const playApi = async (site_name: string, params: PlayParams) => {
     const cmsUrl = await getCmsUrl(site_name);
     if (cmsUrl) {
-        return request.post<ApiResponse<PlayData[]>>(`/proxy`, {
+        return request.get<ApiResponse<PlayData[]>>(`/proxy`, {
             headers: {
                 'x-proxy-target': cmsUrl,
                 'x-proxy-action': 'play'
             },
-            data: {
-                url: data.url
-            }
+            params
         });
     }
-    return request.post<VodHubResponse<PlayData[]>>(`/${site_name}/play`, {
-        data
+    return request.get<VodHubResponse<PlayData[]>>(`/${site_name}/play`, {
+        params
     });
 };
 
-export const searchApi = async (site_name: string, data: SearchParams) => {
+export const searchApi = async (site_name: string, params: SearchParams) => {
     const cmsUrl = await getCmsUrl(site_name);
     if (cmsUrl) {
-        return request.post<ApiResponse<SearchData[]>>(`/proxy`, {
+        return request.get<ApiResponse<SearchData[]>>(`/proxy`, {
             headers: {
                 'x-proxy-target': cmsUrl,
                 'x-proxy-action': 'search'
             },
-            data: {
-                keyword: data.keyword
-            }
+            params
         });
     }
-    return request.post<VodHubResponse<SearchData[]>>(`/${site_name}/search`, {
-        data
+    return request.get<VodHubResponse<SearchData[]>>(`/${site_name}/search`, {
+        params
     });
 };

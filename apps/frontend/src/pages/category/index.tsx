@@ -7,7 +7,7 @@ import styles from './index.module.scss';
 import { Loading } from '@/components/ui/Loading';
 import VodList from '@/components/video/VodList';
 import { CategoryVodData, Filter, FilterItem, HomeData } from '@/lib/types';
-import { categoryApi, CategoryParams } from '@/services';
+import { categoryApi } from '@/services';
 
 const CategoryPage = () => {
     const [categoryList, setCategoryList] = useState<CategoryVodData[]>([]);
@@ -19,16 +19,16 @@ const CategoryPage = () => {
     const id = searchParams.get('id') || '';
     const name = searchParams.get('name') || '';
     const site = searchParams.get('site') || '';
-    const [filters, setFilters] = useState<CategoryParams['filters']>();
+    const [filters, setFilters] = useState<Record<string, string>>({});
 
-    const getCategory = async (id: string | number, filters?: CategoryParams['filters']) => {
+    const getCategory = async (id: string | number) => {
         setLoading(true);
         try {
             const res = await categoryApi(site, {
                 id: id,
                 page: 1,
                 limit: 30,
-                filters
+                ...filters
             });
             const { code, data } = res;
             if (code === 0) {
@@ -60,7 +60,7 @@ const CategoryPage = () => {
     useEffect(() => {
         if (typeof id === 'string' && id) {
             if (site) {
-                getCategory(id, filters);
+                getCategory(id);
             }
         }
     }, [filters, id, site]);
@@ -80,13 +80,13 @@ const CategoryPage = () => {
     };
 
     const handleFilterChange = (type: string, value: string) => {
-        const newFilters = { ...filters } as Record<string, string>;
-        if (value === '') {
-            delete newFilters[type];
-        } else {
-            newFilters[type] = value;
-        }
-        setFilters(newFilters);
+        setFilters((prev) => {
+            if (value === '') {
+                const { [type]: _, ...rest } = prev;
+                return rest;
+            }
+            return { ...prev, [type]: value };
+        });
     };
 
     return (
@@ -103,10 +103,11 @@ const CategoryPage = () => {
                                         <div className={styles['vod-next-category-label']}>{typeMap[item.type]}</div>
                                         <div className={styles['vod-next-category-options']}>
                                             {item.children.map((cItem: FilterItem) => {
+                                                const currentValue = filters[item.type] || '';
                                                 return (
                                                     <div
                                                         key={cItem.label}
-                                                        className={`${styles['vod-next-category-option']} ${(filters as Record<string, string>)?.[item.type] === cItem.value ? styles['active'] : ''}`}
+                                                        className={`${styles['vod-next-category-option']} ${currentValue === cItem.value ? styles['active'] : ''}`}
                                                         onClick={() => {
                                                             handleFilterChange(item.type, cItem.label === '全部' ? '' : cItem.value);
                                                         }}

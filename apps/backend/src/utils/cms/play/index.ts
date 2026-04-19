@@ -8,10 +8,8 @@ import logger from '@/utils/logger';
 export const handler = async (ctx: Context, namespace: Namespace) => {
     ctx.res.headers.set('Cache-Control', 'no-cache');
     try {
-        const body = await ctx.req.json();
-        logger.info(`${PLAY_MESSAGE.INFO} - ${namespace.name} - ${JSON.stringify(body)}`);
-
-        const { url } = body;
+        const url = ctx.req.query('url') || '';
+        logger.info(`${PLAY_MESSAGE.INFO} - ${namespace.name} - url=${url}`);
 
         if (url.length > 0) {
             return {

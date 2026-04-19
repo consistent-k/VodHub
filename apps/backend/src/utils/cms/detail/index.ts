@@ -21,10 +21,8 @@ function parseEpisodes(str: string): VodPlayList['urls'] {
 
 export const handler = async (ctx: Context, namespace: Namespace) => {
     try {
-        const body = await ctx.req.json();
-        logger.info(`${DETAIL_MESSAGE.INFO} - ${namespace.name} - ${JSON.stringify(body)}`);
-
-        const { id } = body;
+        const id = ctx.req.query('id') || '';
+        logger.info(`${DETAIL_MESSAGE.INFO} - ${namespace.name} - id=${id}`);
 
         const res = await request.get<CMSDetailData>(`${namespace.url}/api.php/provide/vod`, {
             params: {

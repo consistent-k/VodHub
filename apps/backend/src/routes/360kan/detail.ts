@@ -71,10 +71,9 @@ interface DetailDataOrigin {
 
 const handler = async (ctx: Context) => {
     try {
-        const body = await ctx.req.json();
-        logger.info(`${DETAIL_MESSAGE.INFO} - ${namespace.name} - ${JSON.stringify(body)}`);
+        const id = ctx.req.query('id') || '';
 
-        const { id } = body;
+        logger.info(`${DETAIL_MESSAGE.INFO} - ${namespace.name} - id=${id}`);
 
         const tid_list = id.split('+');
 
@@ -148,8 +147,8 @@ const handler = async (ctx: Context) => {
 export const route: DetailRoute = {
     path: '/detail',
     name: 'detail',
-    example: '/360kan/detail',
+    example: '/360kan/detail?id=xxx',
     description: `获取详情`,
     handler,
-    method: 'POST'
+    method: 'GET'
 };
