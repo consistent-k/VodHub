@@ -158,7 +158,7 @@ importers:
         version: 3.9.7(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       antd:
         specifier: ^6.3.3
-        version: 6.3.6(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+        version: 6.3.7(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       axios:
         specifier: ^1.13.6
         version: 1.15.2
@@ -1657,8 +1657,8 @@ packages:
     resolution: {integrity: sha512-4Dj6M28JB+oAH8kFkTLUo+a2jwOFkuqb3yucU0CANcRRUbxS0cP0nZYCGjcc3BNXwRIsUVmDGgzawme7zvJHvg==}
     engines: {node: '>=12'}
 
-  antd@6.3.6:
-    resolution: {integrity: sha512-zdCYjusrTUn4gNxEg4PH8MWlfuXYbKfuGOkjgZ0Rg6DpWbIVmG/MwvsZ5yvG6z3Y6UI/gzYpaQ82iTt4KdbeaA==}
+  antd@6.3.7:
+    resolution: {integrity: sha512-WTHi4bHVNKpYXLHESzU0Tts7rRNQeL84Bph9dfI3Qw7mHbTulExDcYKNHny5CTXcrBBOpraXbU9miBAwUR5vaw==}
     peerDependencies:
       react: '>=18.0.0'
       react-dom: '>=18.0.0'
@@ -5340,7 +5340,7 @@ snapshots:
 
   ansi-styles@6.2.3: {}
 
-  antd@6.3.6(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
+  antd@6.3.7(react-dom@19.2.5(react@19.2.5))(react@19.2.5):
     dependencies:
       '@ant-design/colors': 8.0.1
       '@ant-design/cssinjs': 2.1.2(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
