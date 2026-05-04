@@ -2,7 +2,7 @@ import { Col, Image, Row } from 'antd';
 
 import styles from './index.module.scss';
 
-import { CategoryVodData, HomeVodData, SearchData } from '@/lib/types';
+import { CategoryVodData, HomeVodData, SearchData } from '@/types';
 
 export interface VodListProps {
     dataSource: HomeVodData[] | SearchData[] | CategoryVodData[];

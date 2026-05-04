@@ -4,10 +4,10 @@ import store from 'store2';
 
 import styles from './index.module.scss';
 
-import { Loading } from '@/components/ui/Loading';
-import VodList from '@/components/video/VodList';
-import { CategoryVodData, Filter, FilterItem, HomeData } from '@/lib/types';
+import Loading from '@/components/Loading';
+import VodList from '@/components/VodList';
 import { categoryApi } from '@/services';
+import { CategoryVodData, Filter, FilterItem, HomeData } from '@/types';
 
 const CategoryPage = () => {
     const [categoryList, setCategoryList] = useState<CategoryVodData[]>([]);

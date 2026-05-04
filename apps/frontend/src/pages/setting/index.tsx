@@ -4,10 +4,10 @@ import { useNavigate } from 'react-router';
 
 import styles from './index.module.scss';
 
-import CmsManagement from '@/components/cms-management';
-import { ThemeSelector } from '@/components/ui/ThemeSelector';
-import useSettingStore from '@/lib/store/useSettingStore';
-import { useVodSitesStore } from '@/lib/store/useVodSitesStore';
+import CmsManagement from '@/components/CmsManagement';
+import { ThemeSelector } from '@/components/ThemeSelector';
+import useSettingStore from '@/store/useSettingStore';
+import { useVodSitesStore } from '@/store/useVodSitesStore';
 
 const { Text } = Typography;
 

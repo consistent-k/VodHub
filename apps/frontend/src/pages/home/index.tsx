@@ -4,11 +4,11 @@ import { useNavigate } from 'react-router';
 
 import styles from './index.module.scss';
 
-import { Loading } from '@/components/ui/Loading';
-import VodList from '@/components/video/VodList';
-import useSettingStore from '@/lib/store/useSettingStore';
-import { HomeVodData } from '@/lib/types';
+import Loading from '@/components/Loading';
+import VodList from '@/components/VodList';
 import { homeVodApi } from '@/services';
+import useSettingStore from '@/store/useSettingStore';
+import { HomeVodData } from '@/types';
 
 const HomePage: React.FC = () => {
     const [homeVodData, setHomeVodData] = useState<HomeVodData[]>([]);

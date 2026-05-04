@@ -5,11 +5,11 @@ import { useSearchParams, useNavigate } from 'react-router';
 
 import styles from './index.module.scss';
 
-import { Loading } from '@/components/ui/Loading';
-import { PlayerProps } from '@/components/video/VodPalyer';
-import useIsMobile from '@/lib/hooks/useIsMobile';
-import { DetailData, VodPlayList, VodPlayUrl } from '@/lib/types';
+import Loading from '@/components/Loading';
+import { PlayerProps } from '@/components/VodPalyer';
+import useIsMobile from '@/hooks/useIsMobile';
 import { detailApi, playApi } from '@/services';
+import { DetailData, VodPlayList, VodPlayUrl } from '@/types';
 
 const { Paragraph } = Typography;
 
@@ -178,6 +178,6 @@ const DetailPage: React.FC = () => {
     );
 };
 
-const PlayerComponent = React.lazy(() => import('@/components/video/VodPalyer'));
+const PlayerComponent = React.lazy(() => import('@/components/VodPalyer'));
 
 export default DetailPage;

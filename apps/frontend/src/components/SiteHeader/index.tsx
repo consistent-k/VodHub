@@ -4,10 +4,10 @@ import { useNavigate } from 'react-router';
 
 import styles from './index.module.scss';
 
-import VodSearch from '@/components/video/VodSearch';
-import VodSites from '@/components/video/VodSites';
-import useSettingStore from '@/lib/store/useSettingStore';
-import { useVodSitesStore } from '@/lib/store/useVodSitesStore';
+import VodSearch from '@/components/VodSearch';
+import VodSites from '@/components/VodSites';
+import useSettingStore from '@/store/useSettingStore';
+import { useVodSitesStore } from '@/store/useVodSitesStore';
 
 const { Header } = Layout;
 

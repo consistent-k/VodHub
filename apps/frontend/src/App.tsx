@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router';
 
-import BasicLayout from './components/BasicLayout';
 import InitProvider from './components/InitProvider';
 import ThemeProvider from './components/ThemeProvider';
+import BasicLayout from './layouts/BasicLayout';
 import CategoryPage from './pages/category';
 import DetailPage from './pages/detail';
 import HomePage from './pages/home';

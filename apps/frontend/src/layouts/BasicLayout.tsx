@@ -4,11 +4,11 @@ import React, { PropsWithChildren, useMemo } from 'react';
 import { useLocation } from 'react-router';
 
 import styles from './BasicLayout.module.scss';
-import Disclaimer from './Disclaimer';
-import SiteHeader from './SiteHeader';
 
-import VodTypes from '@/components/video/VodTypes';
-import useSettingStore from '@/lib/store/useSettingStore';
+import Disclaimer from '@/components/Disclaimer';
+import SiteHeader from '@/components/SiteHeader';
+import VodTypes from '@/components/VodTypes';
+import useSettingStore from '@/store/useSettingStore';
 const { Content, Footer } = Layout;
 
 interface BasicLayoutProps {

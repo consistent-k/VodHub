@@ -4,13 +4,13 @@ import { debounce, trim } from 'lodash';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 
+import SearchIcon from '../icons/SearchIcon';
+import Loading from '../Loading';
 import VodList, { VodListProps } from '../VodList';
 
-import SearchIcon from '@/components/icons/SearchIcon';
-import { Loading } from '@/components/ui/Loading';
-import useIsMobile from '@/lib/hooks/useIsMobile';
-import { SearchData } from '@/lib/types';
+import useIsMobile from '@/hooks/useIsMobile';
 import { searchApi } from '@/services';
+import { SearchData } from '@/types';
 
 export interface VodSearchProps {
     style?: React.CSSProperties;

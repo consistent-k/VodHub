@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 
-import { Loading } from '@/components/ui/Loading';
-import useSettingStore from '@/lib/store/useSettingStore';
-import { useVodSitesStore } from '@/lib/store/useVodSitesStore';
+import Loading from '../Loading';
+
+import useSettingStore from '@/store/useSettingStore';
+import { useVodSitesStore } from '@/store/useVodSitesStore';
 
 export default function InitProvider({ children }: { children: React.ReactNode }) {
     const { getVodTypes, isInitialized, hasError } = useVodSitesStore();

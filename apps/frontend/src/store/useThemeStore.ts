@@ -2,7 +2,7 @@ import store from 'store2';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import { ThemeId } from '@/lib/themes';
+import { ThemeId } from '@/themes';
 
 interface ThemeStore {
     themeId: ThemeId;

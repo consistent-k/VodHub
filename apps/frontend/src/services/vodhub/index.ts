@@ -1,9 +1,9 @@
 import { ApiResponse } from '@vodhub/shared/types';
 import type { VideoSource } from '@vodhub/shared/types/video-source';
 
-import useVideoSourcesStore from '@/lib/store/useVideoSourcesStore';
-import { HomeData, HomeVodData, CategoryVodData, DetailData, PlayData, SearchData } from '@/lib/types';
-import request from '@/lib/utils/request';
+import useVideoSourcesStore from '@/store/useVideoSourcesStore';
+import { HomeData, HomeVodData, CategoryVodData, DetailData, PlayData, SearchData } from '@/types';
+import request from '@/utils/request';
 
 interface VodHubResponse<T> {
     code: number;

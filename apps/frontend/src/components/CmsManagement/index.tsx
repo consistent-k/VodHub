@@ -3,9 +3,9 @@ import type { VideoSource, CreateVideoSourceInput } from '@vodhub/shared/types/v
 import { Button, Table, Tag, Space, Modal, Form, Input, Switch, message, Popconfirm, Typography, Descriptions } from 'antd';
 import { useEffect, useState } from 'react';
 
-import useSettingStore from '@/lib/store/useSettingStore';
-import useVideoSourcesStore from '@/lib/store/useVideoSourcesStore';
-import { useVodSitesStore } from '@/lib/store/useVodSitesStore';
+import useSettingStore from '@/store/useSettingStore';
+import useVideoSourcesStore from '@/store/useVideoSourcesStore';
+import { useVodSitesStore } from '@/store/useVodSitesStore';
 
 const { Text } = Typography;
 
