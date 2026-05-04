@@ -25,9 +25,9 @@ VodHub frontend is the frontend of the VodHub pnpm monorepo, a video aggregation
 
 ## Video Sources Management
 
-- **Store**: `lib/store/useVideoSourcesStore.ts` (Zustand + localStorage)
+- **Store**: `store/useVideoSourcesStore.ts` (Zustand + localStorage)
 - **Built-in Sources**: Defined in `src/data/builtin-cms.json`
-- **CMS Management UI**: `components/cms-management/index.tsx`
+- **CMS Management UI**: `components/CmsManagement/index.tsx`
 - Features: Enable/disable built-in sources, full CRUD for custom sources
 
 ## Development Tools

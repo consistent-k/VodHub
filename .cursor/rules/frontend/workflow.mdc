@@ -27,7 +27,7 @@ pnpm commit                       # Interactive conventional commit
 2. Create page in `pages/` (if needed)
 3. Create components in `components/`
 4. Add API calls in `services/`
-5. Add type definitions in `lib/types/`
+5. Add type definitions in `types/`
 6. Run `pnpm --filter @vodhub/frontend lint`
 7. Commit with `pnpm commit`
 
@@ -40,20 +40,20 @@ pnpm commit                       # Interactive conventional commit
 4. Create `index.module.scss` for styles
 
 ### Adding a Component
-1. Create directory in `components/` (e.g., `components/video/NewComponent/`)
+1. Create directory in `components/` (e.g., `components/NewComponent/`)
 2. Create `index.tsx`
 3. Define and export Props interface
 4. Create `index.module.scss`
 5. Use `export default` for the component
 
 ### Adding an API Call
-1. Define request/response types in `lib/types/`
+1. Define request/response types in `types/`
 2. Add API function in `services/vodhub/`
 3. Use `request.get<T>` or `request.post<T>`
 4. Export in `services/index.ts`
 
 ### Adding a Store
-1. Create `use{Name}Store.ts` in `lib/store/`
+1. Create `use{Name}Store.ts` in `store/`
 2. Define interface and state types
 3. Create store with Zustand `create`
 4. Add `persist` middleware if persistence needed

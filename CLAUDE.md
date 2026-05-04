@@ -133,7 +133,7 @@ Each custom route file exports a `route` object with the following properties:
 - **Styling**: CSS variables for multi‑theme support
 
 ### Theme System
-Three built‑in themes defined in `lib/themes/index.ts`:
+Three built‑in themes defined in `themes/index.ts`:
 - **midnight**: dark with red accent
 - **aurora**: light with cyan accent  
 - **cyber**: dark with purple accent
@@ -164,7 +164,7 @@ Three built‑in themes defined in `lib/themes/index.ts`:
 | Overlay | `--color-overlay-border` | Overlay border |
 
 ### State Management
-- Stores in `lib/store/` with naming `use{Name}Store.ts`
+- Stores in `store/` with naming `use{Name}Store.ts`
 - Zustand `persist` middleware for localStorage persistence
 - Theme state updates both CSS variables and Ant Design theme config
 
@@ -189,8 +189,8 @@ Three built‑in themes defined in `lib/themes/index.ts`:
 - See `DESIGN.md` for Vercel‑inspired visual guidelines (colors, typography, shadows, component styling).
 
 ### CMS Management UI
-- Component: `components/cms-management/index.tsx`
-- Store: `lib/store/useVideoSourcesStore.ts` (Zustand + localStorage) – replaces the old `useCmsStore`
+- Component: `components/CmsManagement/index.tsx`
+- Store: `store/useVideoSourcesStore.ts` (Zustand + localStorage) – replaces the old `useCmsStore`
 - Data Source: Built-in video sources defined in `apps/frontend/src/data/builtin-cms.json`
 - Features:
   - Table display of all video sources (built‑in + custom)

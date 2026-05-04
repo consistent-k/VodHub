@@ -1,10 +1,10 @@
+import { SearchOutlined } from '@ant-design/icons';
 import { useKeyPress } from 'ahooks';
 import { Button, Flex, Input, Modal, theme } from 'antd';
 import { debounce, trim } from 'lodash';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 
-import SearchIcon from '../icons/SearchIcon';
 import Loading from '../Loading';
 import VodList, { VodListProps } from '../VodList';
 
@@ -73,7 +73,7 @@ const SearchContent: React.FC<SearchContentProps> = (props) => {
                         <Button
                             size="small"
                             icon={
-                                <SearchIcon
+                                <SearchOutlined
                                     style={{
                                         color: token.colorTextPlaceholder
                                     }}
@@ -129,7 +129,7 @@ const VodSearch: React.FC<VodSearchProps> = (props) => {
     return (
         <div style={{ display: 'inline-flex', justifyContent: 'center' }}>
             {isMobile ? (
-                <SearchIcon
+                <SearchOutlined
                     style={{
                         cursor: 'pointer'
                     }}
@@ -146,7 +146,7 @@ const VodSearch: React.FC<VodSearchProps> = (props) => {
                         <Button
                             size="small"
                             icon={
-                                <SearchIcon
+                                <SearchOutlined
                                     style={{
                                         color: token.colorTextPlaceholder
                                     }}

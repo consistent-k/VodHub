@@ -11,18 +11,25 @@ alwaysApply: true
 ```
 apps/frontend/src/
   components/             # Shared components
-    providers/            # Context providers (InitProvider, ThemeProvider)
-    video/                # Video components (VodList, VodPalyer, VodSearch, VodSites, VodTypes)
-    icons/                # Custom SVG icon components
-    ui/                   # UI utilities (Loading, ThemeSelector)
-    cms-management/       # CMS management interface
-  lib/                    # Business logic and utilities
-    constant/             # Constants (llm.ts, site.ts, prompt.ts)
-    hooks/                # Custom hooks
-    store/                # Zustand stores
-    themes/               # Theme definitions (midnight, aurora, cyber)
-    types/                # TypeScript type definitions
-    utils/                # Utilities (HTTP request wrapper)
+    CmsManagement/        # CMS management interface
+    Disclaimer/           # Disclaimer component
+    InitProvider/         # App initialization provider
+    Loading/              # Loading spinner component
+    SiteHeader/           # Site header with search and nav
+    ThemeProvider/        # Theme context provider
+    ThemeSelector/        # Theme picker UI
+    VodList/              # Video list grid
+    VodPalyer/            # Video player (xgplayer)
+    VodSearch/            # Video search with debounce
+    VodSites/             # Video source selector
+    VodTypes/             # Category type selector
+  constant/               # Constants (llm.ts, site.ts, prompt.ts)
+  hooks/                  # Custom hooks (useIsMobile)
+  layouts/                # Layout components (BasicLayout)
+  store/                  # Zustand stores
+  themes/                 # Theme definitions (midnight, aurora, cyber)
+  types/                  # TypeScript type definitions
+  utils/                  # Utilities (HTTP request wrapper)
   pages/                  # React Router pages
     home/                 # Home page
     category/             # Category browsing
@@ -51,7 +58,7 @@ apps/frontend/src/
 - Props interfaces exported with `export interface`
 
 ### State Management
-- Located in `lib/store/` directory
+- Located in `store/` directory
 - File naming: `use{Name}Store.ts`
 - Uses Zustand + `persist` middleware
 
@@ -66,11 +73,11 @@ apps/frontend/src/
 - All colors use CSS variables from `globals.scss`
 
 ## Key File Locations
-- Types: `lib/types/index.ts`
-- HTTP wrapper: `lib/utils/request/index.ts`
-- Theme config: `lib/themes/index.ts`
-- Theme Provider: `components/providers/ThemeProvider.tsx`
-- Theme store: `lib/store/useThemeStore.ts`
-- Video Sources store: `lib/store/useVideoSourcesStore.ts`
-- CMS Management component: `components/cms-management/index.tsx`
+- Types: `types/index.ts`
+- HTTP wrapper: `utils/request/index.ts`
+- Theme config: `themes/index.ts`
+- Theme Provider: `components/ThemeProvider/index.tsx`
+- Theme store: `store/useThemeStore.ts`
+- Video Sources store: `store/useVideoSourcesStore.ts`
+- CMS Management component: `components/CmsManagement/index.tsx`
 - Built-in CMS data: `src/data/builtin-cms.json`

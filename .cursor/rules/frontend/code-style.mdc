@@ -37,8 +37,8 @@ import { Button } from 'antd';
 import { useNavigate } from 'react-router';
 import { useEffect } from 'react';
 
-import useSettingStore from '@/lib/store/useSettingStore';
-import { useVodSitesStore } from '@/lib/store/useVodSitesStore';
+import useSettingStore from '@/store/useSettingStore';
+import { useVodSitesStore } from '@/store/useVodSitesStore';
 ```
 
 ## Component Rules
@@ -103,7 +103,7 @@ Available CSS variables (defined in `globals.scss`):
 | Overlay | `--color-overlay-border` | Overlay border |
 
 ## Themes
-Three built-in themes defined in `lib/themes/index.ts`:
+Three built-in themes defined in `themes/index.ts`:
 - **midnight**: Dark with red accent
 - **aurora**: Light with cyan accent
 - **cyber**: Dark with purple accent
