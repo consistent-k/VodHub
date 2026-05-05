@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 VodHub is a pnpm monorepo with two applications:
 - **Backend** (`apps/backend`): Hono‑based video aggregation API with a single built‑in provider (`360kan`) and support for custom CMS addresses via a proxy system, providing a unified REST API (categories, search, details, playback). Node.js ≥ 24, ESM.
-- **Frontend** (`apps/frontend`): Vite + React 19 + React Router video player application with Ant Design 6, Zustand state management, multi‑theme support, and integrated CMS management.
+- **Frontend** (`apps/frontend`): Vite + React 19 + React Router video player application with Ant Design 6, Zustand state management, multi‑theme support, integrated CMS management, and TMDB metadata integration.
 
 A shared package (`packages/shared`) provides core TypeScript types used by both apps, including video source definitions.
 
@@ -67,6 +67,27 @@ pnpm --filter @vodhub/frontend typecheck # Type check frontend only
   1. **Built-in Sources**: Pre-configured video sources defined in `apps/frontend/src/data/builtin-cms.json`
   2. **Custom Sources**: User-defined CMS addresses with full CRUD support
 - **CMS Factory**: The `createCMSRoutes()` factory dynamically generates route handlers for custom CMS addresses, enabling flexible video source management without hard‑coded backend routes
+
+### TMDB Integration
+- **Config API**: `GET /api/config` – returns TMDB enabled status and API token to the frontend
+- **Config Store**: `useAppConfigStore` fetches config from backend and initializes TMDB client
+- **Environment Variables**: `TMDB_ENABLED` (boolean string), `TMDB_API_TOKEN` (TMDB API read access token)
+- **TMDB Stores**:
+  - `useTmdbStore` – homepage data (trending/popular/now playing etc.)
+  - `useTmdbDetailStore` – current TMDB item detail and CMS match results
+  - `useTmdbMatchStore` – TMDB-to-CMS match cache with 24h TTL, persisted to localStorage
+- **TMDB Hooks** (`hooks/useTmdb.ts`):
+  - `useTmdbHome` – batch fetch homepage categories (trending/popular/now playing)
+  - `useTmdbSearch` – multi-type search with debounce and request cancellation
+  - `useTmdbDetail` – movie/TV detail fetch
+- **TMDB Utils**:
+  - `utils/tmdb.ts` – client management, image URL construction, Movie/TV data normalization
+  - `utils/tmdb-match.ts` – parallel search across enabled CMS sources, cache results to matchStore
+- **TMDB Components**:
+  - `FeaturedCarousel` – hero carousel with background image, title, rating, overview
+  - `SearchTmdb` – TMDB search with Cmd/Ctrl+K shortcut, auto-match CMS sources on click
+  - `MediaList` – universal media list replacing `VodList`, supports custom columns, badges, hover overlay
+- **View Mode**: Site header has TMDB/CMS toggle button (shown when both API and TMDB token are configured)
 
 ### Middleware Order
 1. `cors()` – CORS handling
@@ -131,6 +152,7 @@ Each custom route file exports a `route` object with the following properties:
 - **State Management**: Zustand stores with `persist` middleware
 - **Video Player**: xgplayer + HLS.js
 - **Styling**: CSS variables for multi‑theme support
+- **TMDB**: `tmdb-ts` library for TMDB API integration
 
 ### Theme System
 Three built‑in themes defined in `themes/index.ts`:
@@ -175,7 +197,7 @@ Three built‑in themes defined in `themes/index.ts`:
 - Components use `export default`
 
 ### Error Handling
-- **HTTP errors**: Rejected via Axios interceptor (`Promise.reject(error)`)
+- **HTTP errors**: Rejected via fetch/HTTP client
 - **API calls**: Wrap in try/catch, re‑throw as `Promise.reject`
 - **UI errors**: Display with Ant Design `message` component
 
@@ -186,7 +208,7 @@ Three built‑in themes defined in `themes/index.ts`:
 - Use `Suspense` for async loading
 
 ### Design System
-- See `DESIGN.md` for Vercel‑inspired visual guidelines (colors, typography, shadows, component styling).
+- Vercel‑inspired visual guidelines (colors, typography, shadows, component styling).
 
 ### CMS Management UI
 - Component: `components/CmsManagement/index.tsx`
@@ -222,7 +244,7 @@ Video source types defined in `packages/shared/src/types/video-source.ts` (forme
 ### Production Environment
 - **Services**: frontend, backend, redis
 - **Ports**: 3000→80 (frontend), 8888→8888 (backend), 6379→6379 (redis)
-- **Environment Variables**: `REDIS_URL`, `CACHE_TTL`, `BANNED_KEYWORDS`
+- **Environment Variables**: `REDIS_URL`, `CACHE_TTL`, `BANNED_KEYWORDS`, `TMDB_ENABLED`, `TMDB_API_TOKEN`
 - **Log Persistence**: `./logs` mapped to `/app/apps/backend/logs`
 
 ## Development Standards
@@ -239,7 +261,7 @@ Video source types defined in `packages/shared/src/types/video-source.ts` (forme
 | Variables/functions | `camelCase` | `getLocalhostAddress` |
 | Types/interfaces | `PascalCase` | `HomeData`, `RouteItem` |
 | Constants | `UPPER_SNAKE_CASE` | `SUCCESS_CODE` |
-| Frontend components | `PascalCase` | `VodList` |
+| Frontend components | `PascalCase` | `MediaList` |
 | Frontend hooks | `use` prefix | `useIsMobile` |
 | Frontend stores | `use` + `Store` suffix | `useSettingStore` |
 | Video source store | `use` + `Store` suffix | `useVideoSourcesStore` |
@@ -247,8 +269,21 @@ Video source types defined in `packages/shared/src/types/video-source.ts` (forme
 
 ### Git Workflow
 - Husky + lint‑staged for pre‑commit hooks
-- Commitlint enforces conventional commits
+- Commitlint enforces conventional commits (body 每行不超过 100 字符)
 - `pnpm commit` for interactive commit messages
+- **Commit Message Format**: 使用中文，body 逐文件列出变更，格式为：
+  ```
+  feat: 简要描述
+
+  - path/to/file.tsx：该文件的具体变更说明，
+    换行续写时保持缩进
+  - path/to/other.ts：另一文件的变更说明
+
+  Co-Authored-By: Claude <model> <noreply@anthropic.com>
+  ```
+  - 每行不超过 100 字符，超长则换行并缩进
+  - 使用动词开头：新增、删除、重构、扩展、替换等
+  - 涉及删除/替换时同时列出旧文件和新文件
 
 ### Code Quality Assurance
 - **After generating code**: Always run `pnpm lint:fix` and `pnpm format` to ensure consistent style
@@ -261,7 +296,6 @@ Video source types defined in `packages/shared/src/types/video-source.ts` (forme
 - CMS handlers check `res.code === 1` for upstream success
 - All error responses return `data: []` (empty array)
 - Route handlers must never throw – always return structured response
-- **Architecture Update**: The system now uses a single built‑in provider (`360kan`) with support for custom CMS addresses via the proxy system
-- **Video Source Management**: Frontend manages video sources through `useVideoSourcesStore`, replacing the old `useCmsStore`
-- **Built-in Sources**: Pre-configured video sources are defined in `apps/frontend/src/data/builtin-cms.json` and can be enabled/disabled by users
+- **Video Source Management**: Frontend manages video sources through `useVideoSourcesStore` (replaces old `useCmsStore`), with built-in sources in `apps/frontend/src/data/builtin-cms.json`
 - **Proxy Routes**: Custom CMS addresses are dynamically handled through `/api/vodhub/proxy` using the CMS factory pattern
+- **TMDB View**: Homepage supports TMDB/CMS dual-mode, toggled via SiteHeader; TMDB-only mode can skip CMS initialization entirely

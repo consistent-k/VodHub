@@ -67,6 +67,16 @@ export const namespaceApi = () => {
     >(`/namespace`);
 };
 
+export const configApi = () => {
+    return request.get<{
+        tmdb: {
+            enabled: boolean;
+            hasToken: boolean;
+            apiToken: string;
+        };
+    }>(`/config`);
+};
+
 export const homeApi = async (site_name: string) => {
     const cmsUrl = await getCmsUrl(site_name);
     if (cmsUrl) {

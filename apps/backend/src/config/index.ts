@@ -15,5 +15,9 @@ export const config = {
         ttl: process.env.CACHE_TTL ? parseInt(process.env.CACHE_TTL, 10) * 1000 : 1000 * 60,
         redis: process.env.REDIS_URL
     },
-    bannedKeywords: process.env.BANNED_KEYWORDS?.split(',').filter((keyword) => keyword.trim()) || BANNED_KEYWORDS
+    bannedKeywords: process.env.BANNED_KEYWORDS?.split(',').filter((keyword) => keyword.trim()) || BANNED_KEYWORDS,
+    tmdb: {
+        enabled: process.env.TMDB_ENABLED === 'true',
+        apiToken: process.env.TMDB_API_TOKEN || ''
+    }
 };

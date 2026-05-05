@@ -72,11 +72,57 @@
         }
     }
 
-    &-info {
+    &-tabs {
         background: var(--color-bg-container);
         border-radius: 8px;
         box-shadow: var(--shadow-border);
-        padding: 20px;
+        padding: 4px 20px 20px;
         margin-top: 24px;
+    }
+
+    &-source-card {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px;
+        border-radius: 6px;
+        cursor: pointer;
+        border: 1px solid var(--color-border-secondary);
+        background: var(--color-bg-elevated);
+        transition: all 0.2s;
+
+        &:hover {
+            border-color: var(--color-primary-alpha-medium);
+            background: var(--color-bg-elevated-hover);
+        }
+
+        &.active {
+            border-color: var(--color-primary);
+            background: var(--color-primary-alpha-low);
+            box-shadow: 0 0 0 1px var(--color-primary-alpha-medium);
+        }
+    }
+
+    &-source-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    &-source-name {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--color-text);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &-source-title {
+        font-size: 11px;
+        color: var(--color-text-tertiary);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin-top: 2px;
     }
 }

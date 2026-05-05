@@ -1,15 +1,18 @@
-import { SearchOutlined } from '@ant-design/icons';
 import { useKeyPress } from 'ahooks';
 import { Button, Flex, Input, Modal, theme } from 'antd';
 import { debounce, trim } from 'lodash';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
 
+import SearchIcon from '../Icons/SearchIcon';
 import Loading from '../Loading';
-import VodList, { VodListProps } from '../VodList';
+import MediaList, { MediaListItem } from '../MediaList';
+import SearchTmdb from '../SearchTmdb';
 
 import useIsMobile from '@/hooks/useIsMobile';
 import { searchApi } from '@/services';
+import useAppConfigStore from '@/store/useAppConfigStore';
+import useSettingStore from '@/store/useSettingStore';
 import { SearchData } from '@/types';
 
 export interface VodSearchProps {
@@ -21,7 +24,7 @@ interface SearchContentProps {
     site: string;
     onCancel: () => void;
     style?: React.CSSProperties;
-    onItemClick?: VodListProps['onItemClick'];
+    onItemClick?: (item: MediaListItem) => void;
 }
 
 const SearchContent: React.FC<SearchContentProps> = (props) => {
@@ -73,7 +76,7 @@ const SearchContent: React.FC<SearchContentProps> = (props) => {
                         <Button
                             size="small"
                             icon={
-                                <SearchOutlined
+                                <SearchIcon
                                     style={{
                                         color: token.colorTextPlaceholder
                                     }}
@@ -99,13 +102,27 @@ const SearchContent: React.FC<SearchContentProps> = (props) => {
             </Flex>
 
             <div style={{ height: 'calc(100% - 60px)', overflowY: 'auto', padding: '0 16px 16px 16px' }}>
-                {loading ? <Loading description="搜索中" /> : <VodList dataSource={dataSource} onItemClick={onItemClick}></VodList>}
+                {loading ? (
+                    <Loading description="搜索中" />
+                ) : (
+                    <MediaList
+                        items={dataSource.map(
+                            (vod): MediaListItem => ({
+                                id: vod.vod_id,
+                                title: vod.vod_name,
+                                posterUrl: vod.vod_pic,
+                                badge: vod.vod_remarks || undefined
+                            })
+                        )}
+                        onItemClick={onItemClick}
+                    />
+                )}
             </div>
         </Flex>
     );
 };
 
-const VodSearch: React.FC<VodSearchProps> = (props) => {
+const CmsVodSearch: React.FC<VodSearchProps> = (props) => {
     const { style, site } = props;
 
     const { token } = theme.useToken();
@@ -129,7 +146,7 @@ const VodSearch: React.FC<VodSearchProps> = (props) => {
     return (
         <div style={{ display: 'inline-flex', justifyContent: 'center' }}>
             {isMobile ? (
-                <SearchOutlined
+                <SearchIcon
                     style={{
                         cursor: 'pointer'
                     }}
@@ -146,7 +163,7 @@ const VodSearch: React.FC<VodSearchProps> = (props) => {
                         <Button
                             size="small"
                             icon={
-                                <SearchOutlined
+                                <SearchIcon
                                     style={{
                                         color: token.colorTextPlaceholder
                                     }}
@@ -180,7 +197,11 @@ const VodSearch: React.FC<VodSearchProps> = (props) => {
                     style={{
                         position: 'fixed',
                         inset: 0,
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        width: '100dvw',
+                        height: '100dvh',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        backgroundColor: 'var(--color-bg)',
                         zIndex: 1000
                     }}
                 >
@@ -189,9 +210,9 @@ const VodSearch: React.FC<VodSearchProps> = (props) => {
                         onCancel={() => {
                             setShowSearch(false);
                         }}
-                        onItemClick={(vod) => {
+                        onItemClick={(media) => {
                             setShowSearch(false);
-                            navigate(`/detail?id=${encodeURIComponent(vod.vod_id as string)}&site=${site}`);
+                            navigate(`/detail?id=${encodeURIComponent(String(media.id))}&site=${site}`);
                         }}
                         style={{
                             height: '100%',
@@ -223,15 +244,26 @@ const VodSearch: React.FC<VodSearchProps> = (props) => {
                         onCancel={() => {
                             setShowSearch(false);
                         }}
-                        onItemClick={(vod) => {
+                        onItemClick={(media) => {
                             setShowSearch(false);
-                            navigate(`/detail?id=${encodeURIComponent(vod.vod_id as string)}&site=${site}`);
+                            navigate(`/detail?id=${encodeURIComponent(String(media.id))}&site=${site}`);
                         }}
                     ></SearchContent>
                 </Modal>
             )}
         </div>
     );
+};
+
+const VodSearch: React.FC<VodSearchProps> = (props) => {
+    const { tmdb_enabled } = useAppConfigStore();
+    const { tmdb_view_cms } = useSettingStore();
+
+    if (tmdb_enabled && !tmdb_view_cms) {
+        return <SearchTmdb style={props.style} />;
+    }
+
+    return <CmsVodSearch {...props} />;
 };
 
 export default VodSearch;

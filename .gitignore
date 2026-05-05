@@ -10,6 +10,7 @@
 
 # deps
 node_modules/
+temp/
 
 # env
 .env

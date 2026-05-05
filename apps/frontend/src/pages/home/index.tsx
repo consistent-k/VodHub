@@ -3,14 +3,16 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import styles from './index.module.scss';
+import TmdbHomePage from './tmdb';
 
 import Loading from '@/components/Loading';
-import VodList from '@/components/VodList';
+import MediaList, { MediaListItem } from '@/components/MediaList';
 import { homeVodApi } from '@/services';
+import useAppConfigStore from '@/store/useAppConfigStore';
 import useSettingStore from '@/store/useSettingStore';
 import { HomeVodData } from '@/types';
 
-const HomePage: React.FC = () => {
+const CmsHomePage: React.FC = () => {
     const [homeVodData, setHomeVodData] = useState<HomeVodData[]>([]);
     const [homeVodTypes, setHomeVodTypes] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
@@ -64,12 +66,21 @@ const HomePage: React.FC = () => {
                                             </svg>
                                         </div>
                                     </div>
-                                    <VodList
-                                        dataSource={homeVodData.filter((mItem) => mItem.type_name === item)}
-                                        onItemClick={(vod) => {
-                                            navigate(`/detail?id=${encodeURIComponent(vod.vod_id as string)}&site=${current_site}`);
+                                    <MediaList
+                                        items={homeVodData
+                                            .filter((mItem) => mItem.type_name === item)
+                                            .map(
+                                                (vod): MediaListItem => ({
+                                                    id: vod.vod_id,
+                                                    title: vod.vod_name,
+                                                    posterUrl: vod.vod_pic,
+                                                    badge: vod.vod_remarks || undefined
+                                                })
+                                            )}
+                                        onItemClick={(media) => {
+                                            navigate(`/detail?id=${encodeURIComponent(String(media.id))}&site=${current_site}`);
                                         }}
-                                    ></VodList>
+                                    />
                                 </div>
                             );
                         })
@@ -87,6 +98,17 @@ const HomePage: React.FC = () => {
             )}
         </div>
     );
+};
+
+const HomePage: React.FC = () => {
+    const { tmdb_enabled, tmdb_api_token } = useAppConfigStore();
+    const { tmdb_view_cms } = useSettingStore();
+
+    if (tmdb_enabled && tmdb_api_token && !tmdb_view_cms) {
+        return <TmdbHomePage />;
+    }
+
+    return <CmsHomePage />;
 };
 
 export default HomePage;

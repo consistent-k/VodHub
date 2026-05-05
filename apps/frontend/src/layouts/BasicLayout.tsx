@@ -8,6 +8,7 @@ import styles from './BasicLayout.module.scss';
 import Disclaimer from '@/components/Disclaimer';
 import SiteHeader from '@/components/SiteHeader';
 import VodTypes from '@/components/VodTypes';
+import useAppConfigStore from '@/store/useAppConfigStore';
 import useSettingStore from '@/store/useSettingStore';
 const { Content, Footer } = Layout;
 
@@ -18,7 +19,9 @@ interface BasicLayoutProps {
 const BasicLayout: React.FC<PropsWithChildren<BasicLayoutProps>> = ({ children, isSettingPage = false }) => {
     const location = useLocation();
 
-    const { current_site } = useSettingStore();
+    const { current_site, tmdb_view_cms } = useSettingStore();
+    const { tmdb_enabled } = useAppConfigStore();
+    const isTmdbView = tmdb_enabled && !tmdb_view_cms;
 
     const isHomePage = useMemo(() => {
         return location.pathname === '/home';
@@ -29,8 +32,8 @@ const BasicLayout: React.FC<PropsWithChildren<BasicLayoutProps>> = ({ children, 
     }, [location.pathname]);
 
     const showVodTypes = useMemo(() => {
-        return isHomePage || isCategoryPage;
-    }, [isHomePage, isCategoryPage]);
+        return (isHomePage || isCategoryPage) && !isTmdbView;
+    }, [isHomePage, isCategoryPage, isTmdbView]);
 
     return (
         <Layout className={styles['vod-layout']}>

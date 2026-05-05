@@ -138,46 +138,49 @@ const SettingPage: React.FC = () => {
                                 }
                             }}
                         >
-                            <Flex gap={24} wrap="wrap">
-                                <Form.Item
-                                    label={<Text style={{ fontWeight: 500, color: 'var(--color-text-secondary)' }}>网站名称</Text>}
-                                    name="site_name"
-                                    rules={[{ required: true, message: '请输入网站名称' }]}
-                                    style={{ marginBottom: 0 }}
-                                >
-                                    <Input
-                                        placeholder="请输入网站名称"
-                                        style={{
-                                            width: 280
-                                        }}
-                                    />
-                                </Form.Item>
+                            <Form.Item
+                                label={<Text style={{ fontWeight: 500, color: 'var(--color-text-secondary)' }}>网站名称</Text>}
+                                name="site_name"
+                                rules={[{ required: true, message: '请输入网站名称' }]}
+                            >
+                                <Input
+                                    placeholder="请输入网站名称"
+                                    style={{
+                                        width: 280,
+                                        height: 40
+                                    }}
+                                />
+                            </Form.Item>
 
-                                <Form.Item
-                                    label={<Text style={{ fontWeight: 500, color: 'var(--color-text-secondary)' }}>VodHub API 地址</Text>}
-                                    name="vod_hub_api"
-                                    rules={[
-                                        {
-                                            validator: (_, value) => {
-                                                if (!value) {
-                                                    return Promise.reject('请输入 API 地址');
-                                                }
-                                                if (value.startsWith('/') || /^https?:\/\//.test(value)) {
-                                                    return Promise.resolve();
-                                                }
-                                                return Promise.reject('请输入正确的 URL 或以 / 开头的路径');
+                            <Form.Item
+                                label={<Text style={{ fontWeight: 500, color: 'var(--color-text-secondary)' }}>VodHub API 地址</Text>}
+                                name="vod_hub_api"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: '请输入 API 地址'
+                                    },
+                                    {
+                                        validator: (_, value) => {
+                                            if (!value) {
+                                                return Promise.reject('请输入 API 地址');
                                             }
+                                            if (value.startsWith('/') || /^https?:\/\//.test(value)) {
+                                                return Promise.resolve();
+                                            }
+                                            return Promise.reject('请输入正确的 URL 或以 / 开头的路径');
                                         }
-                                    ]}
-                                    style={{ marginBottom: 0 }}
-                                >
-                                    <Flex gap={8} align="flex-end">
-                                        <Input
-                                            placeholder="请输入 VodHub API 地址"
-                                            style={{
-                                                width: 280
-                                            }}
-                                        />
+                                    }
+                                ]}
+                                style={{ marginBottom: 0 }}
+                            >
+                                <Input
+                                    placeholder="请输入 VodHub API 地址"
+                                    style={{
+                                        width: 280,
+                                        height: 40
+                                    }}
+                                    suffix={
                                         <Button
                                             type="default"
                                             onClick={handleApiChange}
@@ -188,9 +191,9 @@ const SettingPage: React.FC = () => {
                                         >
                                             验证
                                         </Button>
-                                    </Flex>
-                                </Form.Item>
-                            </Flex>
+                                    }
+                                />
+                            </Form.Item>
                         </Form>
                     </Card>
                     {/* CMS地址管理 */}

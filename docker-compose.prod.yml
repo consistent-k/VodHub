@@ -25,6 +25,8 @@ services:
       - NODE_ENV=production
       - REDIS_URL=redis://redis:6379
       - CACHE_TTL=60
+      - TMDB_ENABLED=${TMDB_ENABLED:-false}
+      - TMDB_API_TOKEN=${TMDB_API_TOKEN:-}
     volumes:
       - ./logs:/app/apps/backend/logs
     depends_on:

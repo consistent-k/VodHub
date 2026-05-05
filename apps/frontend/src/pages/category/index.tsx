@@ -5,7 +5,7 @@ import store from 'store2';
 import styles from './index.module.scss';
 
 import Loading from '@/components/Loading';
-import VodList from '@/components/VodList';
+import MediaList, { MediaListItem } from '@/components/MediaList';
 import { categoryApi } from '@/services';
 import { CategoryVodData, Filter, FilterItem, HomeData } from '@/types';
 
@@ -123,12 +123,19 @@ const CategoryPage = () => {
                         </div>
                     ) : null}
 
-                    <VodList
-                        dataSource={categoryList}
-                        onItemClick={(vod) => {
-                            navigate(`/detail?id=${encodeURIComponent(vod.vod_id as string)}&site=${site}`);
+                    <MediaList
+                        items={categoryList.map(
+                            (vod): MediaListItem => ({
+                                id: vod.vod_id,
+                                title: vod.vod_name,
+                                posterUrl: vod.vod_pic,
+                                badge: vod.vod_remarks || undefined
+                            })
+                        )}
+                        onItemClick={(media) => {
+                            navigate(`/detail?id=${encodeURIComponent(String(media.id))}&site=${site}`);
                         }}
-                    ></VodList>
+                    />
                 </>
             )}
         </div>
