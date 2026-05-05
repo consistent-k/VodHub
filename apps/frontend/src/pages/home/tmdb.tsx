@@ -12,7 +12,7 @@ import useTmdbDetailStore from '@/store/useTmdbDetailStore';
 import useTmdbStore from '@/store/useTmdbStore';
 import type { TmdbMediaItem } from '@/types/tmdb';
 import { getPosterUrl } from '@/utils/tmdb';
-import { matchTmdbToCms } from '@/utils/tmdb-match';
+import { matchTmdbToCmsTop } from '@/utils/tmdb-match';
 
 const toMediaListItems = (items: TmdbMediaItem[]): MediaListItem[] =>
     items.map((item) => ({
@@ -34,14 +34,12 @@ const TmdbHomePage: React.FC = () => {
             const tmdbItem = (item as MediaListItem & { tmdbItem: TmdbMediaItem }).tmdbItem;
             setMatching(true);
             try {
-                const results = await matchTmdbToCms(tmdbItem);
-                if (results.length === 0) {
+                const matches = await matchTmdbToCmsTop(tmdbItem);
+                if (matches.length === 0) {
                     message.info('未找到匹配的播放源');
-                } else if (results.length === 1) {
-                    navigate(`/detail?id=${encodeURIComponent(String(results[0].vod_id))}&site=${results[0].site}`);
                 } else {
-                    useTmdbDetailStore.getState().setTmdbDetail(tmdbItem, results);
-                    navigate(`/detail?id=${encodeURIComponent(String(results[0].vod_id))}&site=${results[0].site}&tmdbId=${tmdbItem.id}&mediaType=${tmdbItem.mediaType}`);
+                    useTmdbDetailStore.getState().setTmdbDetail(tmdbItem, matches);
+                    navigate(`/detail?id=${encodeURIComponent(String(matches[0].vod_id))}&site=${matches[0].site}&tmdbId=${tmdbItem.id}&mediaType=${tmdbItem.mediaType}`);
                 }
             } catch {
                 message.error('匹配播放源失败');

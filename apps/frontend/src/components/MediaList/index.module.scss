@@ -4,6 +4,7 @@
     &-header {
         display: flex;
         align-items: center;
+        justify-content: space-between;
         margin-bottom: 16px;
     }
 
@@ -23,6 +24,20 @@
             height: 20px;
             background: var(--color-primary);
             border-radius: 2px;
+        }
+    }
+
+    &-more {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--color-text-tertiary);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+
+        &:hover {
+            color: var(--color-primary);
         }
     }
 }

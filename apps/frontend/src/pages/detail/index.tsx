@@ -1,6 +1,6 @@
 import { App, Col, Descriptions, Flex, Image, Row, Select, Tabs, Typography } from 'antd';
 import { includes } from 'lodash';
-import React, { Suspense, useEffect, useMemo, useState } from 'react';
+import React, { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router';
 
 import styles from './index.module.scss';
@@ -12,7 +12,7 @@ import { detailApi, playApi } from '@/services';
 import useTmdbDetailStore from '@/store/useTmdbDetailStore';
 import { DetailData, VodPlayList, VodPlayUrl } from '@/types';
 import type { CmsMatchResult, TmdbMediaItem } from '@/types/tmdb';
-import { matchTmdbToCms } from '@/utils/tmdb-match';
+import { matchTmdbToCms, matchTmdbToCmsStream } from '@/utils/tmdb-match';
 
 const { Paragraph } = Typography;
 
@@ -29,6 +29,7 @@ const DetailPage: React.FC = () => {
     const [activePlayList, setActivePlayList] = useState<VodPlayList>();
     const [activeUrl, setActiveUrl] = useState('');
     const [tmdbMatches, setTmdbMatches] = useState<CmsMatchResult[]>([]);
+    const bgMatchedId = useRef<number | null>(null);
 
     const { message } = App.useApp();
 
@@ -129,6 +130,37 @@ const DetailPage: React.FC = () => {
             });
         }
     }, [tmdbId, mediaType, movieDetail?.vod_name]);
+
+    // Background: stream-match all remaining sources one by one
+    useEffect(() => {
+        if (!tmdbId || !mediaType || !movieDetail?.vod_name) return;
+        if (tmdbMatches.length === 0) return;
+        const id = Number(tmdbId);
+        if (bgMatchedId.current === id) return;
+        bgMatchedId.current = id;
+
+        const item: TmdbMediaItem = {
+            id: Number(tmdbId),
+            mediaType: mediaType as TmdbMediaItem['mediaType'],
+            title: movieDetail.vod_name,
+            originalTitle: movieDetail.vod_name,
+            overview: '',
+            posterPath: null,
+            backdropPath: null,
+            releaseDate: movieDetail.vod_year || '',
+            voteAverage: 0,
+            voteCount: 0,
+            genreIds: [],
+            popularity: 0,
+            originalLanguage: ''
+        };
+        matchTmdbToCmsStream(item, (match) => {
+            setTmdbMatches((prev) => {
+                if (prev.some((m) => m.site === match.site)) return prev;
+                return [...prev, match];
+            });
+        });
+    }, [tmdbId, mediaType, movieDetail?.vod_name, tmdbMatches.length]);
 
     if (!movieDetail) {
         return <Loading fullscreen />;
