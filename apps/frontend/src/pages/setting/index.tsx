@@ -2,7 +2,7 @@ import { Form, Input, Button, Flex, Select, App, Card, Typography, Space } from 
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
-import styles from './index.module.scss';
+import { useStyles } from './styles';
 
 import CmsManagement from '@/components/CmsManagement';
 import { ThemeSelector } from '@/components/ThemeSelector';
@@ -14,6 +14,7 @@ const { Text } = Typography;
 const SettingPage: React.FC = () => {
     const { vod_hub_api, site_name, current_site, updateSetting } = useSettingStore();
     const [form] = Form.useForm();
+    const { styles } = useStyles();
 
     const { getVodTypes, sites, isInitialized, hasError, clearVodTypes } = useVodSitesStore();
 
@@ -69,12 +70,12 @@ const SettingPage: React.FC = () => {
     };
 
     return (
-        <div className={styles['vod-next-setting']}>
-            <div className={styles['setting-page']}>
+        <div className={styles.setting}>
+            <div className={styles.page}>
                 <Flex gap={24} vertical>
                     {/* 操作按钮 */}
                     <Card
-                        className={styles['setting-card']}
+                        className={styles.card}
                         styles={{
                             body: { padding: '24px' }
                         }}
@@ -117,7 +118,7 @@ const SettingPage: React.FC = () => {
                                 <span style={{ fontSize: '16px', fontWeight: 600, letterSpacing: '-0.32px' }}>基础配置</span>
                             </Flex>
                         }
-                        className={styles['setting-card']}
+                        className={styles.card}
                         styles={{
                             body: { padding: '24px' }
                         }}
@@ -203,7 +204,7 @@ const SettingPage: React.FC = () => {
                                 <span style={{ fontSize: '16px', fontWeight: 600, letterSpacing: '-0.32px' }}>CMS地址管理</span>
                             </Flex>
                         }
-                        className={styles['setting-card']}
+                        className={styles.card}
                         styles={{
                             body: { padding: '24px' }
                         }}
@@ -218,7 +219,7 @@ const SettingPage: React.FC = () => {
                                 <span style={{ fontSize: '16px', fontWeight: 600, letterSpacing: '-0.32px' }}>站点选择</span>
                             </Flex>
                         }
-                        className={styles['setting-card']}
+                        className={styles.card}
                         styles={{
                             body: { padding: '24px' }
                         }}
@@ -247,7 +248,7 @@ const SettingPage: React.FC = () => {
                                 <span style={{ fontSize: '16px', fontWeight: 600, letterSpacing: '-0.32px' }}>主题设置</span>
                             </Flex>
                         }
-                        className={styles['setting-card']}
+                        className={styles.card}
                         styles={{
                             body: { padding: '24px' }
                         }}

@@ -2,7 +2,7 @@ import { uniq } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 
-import styles from './index.module.scss';
+import { useStyles } from './styles';
 import TmdbHomePage from './tmdb';
 
 import Loading from '@/components/Loading';
@@ -17,6 +17,7 @@ const CmsHomePage: React.FC = () => {
     const [homeVodTypes, setHomeVodTypes] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
     const { current_site } = useSettingStore();
+    const { styles } = useStyles();
 
     const navigate = useNavigate();
 
@@ -40,7 +41,7 @@ const CmsHomePage: React.FC = () => {
     }, [current_site, getHomeVod]);
 
     return (
-        <div className={styles['vod-next-home']}>
+        <div className={styles.home}>
             {loading ? (
                 <Loading fullscreen description="加载中" />
             ) : (
@@ -48,7 +49,7 @@ const CmsHomePage: React.FC = () => {
                     {homeVodTypes?.length > 0 ? (
                         homeVodTypes.map((item, index) => {
                             return (
-                                <div key={`${item}-${index.toString()}`} className={styles['vod-next-home-section']}>
+                                <div key={`${item}-${index.toString()}`} className={styles.section}>
                                     <MediaList
                                         title={item}
                                         onMore={() => {
@@ -75,7 +76,7 @@ const CmsHomePage: React.FC = () => {
                             );
                         })
                     ) : (
-                        <div className={styles['vod-next-home-empty']}>
+                        <div className={styles.empty}>
                             <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M4 4H20V16H4V4Z" stroke="#666666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                                 <path d="M8 20H16" stroke="#666666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />

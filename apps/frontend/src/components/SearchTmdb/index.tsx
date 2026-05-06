@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router';
 
 import SearchIcon from '../Icons/SearchIcon';
 
-import styles from './index.module.scss';
+import { useStyles } from './styles';
 
 import useIsMobile from '@/hooks/useIsMobile';
 import { useTmdbSearch } from '@/hooks/useTmdb';
@@ -23,6 +23,7 @@ interface SearchTmdbContentProps {
 const SearchTmdbContent: React.FC<SearchTmdbContentProps> = ({ onCancel, style }) => {
     const { token } = theme.useToken();
     const navigate = useNavigate();
+    const { styles } = useStyles();
     const { results, isLoading, totalResults, search, reset } = useTmdbSearch();
     const [value, setValue] = useState('');
     const [matchingId, setMatchingId] = useState<number | null>(null);
@@ -75,27 +76,27 @@ const SearchTmdbContent: React.FC<SearchTmdbContentProps> = ({ onCancel, style }
                 <Button onClick={onCancel}>取消</Button>
             </Flex>
 
-            <div className={styles['search-tmdb-results']}>
+            <div className={styles.results}>
                 {isLoading && results.length === 0 ? (
-                    <div className={styles['search-tmdb-loading']}>
+                    <div className={styles.loading}>
                         <Spin />
                     </div>
                 ) : results.length > 0 ? (
                     <>
-                        {totalResults > 0 && <div className={styles['search-tmdb-count']}>共 {totalResults} 个结果</div>}
-                        <div className={styles['search-tmdb-grid']}>
+                        {totalResults > 0 && <div className={styles.count}>共 {totalResults} 个结果</div>}
+                        <div className={styles.grid}>
                             {results.map((item) => (
-                                <div key={`${item.mediaType}-${item.id}`} className={styles['search-tmdb-item']} onClick={() => handleItemClick(item)}>
-                                    <div className={styles['search-tmdb-item-cover']}>
-                                        <Tag className={styles['search-tmdb-item-type']}>{item.mediaType === 'movie' ? '电影' : '剧集'}</Tag>
-                                        <div className={styles['search-tmdb-item-score']}>{item.voteAverage.toFixed(1)}</div>
+                                <div key={`${item.mediaType}-${item.id}`} className={styles.item} onClick={() => handleItemClick(item)}>
+                                    <div className={styles.itemCover}>
+                                        <Tag className={styles.itemType}>{item.mediaType === 'movie' ? '电影' : '剧集'}</Tag>
+                                        <div className={styles.itemScore}>{item.voteAverage.toFixed(1)}</div>
                                         {matchingId === item.id && (
-                                            <div className={styles['search-tmdb-item-matching']}>
+                                            <div className={styles.itemMatching}>
                                                 <Spin size="small" />
                                             </div>
                                         )}
                                         <Image
-                                            rootClassName={styles['search-tmdb-item-pic']}
+                                            rootClassName={styles.itemPic}
                                             src={getPosterUrl(item.posterPath, 'w342')}
                                             alt={item.title}
                                             preview={false}
@@ -103,18 +104,18 @@ const SearchTmdbContent: React.FC<SearchTmdbContentProps> = ({ onCancel, style }
                                             fallback="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIAAQMAAADOtka5AAAABlBMVEX///8AAABVwtN+AAAAAXRSTlMAQObYZgAAAAlwShavanJqcGAAAAyRJREFUeNrtwQEBAAAAgiD/r25IQAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAfBp4DwABPq7bWwAAAABJRU5ErkJggg=="
                                         />
                                     </div>
-                                    <div className={styles['search-tmdb-item-info']}>
-                                        <div className={styles['search-tmdb-item-title']}>{item.title}</div>
-                                        <div className={styles['search-tmdb-item-meta']}>{item.releaseDate && <span>{item.releaseDate.slice(0, 4)}</span>}</div>
+                                    <div className={styles.itemInfo}>
+                                        <div className={styles.itemTitle}>{item.title}</div>
+                                        <div className={styles.itemMeta}>{item.releaseDate && <span>{item.releaseDate.slice(0, 4)}</span>}</div>
                                     </div>
                                 </div>
                             ))}
                         </div>
                     </>
                 ) : value.trim() ? (
-                    <div className={styles['search-tmdb-empty']}>暂无搜索结果</div>
+                    <div className={styles.empty}>暂无搜索结果</div>
                 ) : (
-                    <div className={styles['search-tmdb-empty']}>输入关键字搜索电影和剧集</div>
+                    <div className={styles.empty}>输入关键字搜索电影和剧集</div>
                 )}
             </div>
         </Flex>
@@ -125,6 +126,7 @@ const SearchTmdb: React.FC<{ style?: React.CSSProperties }> = ({ style }) => {
     const { token } = theme.useToken();
     const { isMobile } = useIsMobile();
     const [showSearch, setShowSearch] = useState(false);
+    const { styles } = useStyles();
 
     useKeyPress(['meta.k'], () => setShowSearch(true));
     useKeyPress(['ctrl.k'], () => setShowSearch(true));
@@ -160,7 +162,7 @@ const SearchTmdb: React.FC<{ style?: React.CSSProperties }> = ({ style }) => {
             )}
 
             {showSearch && isMobile && (
-                <div className={styles['search-tmdb-mobile-overlay']}>
+                <div className={styles.mobileOverlay}>
                     <SearchTmdbContent onCancel={() => setShowSearch(false)} style={{ height: '100%', overflowY: 'auto' }} />
                 </div>
             )}

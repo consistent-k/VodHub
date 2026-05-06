@@ -1,7 +1,7 @@
 import { CheckOutlined } from '@ant-design/icons';
 import { Card, Flex, Typography } from 'antd';
 
-import styles from './index.module.scss';
+import { useStyles } from './styles';
 
 import { useThemeStore } from '@/store/useThemeStore';
 import { themeList, ThemeId } from '@/themes';
@@ -10,6 +10,7 @@ const { Text } = Typography;
 
 export function ThemeSelector() {
     const { themeId, setThemeId } = useThemeStore();
+    const { styles, cx } = useStyles();
 
     return (
         <Flex gap={16} wrap="wrap">
@@ -21,7 +22,7 @@ export function ThemeSelector() {
                         key={theme.id}
                         hoverable
                         onClick={() => setThemeId(theme.id as ThemeId)}
-                        className={`${styles['theme-card']} ${isSelected ? styles['theme-card-selected'] : ''}`}
+                        className={cx(styles.card, isSelected && styles.cardSelected)}
                         style={{
                             width: 200,
                             cursor: 'pointer',
@@ -35,14 +36,14 @@ export function ThemeSelector() {
                         }}
                     >
                         {isSelected && (
-                            <div className={styles['theme-check']}>
+                            <div className={styles.check}>
                                 <CheckOutlined />
                             </div>
                         )}
 
                         <Flex vertical gap={12}>
                             <div
-                                className={styles['theme-preview']}
+                                className={styles.preview}
                                 style={{
                                     backgroundColor: theme.preview.background,
                                     borderRadius: 8,

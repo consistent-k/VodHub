@@ -4,8 +4,9 @@ import Player, { I18N } from 'xgplayer';
 import ZH from 'xgplayer/es/lang/zh-cn';
 import HlsPlugin from 'xgplayer-hls';
 
-import styles from './index.module.scss';
 import 'xgplayer/dist/index.min.css';
+
+import { useStyles } from './styles';
 
 // eslint-disable-next-line react-hooks/rules-of-hooks
 I18N.use(ZH);
@@ -19,6 +20,7 @@ export interface PlayerProps {
 
 const VodPalyer: React.FC<PlayerProps> = (props) => {
     const { url, onError, style, showType = 'xgplayer' } = props;
+    const { styles } = useStyles();
 
     const xgInstanceRef = useRef<any>(null);
 
@@ -68,7 +70,7 @@ const VodPalyer: React.FC<PlayerProps> = (props) => {
     });
 
     return (
-        <div className={styles['vod-next-player']} style={{ ...style }}>
+        <div className={styles.player} style={{ ...style }}>
             {showType === 'xgplayer' ? (
                 <div
                     id="xgplayer"

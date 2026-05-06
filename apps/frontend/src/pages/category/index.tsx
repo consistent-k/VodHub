@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router';
 import store from 'store2';
 
-import styles from './index.module.scss';
+import { useStyles } from './styles';
 
 import Loading from '@/components/Loading';
 import MediaList, { MediaListItem } from '@/components/MediaList';
@@ -12,6 +12,7 @@ import { CategoryVodData, Filter, FilterItem, HomeData } from '@/types';
 const CategoryPage = () => {
     const [categoryList, setCategoryList] = useState<CategoryVodData[]>([]);
     const [loading, setLoading] = useState(true);
+    const { styles, cx } = useStyles();
 
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
@@ -90,24 +91,24 @@ const CategoryPage = () => {
     };
 
     return (
-        <div className={styles['vod-next-category']}>
+        <div className={styles.category}>
             {loading ? (
                 <Loading fullscreen description="加载中" />
             ) : (
                 <>
                     {currentData?.filters?.length ? (
-                        <div className={styles['vod-next-category-filters']}>
+                        <div className={styles.filters}>
                             {currentData.filters.map((item: Filter) => {
                                 return (
-                                    <div key={item.type} className={styles['vod-next-category-filter']}>
-                                        <div className={styles['vod-next-category-label']}>{typeMap[item.type]}</div>
-                                        <div className={styles['vod-next-category-options']}>
+                                    <div key={item.type} className={styles.filter}>
+                                        <div className={styles.label}>{typeMap[item.type]}</div>
+                                        <div className={styles.options}>
                                             {item.children.map((cItem: FilterItem) => {
                                                 const currentValue = filters[item.type] || '';
                                                 return (
                                                     <div
                                                         key={cItem.label}
-                                                        className={`${styles['vod-next-category-option']} ${currentValue === cItem.value ? styles['active'] : ''}`}
+                                                        className={cx(styles.option, currentValue === cItem.value && styles.active)}
                                                         onClick={() => {
                                                             handleFilterChange(item.type, cItem.label === '全部' ? '' : cItem.value);
                                                         }}

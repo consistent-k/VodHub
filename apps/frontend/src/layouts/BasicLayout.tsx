@@ -3,13 +3,14 @@ import dayjs from 'dayjs';
 import React, { PropsWithChildren, useMemo } from 'react';
 import { useLocation } from 'react-router';
 
-import styles from './BasicLayout.module.scss';
+import { useStyles } from './styles';
 
 import Disclaimer from '@/components/Disclaimer';
 import SiteHeader from '@/components/SiteHeader';
 import VodTypes from '@/components/VodTypes';
 import useAppConfigStore from '@/store/useAppConfigStore';
 import useSettingStore from '@/store/useSettingStore';
+
 const { Content, Footer } = Layout;
 
 interface BasicLayoutProps {
@@ -18,6 +19,7 @@ interface BasicLayoutProps {
 
 const BasicLayout: React.FC<PropsWithChildren<BasicLayoutProps>> = ({ children, isSettingPage = false }) => {
     const location = useLocation();
+    const { styles } = useStyles();
 
     const { current_site, tmdb_view_cms } = useSettingStore();
     const { tmdb_enabled } = useAppConfigStore();
@@ -36,16 +38,16 @@ const BasicLayout: React.FC<PropsWithChildren<BasicLayoutProps>> = ({ children, 
     }, [isHomePage, isCategoryPage, isTmdbView]);
 
     return (
-        <Layout className={styles['vod-layout']}>
+        <Layout className={styles.layout}>
             <Disclaimer></Disclaimer>
             {!isSettingPage && <SiteHeader></SiteHeader>}
-            <Content className={styles['vod-layout-content']}>
+            <Content className={styles.content}>
                 {showVodTypes && <VodTypes site={current_site}></VodTypes>}
-                <div className={styles['vod-layout-main']}>{children}</div>
+                <div className={styles.main}>{children}</div>
             </Content>
-            <Footer className={styles['vod-layout-footer']}>
+            <Footer className={styles.footer}>
                 <span>©{dayjs().year()} VodNext</span>
-                <span className={styles['vod-layout-footer-divider']}>|</span>
+                <span className={styles.footerDivider}>|</span>
                 <span>仅供学习交流使用</span>
             </Footer>
         </Layout>

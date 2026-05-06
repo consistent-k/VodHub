@@ -1,7 +1,7 @@
 import { Select } from 'antd';
 import type { SelectProps } from 'antd';
 
-import styles from './index.module.scss';
+import { useStyles } from './styles';
 
 interface VodSitesProps {
     options: SelectProps['options'];
@@ -11,9 +11,10 @@ interface VodSitesProps {
 
 const VodSites: React.FC<VodSitesProps> = (props) => {
     const { options, value, onChange } = props;
+    const { styles } = useStyles();
 
     return (
-        <div className={styles['vod-header-sites']}>
+        <div className={styles.sites}>
             {options && options.length > 0 && (
                 <Select
                     styles={{

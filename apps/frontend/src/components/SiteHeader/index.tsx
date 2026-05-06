@@ -2,7 +2,7 @@ import { AppstoreOutlined, SettingOutlined, VideoCameraOutlined } from '@ant-des
 import { Button, Flex, Layout, Tooltip } from 'antd';
 import { useNavigate } from 'react-router';
 
-import styles from './index.module.scss';
+import { useStyles } from './styles';
 
 import VodSearch from '@/components/VodSearch';
 import VodSites from '@/components/VodSites';
@@ -14,6 +14,7 @@ const { Header } = Layout;
 
 const SiteHeader = () => {
     const navigate = useNavigate();
+    const { styles } = useStyles();
 
     const { vod_hub_api, site_name, current_site, tmdb_view_cms, updateSetting } = useSettingStore();
     const { tmdb_enabled, tmdb_api_token } = useAppConfigStore();
@@ -24,22 +25,22 @@ const SiteHeader = () => {
     const isTmdbView = tmdb_enabled && !tmdb_view_cms;
 
     return (
-        <Header className={styles['vod-header']}>
+        <Header className={styles.header}>
             <Flex gap={20} align="center">
                 <Flex
-                    className={styles['vod-header-logo']}
+                    className={styles.logo}
                     onClick={() => {
                         navigate('/home');
                     }}
                     align="center"
                     gap={10}
                 >
-                    <div className={styles['vod-header-logo-icon']}>
+                    <div className={styles.logoIcon}>
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M9 8L15 12L9 16V8Z" fill="currentColor" />
                         </svg>
                     </div>
-                    <span className={styles['vod-header-title']}>{site_name || 'VodNext'}</span>
+                    <span className={styles.title}>{site_name || 'VodNext'}</span>
                 </Flex>
                 {!isTmdbView && (
                     <VodSites
@@ -57,7 +58,7 @@ const SiteHeader = () => {
                     <Tooltip title={isTmdbView ? '切换到 CMS' : '切换到 TMDB'}>
                         <Button
                             type="text"
-                            className={styles['vod-header-btn']}
+                            className={styles.btn}
                             icon={isTmdbView ? <AppstoreOutlined /> : <VideoCameraOutlined />}
                             onClick={() => {
                                 updateSetting({ tmdb_view_cms: !tmdb_view_cms });
@@ -69,7 +70,7 @@ const SiteHeader = () => {
                 <VodSearch site={current_site} />
                 <Button
                     type="text"
-                    className={styles['vod-header-btn']}
+                    className={styles.btn}
                     icon={<SettingOutlined />}
                     onClick={() => {
                         navigate('/setting');

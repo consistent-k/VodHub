@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import styles from './index.module.scss';
+import { useStyles } from './styles';
 
 interface LoadingProps {
     fullscreen?: boolean;
@@ -10,6 +10,7 @@ interface LoadingProps {
 
 const Loading: React.FC<LoadingProps> = ({ fullscreen = false, description = '加载中', size = 'default' }) => {
     const [dots, setDots] = useState('');
+    const { styles, cx } = useStyles();
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -19,30 +20,28 @@ const Loading: React.FC<LoadingProps> = ({ fullscreen = false, description = '�
     }, []);
 
     const sizeClasses = {
-        small: styles['size-small'],
-        default: styles['size-default'],
-        large: styles['size-large']
+        small: styles.sizeSmall,
+        default: styles.sizeDefault,
+        large: styles.sizeLarge
     };
 
-    const content = (
-        <div className={`${styles['loading-container']} ${fullscreen ? styles['fullscreen'] : ''}`}>
-            <div className={styles['loading-content']}>
-                <div className={`${styles['spinner']} ${sizeClasses[size]}`}>
-                    <div className={styles['spinner-ring']} />
-                    <div className={styles['spinner-ring']} />
-                    <div className={styles['spinner-ring']} />
+    return (
+        <div className={cx(styles.container, fullscreen && styles.fullscreen)}>
+            <div className={styles.content}>
+                <div className={cx(styles.spinner, sizeClasses[size])}>
+                    <div className={styles.spinnerRing} />
+                    <div className={styles.spinnerRing} />
+                    <div className={styles.spinnerRing} />
                 </div>
                 {description && (
-                    <div className={styles['loading-text']}>
+                    <div className={styles.loadingText}>
                         {description}
-                        <span className={styles['dots']}>{dots}</span>
+                        <span className={styles.dots}>{dots}</span>
                     </div>
                 )}
             </div>
         </div>
     );
-
-    return content;
 };
 
 export default Loading;

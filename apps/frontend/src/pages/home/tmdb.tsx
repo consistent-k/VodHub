@@ -2,7 +2,7 @@ import { message } from 'antd';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 
-import styles from './tmdb.module.scss';
+import { useStyles } from './tmdb.styles';
 
 import FeaturedCarousel from '@/components/FeaturedCarousel';
 import Loading from '@/components/Loading';
@@ -28,6 +28,7 @@ const TmdbHomePage: React.FC = () => {
     const store = useTmdbStore();
     useTmdbHome();
     const [matching, setMatching] = useState(false);
+    const { styles } = useStyles();
 
     const handleItemClick = useCallback(
         async (item: MediaListItem) => {
@@ -68,7 +69,7 @@ const TmdbHomePage: React.FC = () => {
 
     if (store.error) {
         return (
-            <div className={styles['tmdb-home-empty']}>
+            <div className={styles.empty}>
                 <p>加载失败: {store.error}</p>
             </div>
         );
@@ -76,14 +77,14 @@ const TmdbHomePage: React.FC = () => {
 
     if (store.isLoaded && store.trending.length === 0 && store.popularMovies.length === 0 && store.popularTvShows.length === 0) {
         return (
-            <div className={styles['tmdb-home-empty']}>
+            <div className={styles.empty}>
                 <p>TMDB 数据为空，请检查网络连接或 API Token 配置</p>
             </div>
         );
     }
 
     return (
-        <div className={styles['tmdb-home']}>
+        <div className={styles.home}>
             {matching && <Loading fullscreen description="正在匹配播放源" />}
             <FeaturedCarousel
                 items={store.trending}

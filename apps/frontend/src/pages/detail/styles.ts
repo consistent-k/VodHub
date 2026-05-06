@@ -1,57 +1,54 @@
-.vod-next-detail {
-    height: 100%;
-    width: 100%;
+import { createStyles } from 'antd-style';
 
-    &-player {
-        background: var(--color-bg-container);
+export const useStyles = createStyles(({ css, token }) => ({
+    detail: css`
+        height: 100%;
+        width: 100%;
+    `,
+    player: css`
+        background: ${token.colorBgContainer};
         border-radius: 12px;
         overflow: hidden;
         box-shadow: var(--shadow-border);
-    }
-
-    &-playlist {
-        background: var(--color-bg-container);
+    `,
+    playlist: css`
+        background: ${token.colorBgContainer};
         border-radius: 8px;
         box-shadow: var(--shadow-border);
         padding: 20px;
-    }
-
-    &-header {
+    `,
+    header: css`
         display: flex;
         align-items: center;
         justify-content: space-between;
         margin-bottom: 16px;
-    }
-
-    &-title {
+    `,
+    title: css`
         font-size: 18px;
         font-weight: 600;
-        color: var(--color-text);
+        color: ${token.colorText};
         letter-spacing: -0.32px;
-    }
-
-    &-source {
+    `,
+    source: css`
         font-size: 12px;
         font-weight: 400;
-        color: var(--color-text-tertiary);
-    }
-
-    &-episodes {
+        color: ${token.colorTextTertiary};
+    `,
+    episodes: css`
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
         max-height: 300px;
         overflow-y: auto;
-    }
-
-    &-episode {
+    `,
+    episode: css`
         flex: 0 0 calc(33.33% - 6px);
         padding: 10px 12px;
-        background: var(--color-bg-elevated);
+        background: ${token.colorBgElevated};
         border-radius: 6px;
         font-size: 12px;
         font-weight: 400;
-        color: var(--color-text-secondary);
+        color: ${token.colorTextSecondary};
         cursor: pointer;
         transition: all 0.2s;
         text-align: center;
@@ -59,70 +56,61 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-
         &:hover {
-            color: var(--color-text);
+            color: ${token.colorText};
             background: var(--color-bg-elevated-hover);
         }
-
-        &.active {
-            color: var(--color-primary);
-            background: var(--color-primary-alpha-low);
-            box-shadow: 0px 0px 0px 1px rgba(23, 23, 23, 0.2);
-        }
-    }
-
-    &-tabs {
-        background: var(--color-bg-container);
+    `,
+    episodeActive: css`
+        color: ${token.colorPrimary};
+        background: var(--color-primary-alpha-low);
+        box-shadow: 0px 0px 0px 1px rgba(23, 23, 23, 0.2);
+    `,
+    tabs: css`
+        background: ${token.colorBgContainer};
         border-radius: 8px;
         box-shadow: var(--shadow-border);
         padding: 4px 20px 20px;
         margin-top: 24px;
-    }
-
-    &-source-card {
+    `,
+    sourceCard: css`
         display: flex;
         align-items: center;
         gap: 8px;
         padding: 8px;
         border-radius: 6px;
         cursor: pointer;
-        border: 1px solid var(--color-border-secondary);
-        background: var(--color-bg-elevated);
+        border: 1px solid ${token.colorBorderSecondary};
+        background: ${token.colorBgElevated};
         transition: all 0.2s;
-
         &:hover {
             border-color: var(--color-primary-alpha-medium);
             background: var(--color-bg-elevated-hover);
         }
-
-        &.active {
-            border-color: var(--color-primary);
-            background: var(--color-primary-alpha-low);
-            box-shadow: 0 0 0 1px var(--color-primary-alpha-medium);
-        }
-    }
-
-    &-source-info {
+    `,
+    sourceCardActive: css`
+        border-color: ${token.colorPrimary};
+        background: var(--color-primary-alpha-low);
+        box-shadow: 0 0 0 1px var(--color-primary-alpha-medium);
+    `,
+    sourceInfo: css`
         flex: 1;
         min-width: 0;
-    }
-
-    &-source-name {
+    `,
+    sourceName: css`
         font-size: 12px;
         font-weight: 500;
-        color: var(--color-text);
+        color: ${token.colorText};
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-    }
-
-    &-source-title {
+    `,
+    sourceTitle: css`
         font-size: 11px;
-        color: var(--color-text-tertiary);
+        color: ${token.colorTextTertiary};
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
         margin-top: 2px;
-    }
-}
+    `
+}));

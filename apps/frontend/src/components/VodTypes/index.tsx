@@ -2,7 +2,7 @@ import { useEffect, useState, useRef, useMemo } from 'react';
 import { useNavigate, useLocation, useSearchParams } from 'react-router';
 import store from 'store2';
 
-import styles from './index.module.scss';
+import { useStyles } from './styles';
 
 import { homeApi } from '@/services';
 
@@ -20,6 +20,7 @@ const VodTypes: React.FC<VodTypesProps> = ({ site }) => {
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(false);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const { styles, cx } = useStyles();
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -101,35 +102,35 @@ const VodTypes: React.FC<VodTypesProps> = ({ site }) => {
     };
 
     return (
-        <div className={styles['vod-types']}>
-            <div className={styles['tabs-wrapper']}>
+        <div className={styles.vodTypes}>
+            <div className={styles.tabsWrapper}>
                 {canScrollLeft && (
-                    <button onClick={() => scroll('left')} className={styles['scroll-button']} aria-label="向左滚动">
+                    <button onClick={() => scroll('left')} className={styles.scrollButton} aria-label="向左滚动">
                         <svg style={{ width: 16, height: 16 }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                         </svg>
                     </button>
                 )}
 
-                <div ref={scrollContainerRef} className={styles['tabs-container']}>
-                    <div className={styles['tabs-list']}>
+                <div ref={scrollContainerRef} className={styles.tabsContainer}>
+                    <div className={styles.tabsList}>
                         {items.map((item) => (
                             <button
                                 key={item.key}
                                 onClick={() => handleTabClick(item.key)}
-                                className={`${styles['tab-item']} ${activeKey === item.key ? styles['active'] : ''}`}
+                                className={cx(styles.tabItem, activeKey === item.key && styles.active)}
                                 aria-selected={activeKey === item.key}
                                 role="tab"
                             >
-                                <span className={styles['tab-label']}>{item.label}</span>
-                                {activeKey === item.key && <div className={styles['active-indicator']} />}
+                                <span className={styles.tabLabel}>{item.label}</span>
+                                {activeKey === item.key && <div className={styles.activeIndicator} />}
                             </button>
                         ))}
                     </div>
                 </div>
 
                 {canScrollRight && (
-                    <button onClick={() => scroll('right')} className={styles['scroll-button']} aria-label="向右滚动">
+                    <button onClick={() => scroll('right')} className={styles.scrollButton} aria-label="向右滚动">
                         <svg style={{ width: 16, height: 16 }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                         </svg>

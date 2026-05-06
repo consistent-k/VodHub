@@ -1,77 +1,70 @@
-.media-list {
-    width: 100%;
+import { createStyles } from 'antd-style';
 
-    &-header {
+export const useStyles = createStyles(({ css, token }) => ({
+    list: css`
+        width: 100%;
+    `,
+    listHeader: css`
         display: flex;
         align-items: center;
         justify-content: space-between;
         margin-bottom: 16px;
-    }
-
-    &-title {
+    `,
+    listTitle: css`
         font-size: 20px;
         font-weight: 600;
-        color: var(--color-text);
+        color: ${token.colorText};
         letter-spacing: -0.5px;
         position: relative;
         display: inline-flex;
         align-items: center;
         gap: 10px;
-
         &::before {
             content: '';
             width: 3px;
             height: 20px;
-            background: var(--color-primary);
+            background: ${token.colorPrimary};
             border-radius: 2px;
         }
-    }
-
-    &-more {
+    `,
+    listMore: css`
         font-size: 14px;
         font-weight: 500;
-        color: var(--color-text-tertiary);
+        color: ${token.colorTextTertiary};
         cursor: pointer;
         display: flex;
         align-items: center;
         gap: 4px;
-
         &:hover {
-            color: var(--color-primary);
+            color: ${token.colorPrimary};
         }
-    }
-}
-
-.media-card {
-    display: flex;
-    flex-direction: column;
-    cursor: pointer;
-
-    &-cover {
+    `,
+    card: css`
+        display: flex;
+        flex-direction: column;
+        cursor: pointer;
+    `,
+    cardCover: css`
         position: relative;
         height: 0;
         padding-top: 150%;
         overflow: hidden;
         border-radius: 12px;
-        background-color: var(--color-bg-container);
+        background-color: ${token.colorBgContainer};
         box-shadow: var(--shadow-border-light);
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
         &:hover {
             transform: translateY(-4px);
             box-shadow: var(--shadow-card);
         }
-
         &:hover img {
             transform: scale(1.08);
         }
-
-        &:hover .media-card-play {
+        &:hover .card-play {
             opacity: 1;
         }
-    }
-
-    &-pic {
+    `,
+    cardPic: css`
         position: absolute !important;
         top: 0;
         left: 0;
@@ -80,13 +73,11 @@
         display: flex;
         align-items: center;
         justify-content: center;
-
         img {
             transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-    }
-
-    &-badge {
+    `,
+    cardBadge: css`
         position: absolute;
         right: 8px;
         bottom: 8px;
@@ -100,16 +91,15 @@
         padding: 3px 8px;
         font-size: 11px;
         border: 1px solid var(--color-overlay-border);
-    }
-
-    &-play {
+    `,
+    cardPlay: css`
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
         width: 44px;
         height: 44px;
-        background: var(--color-primary);
+        background: ${token.colorPrimary};
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -118,18 +108,15 @@
         transition: opacity 0.3s;
         backdrop-filter: blur(8px);
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-
         svg {
             margin-left: 2px;
         }
-    }
-
-    &-info {
+    `,
+    cardInfo: css`
         margin-top: 10px;
         width: 100%;
-    }
-
-    &-title {
+    `,
+    cardTitle: css`
         text-align: left;
         font-size: 13px;
         font-weight: 500;
@@ -137,18 +124,16 @@
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
-        color: var(--color-text-secondary);
+        color: ${token.colorTextSecondary};
         line-height: 1.4;
         transition: color 0.2s;
-
         &:hover {
-            color: var(--color-text);
+            color: ${token.colorText};
         }
-    }
-
-    &-extra {
+    `,
+    cardExtra: css`
         font-size: 12px;
-        color: var(--color-text-tertiary);
+        color: ${token.colorTextTertiary};
         margin-top: 2px;
-    }
-}
+    `
+}));

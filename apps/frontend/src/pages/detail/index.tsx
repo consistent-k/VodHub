@@ -3,7 +3,7 @@ import { includes } from 'lodash';
 import React, { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router';
 
-import styles from './index.module.scss';
+import { useStyles } from './styles';
 
 import Loading from '@/components/Loading';
 import { PlayerProps } from '@/components/VodPalyer';
@@ -24,6 +24,7 @@ const DetailPage: React.FC = () => {
     const tmdbId = searchParams.get('tmdbId');
     const mediaType = searchParams.get('mediaType');
     const { isMobile } = useIsMobile();
+    const { styles, cx } = useStyles();
 
     const [movieDetail, setMovieDetail] = useState<DetailData>();
     const [activePlayList, setActivePlayList] = useState<VodPlayList>();
@@ -177,9 +178,9 @@ const DetailPage: React.FC = () => {
     };
 
     return (
-        <div className={styles['vod-next-detail']}>
+        <div className={styles.detail}>
             <Flex vertical={isMobile} gap={24}>
-                <div className={styles['vod-next-detail-player']} style={{ width: isMobile ? '100%' : 'calc(100% - 400px)' }}>
+                <div className={styles.player} style={{ width: isMobile ? '100%' : 'calc(100% - 400px)' }}>
                     <Suspense fallback={<Loading />}>
                         <PlayerComponent
                             url={playerUrl}
@@ -192,9 +193,9 @@ const DetailPage: React.FC = () => {
                     </Suspense>
                 </div>
 
-                <div className={styles['vod-next-detail-playlist']} style={{ flex: 1 }}>
-                    <div className={styles['vod-next-detail-header']}>
-                        <span className={styles['vod-next-detail-title']}>选集播放</span>
+                <div className={styles.playlist} style={{ flex: 1 }}>
+                    <div className={styles.header}>
+                        <span className={styles.title}>选集播放</span>
                         <Select
                             style={{ width: 130 }}
                             options={movieDetail?.vod_play_list.map((item: VodPlayList) => {
@@ -213,11 +214,11 @@ const DetailPage: React.FC = () => {
                         />
                     </div>
 
-                    <div className={styles['vod-next-detail-episodes']}>
+                    <div className={styles.episodes}>
                         {activePlayList?.urls.map((item: VodPlayUrl, index: number) => (
                             <div
                                 key={`${item.url}-${index.toString()}`}
-                                className={`${styles['vod-next-detail-episode']} ${activeUrl === item.url ? styles['active'] : ''}`}
+                                className={cx(styles.episode, activeUrl === item.url && styles.episodeActive)}
                                 title={item.name}
                                 onClick={() => {
                                     setActiveUrl(item.url);
@@ -231,7 +232,7 @@ const DetailPage: React.FC = () => {
                 </div>
             </Flex>
 
-            <div className={styles['vod-next-detail-tabs']}>
+            <div className={styles.tabs}>
                 <Tabs
                     items={[
                         ...(tmdbMatches.length > 1
@@ -243,10 +244,7 @@ const DetailPage: React.FC = () => {
                                           <Row gutter={[10, 10]}>
                                               {tmdbMatches.map((match) => (
                                                   <Col key={`${match.site}-${match.vod_id}`} xs={12} sm={8} md={6} lg={6} xl={4}>
-                                                      <div
-                                                          className={`${styles['vod-next-detail-source-card']} ${match.site === site ? styles['active'] : ''}`}
-                                                          onClick={() => handleTmdbSourceSwitch(match)}
-                                                      >
+                                                      <div className={cx(styles.sourceCard, match.site === site && styles.sourceCardActive)} onClick={() => handleTmdbSourceSwitch(match)}>
                                                           {match.vod_pic && (
                                                               <Image
                                                                   src={match.vod_pic}
@@ -258,9 +256,9 @@ const DetailPage: React.FC = () => {
                                                                   fallback="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIAAQMAAADOtka5AAAABlBMVEX///8AAABVwtN+AAAAAXRSTlMAQObYZgAAAAlwShavanJqcGAAAAyRJREFUeNrtwQEBAAAAgiD/r25IQAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAfBp4DwABPq7bWwAAAABJRU5ErkJggg=="
                                                               />
                                                           )}
-                                                          <div className={styles['vod-next-detail-source-info']}>
-                                                              <div className={styles['vod-next-detail-source-name']}>{match.sourceName}</div>
-                                                              <div className={styles['vod-next-detail-source-title']}>{match.vod_name}</div>
+                                                          <div className={styles.sourceInfo}>
+                                                              <div className={styles.sourceName}>{match.sourceName}</div>
+                                                              <div className={styles.sourceTitle}>{match.vod_name}</div>
                                                           </div>
                                                       </div>
                                                   </Col>
