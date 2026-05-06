@@ -2,7 +2,7 @@ import { createStyles } from 'antd-style';
 
 export const useStyles = createStyles(({ css, token }) => ({
     layout: css`
-        font-family: 'Geist', 'Inter', 'Microsoft YaHei', sans-serif;
+        font-family: 'Inter', 'Microsoft YaHei', sans-serif;
         font-feature-settings: 'liga' 1;
         height: 100%;
         background: ${token.colorBgLayout};

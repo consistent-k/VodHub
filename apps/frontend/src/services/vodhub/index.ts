@@ -24,9 +24,9 @@ const getVideoSourceBySite = async (site: string): Promise<VideoSource | undefin
 
     if (site.startsWith('custom_')) {
         const id = site.replace('custom_', '');
-        return enabledSources.find((source) => source.id === id && source.type === 'custom');
+        return enabledSources.find((source) => source.id === id);
     }
-    return enabledSources.find((source) => source.id === site && source.type === 'builtin');
+    return enabledSources.find((source) => source.id === site);
 };
 
 const getCmsUrl = async (site: string): Promise<string | undefined> => {

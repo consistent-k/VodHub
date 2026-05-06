@@ -83,7 +83,7 @@ export const themes: Record<ThemeId, ThemeDefinition> = {
                 colorBorder: 'rgba(0, 0, 0, 0.08)',
                 colorBorderSecondary: 'rgba(0, 0, 0, 0.04)',
                 borderRadius: 6,
-                fontFamily: '"Geist", "Inter", "Roboto", "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif'
+                fontFamily: '"Inter", "Roboto", "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif'
             },
             components: {
                 Button: {
@@ -204,7 +204,7 @@ export const themes: Record<ThemeId, ThemeDefinition> = {
                 colorBorder: '#c1c1c1',
                 colorBorderSecondary: '#e8e8e8',
                 borderRadius: 12,
-                fontFamily: '"Geist", "Inter", "Roboto", "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif'
+                fontFamily: '"Inter", "Roboto", "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif'
             },
             components: {
                 Button: {
@@ -326,7 +326,7 @@ export const themes: Record<ThemeId, ThemeDefinition> = {
                 colorBorder: '#f0eee6',
                 colorBorderSecondary: '#e8e6dc',
                 borderRadius: 12,
-                fontFamily: '"Geist", "Inter", "Roboto", "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif'
+                fontFamily: '"Inter", "Roboto", "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif'
             },
             components: {
                 Button: {

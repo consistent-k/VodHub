@@ -1,20 +1,3 @@
-/* Geist字体来自Vercel CDN */
-@font-face {
-    font-family: 'Geist';
-    src: url('https://assets.vercel.com/raw/upload/v1660068731/fonts/4/GeistVariable.woff2') format('woff2');
-    font-weight: 100 900;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Geist Mono';
-    src: url('https://assets.vercel.com/raw/upload/v1660068731/fonts/4/GeistMonoVariable.woff2') format('woff2');
-    font-weight: 100 900;
-    font-style: normal;
-    font-display: swap;
-}
-
 :root {
     /* Vercel设计系统颜色 */
     --color-primary: #171717;
@@ -60,7 +43,7 @@ html,
     height: 100%;
     color: var(--color-text);
     background: var(--color-bg);
-    font-family: 'Geist', 'Inter', 'Roboto', 'Helvetica Neue', Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    font-family: 'Inter', 'Roboto', 'Helvetica Neue', Arial, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
     font-feature-settings: 'liga' 1;
     font-size: 16px;
     line-height: 1.5;

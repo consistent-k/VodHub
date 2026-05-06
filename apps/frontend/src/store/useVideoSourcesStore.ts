@@ -1,38 +1,44 @@
-import type { VideoSource, CreateVideoSourceInput, UpdateVideoSourceInput } from '@vodhub/shared/types/video-source';
+import type { CreateVideoSourceInput, ImportMode, ImportVideoSourceItem, UpdateVideoSourceInput, VideoSource } from '@vodhub/shared/types/video-source';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-
-import builtinCmsData from '@/data/builtin-cms.json';
 
 // 安全的ID生成器：支持非安全上下文（HTTP/LAN环境）
 const generateId = (): string => {
     try {
-        // 优先使用 crypto.randomUUID
         if (typeof crypto !== 'undefined' && crypto.randomUUID) {
             return crypto.randomUUID();
         }
     } catch {
         // 在非安全上下文中 crypto.randomUUID 会抛出异常
     }
-    // 降级方案：时间戳 + 随机数
     return `${Date.now()}-${Math.random().toString(36).substring(2, 15)}`;
 };
 
+const normalizeUrl = (url: string): string => {
+    return url.trim().replace(/\/+$/, '').toLowerCase();
+};
+
+const dedupByUrl = (sources: VideoSource[]): VideoSource[] => {
+    const map = new Map<string, VideoSource>();
+    for (const source of sources) {
+        map.set(normalizeUrl(source.url), source);
+    }
+    return Array.from(map.values());
+};
+
 interface VideoSourcesStore {
-    // 状态
     videoSources: VideoSource[];
     isLoading: boolean;
     error: string | null;
 
-    // 操作
     fetchVideoSources: () => Promise<void>;
     getVideoSourceById: (id: string) => VideoSource | undefined;
     addVideoSource: (input: CreateVideoSourceInput) => Promise<VideoSource>;
     updateVideoSource: (input: UpdateVideoSourceInput) => Promise<VideoSource>;
     deleteVideoSource: (id: string) => Promise<void>;
     toggleVideoSource: (id: string) => Promise<void>;
+    importVideoSources: (items: ImportVideoSourceItem[], mode?: ImportMode) => { imported: number };
 
-    // 工具
     clearError: () => void;
     clearVideoSources: () => void;
 }
@@ -40,35 +46,16 @@ interface VideoSourcesStore {
 const useVideoSourcesStore = create<VideoSourcesStore>()(
     persist(
         (set, get) => ({
-            // 初始状态
             videoSources: [],
             isLoading: false,
             error: null,
 
-            // 获取所有视频源
             fetchVideoSources: async () => {
                 set({ isLoading: true, error: null });
                 try {
-                    // 加载内置视频源数据
-                    const builtinSources = builtinCmsData as VideoSource[];
-
-                    // 从持久化存储中恢复状态（包括自定义视频源和内置视频源的启用状态）
-                    const storedSources = get().videoSources;
-
-                    // 合并策略：
-                    // 1. 对于内置视频源：使用存储中的启用状态（如果存在），否则使用JSON中的默认值
-                    // 2. 对于自定义视频源：完全使用存储中的值
-                    const mergedBuiltin = builtinSources.map((builtin) => {
-                        const stored = storedSources.find((s) => s.id === builtin.id && s.type === 'builtin');
-                        return stored ? { ...builtin, enabled: stored.enabled, updatedAt: stored.updatedAt } : builtin;
-                    });
-
-                    const customSources = storedSources.filter((s) => s.type === 'custom');
-
-                    set({
-                        videoSources: [...mergedBuiltin, ...customSources],
-                        isLoading: false
-                    });
+                    // 数据已通过 persist 中间件从 localStorage 恢复
+                    // 只需更新加载状态
+                    set({ isLoading: false });
                 } catch (error) {
                     set({
                         error: error instanceof Error ? error.message : '加载视频源列表失败',
@@ -78,12 +65,10 @@ const useVideoSourcesStore = create<VideoSourcesStore>()(
                 }
             },
 
-            // 根据ID获取视频源
             getVideoSourceById: (id) => {
                 return get().videoSources.find((source) => source.id === id);
             },
 
-            // 添加视频源（只能是自定义类型）
             addVideoSource: async (input) => {
                 set({ isLoading: true, error: null });
                 try {
@@ -93,7 +78,6 @@ const useVideoSourcesStore = create<VideoSourcesStore>()(
                         url: input.url,
                         description: input.description || '',
                         enabled: input.enabled ?? true,
-                        type: 'custom',
                         createdAt: new Date().toISOString(),
                         updatedAt: new Date().toISOString()
                     };
@@ -113,18 +97,12 @@ const useVideoSourcesStore = create<VideoSourcesStore>()(
                 }
             },
 
-            // 更新视频源
             updateVideoSource: async (input) => {
                 set({ isLoading: true, error: null });
                 try {
                     const existingSource = get().videoSources.find((source) => source.id === input.id);
                     if (!existingSource) {
                         throw new Error('视频源未找到');
-                    }
-
-                    // 内置视频源只能更新启用状态
-                    if (existingSource.type === 'builtin' && (input.name !== undefined || input.url !== undefined || input.description !== undefined)) {
-                        throw new Error('内置视频源只能更新启用状态');
                     }
 
                     const updatedSource: VideoSource = {
@@ -151,17 +129,12 @@ const useVideoSourcesStore = create<VideoSourcesStore>()(
                 }
             },
 
-            // 删除视频源（只能删除自定义类型）
             deleteVideoSource: async (id) => {
                 set({ isLoading: true, error: null });
                 try {
                     const source = get().videoSources.find((s) => s.id === id);
                     if (!source) {
                         throw new Error('视频源未找到');
-                    }
-
-                    if (source.type === 'builtin') {
-                        throw new Error('内置视频源不能删除');
                     }
 
                     set((state) => ({
@@ -177,7 +150,6 @@ const useVideoSourcesStore = create<VideoSourcesStore>()(
                 }
             },
 
-            // 切换视频源启用状态
             toggleVideoSource: async (id) => {
                 const source = get().getVideoSourceById(id);
                 if (!source) {
@@ -186,10 +158,47 @@ const useVideoSourcesStore = create<VideoSourcesStore>()(
                 await get().updateVideoSource({ id, enabled: !source.enabled });
             },
 
-            // 清除错误
+            importVideoSources: (items, mode = 'overwrite') => {
+                const now = new Date().toISOString();
+
+                // 将导入项转换为 VideoSource，生成新 ID
+                const newSources: VideoSource[] = items.map((item) => ({
+                    id: generateId(),
+                    name: item.name,
+                    url: item.url,
+                    description: item.description || '',
+                    enabled: item.enabled ?? true,
+                    createdAt: now,
+                    updatedAt: now
+                }));
+
+                // 按 URL 去重（保留最后一个）
+                const deduped = dedupByUrl(newSources);
+
+                set((state) => {
+                    if (mode === 'overwrite') {
+                        return { videoSources: deduped, isLoading: false };
+                    }
+
+                    // 合并模式：与已有源合并，同 URL 的旧源被替换
+                    const merged = [...state.videoSources];
+                    for (const newSource of deduped) {
+                        const normalizedUrl = normalizeUrl(newSource.url);
+                        const existingIndex = merged.findIndex((s) => normalizeUrl(s.url) === normalizedUrl);
+                        if (existingIndex >= 0) {
+                            merged[existingIndex] = newSource;
+                        } else {
+                            merged.push(newSource);
+                        }
+                    }
+                    return { videoSources: merged, isLoading: false };
+                });
+
+                return { imported: deduped.length };
+            },
+
             clearError: () => set({ error: null }),
 
-            // 清除视频源列表
             clearVideoSources: () => set({ videoSources: [] })
         }),
         {

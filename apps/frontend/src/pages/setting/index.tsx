@@ -138,6 +138,7 @@ const SettingPage: React.FC = () => {
                                     }
                                 }
                             }}
+                            autoComplete="off"
                         >
                             <Form.Item
                                 label={<Text style={{ fontWeight: 500, color: 'var(--color-text-secondary)' }}>网站名称</Text>}

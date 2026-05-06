@@ -51,17 +51,10 @@ export const useVodSitesStore = create<VodSitesStore>((set) => ({
             const enabledVideoSources = refreshedState.videoSources.filter((source) => source.enabled);
 
             enabledVideoSources.forEach((source) => {
-                if (source.type === 'builtin') {
-                    newSites.push({
-                        label: source.name,
-                        value: source.id
-                    });
-                } else if (source.type === 'custom') {
-                    newSites.push({
-                        label: source.name,
-                        value: `custom_${source.id}`
-                    });
-                }
+                newSites.push({
+                    label: source.name,
+                    value: `custom_${source.id}`
+                });
             });
 
             store.set(CACHE_KEY, {

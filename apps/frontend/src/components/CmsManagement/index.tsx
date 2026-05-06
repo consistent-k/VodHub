@@ -1,6 +1,7 @@
-import { PlusOutlined, EditOutlined, DeleteOutlined, EyeOutlined, ReloadOutlined } from '@ant-design/icons';
-import type { VideoSource, CreateVideoSourceInput } from '@vodhub/shared/types/video-source';
-import { Button, Table, Tag, Space, Modal, Form, Input, Switch, message, Popconfirm, Typography, Descriptions } from 'antd';
+import { PlusOutlined, EditOutlined, DeleteOutlined, EyeOutlined, DownloadOutlined, UploadOutlined, LinkOutlined, ReloadOutlined } from '@ant-design/icons';
+import type { CreateVideoSourceInput, ImportMode, ImportVideoSourceItem, VideoSource } from '@vodhub/shared/types/video-source';
+import { Button, Table, Tag, Space, Modal, Form, Input, Switch, message, Popconfirm, Typography, Descriptions, Radio, Upload } from 'antd';
+import type { Breakpoint } from 'antd';
 import { useEffect, useState } from 'react';
 
 import useSettingStore from '@/store/useSettingStore';
@@ -9,14 +10,47 @@ import { useVodSitesStore } from '@/store/useVodSitesStore';
 
 const { Text } = Typography;
 
+const TEMPLATE_DATA: ImportVideoSourceItem[] = [
+    {
+        name: '示例资源',
+        url: 'https://example.com',
+        description: '示例描述',
+        enabled: true
+    }
+];
+
+const downloadJson = (data: unknown, filename: string) => {
+    const blob = new Blob([JSON.stringify(data, null, 4)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+};
+
 const CmsManagement = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+    const [isImportModalOpen, setIsImportModalOpen] = useState(false);
     const [editingCms, setEditingCms] = useState<VideoSource | null>(null);
     const [viewingCms, setViewingCms] = useState<VideoSource | null>(null);
+    const [pendingImportItems, setPendingImportItems] = useState<ImportVideoSourceItem[] | null>(null);
+    const [importMode, setImportMode] = useState<ImportMode>('overwrite');
+    const [importUrl, setImportUrl] = useState('');
+    const [isUrlImportMode, setIsUrlImportMode] = useState(false);
+    const [isImporting, setIsImporting] = useState(false);
     const [form] = Form.useForm();
 
-    const { videoSources, isLoading, error, fetchVideoSources, addVideoSource, updateVideoSource, deleteVideoSource, toggleVideoSource, clearError } = useVideoSourcesStore();
+    const resetImportState = () => {
+        setIsImportModalOpen(false);
+        setPendingImportItems(null);
+        setImportUrl('');
+        setIsUrlImportMode(false);
+        setIsImporting(false);
+    };
+
+    const { videoSources, isLoading, error, fetchVideoSources, addVideoSource, updateVideoSource, deleteVideoSource, toggleVideoSource, importVideoSources, clearError } = useVideoSourcesStore();
     const { vod_hub_api, site_name, current_site, updateSetting } = useSettingStore();
     const { getVodTypes } = useVodSitesStore();
 
@@ -30,10 +64,6 @@ const CmsManagement = () => {
             clearError();
         }
     }, [error]);
-
-    // 合并内置CMS和自定义CMS列表
-    const mergedCmsList = videoSources.map((source) => ({ ...source, isBuiltin: source.type === 'builtin' }));
-    const mergedLoading = isLoading;
 
     const handleAdd = () => {
         setEditingCms(null);
@@ -62,7 +92,6 @@ const CmsManagement = () => {
             await deleteVideoSource(id);
             message.success('删除成功');
 
-            // 如果当前选中的站点是被删除的CMS，则清除选中
             if (current_site === `custom_${id}`) {
                 updateSetting({
                     vod_hub_api: vod_hub_api || '',
@@ -71,7 +100,6 @@ const CmsManagement = () => {
                 });
             }
 
-            // 刷新站点列表
             await getVodTypes();
         } catch {
             // 错误已在store中处理
@@ -92,7 +120,6 @@ const CmsManagement = () => {
                 await updateVideoSource({ ...input, id: editingCms.id });
                 message.success('更新成功');
 
-                // 如果当前选中的站点是被禁用的CMS，则清除选中
                 if (!input.enabled && current_site === `custom_${editingCms.id}`) {
                     updateSetting({
                         vod_hub_api: vod_hub_api || '',
@@ -105,7 +132,6 @@ const CmsManagement = () => {
                 message.success('添加成功');
             }
 
-            // 刷新站点列表
             await getVodTypes();
 
             setIsModalOpen(false);
@@ -125,13 +151,12 @@ const CmsManagement = () => {
         setViewingCms(null);
     };
 
-    const handleToggleBuiltin = async (id: string) => {
+    const handleToggle = async (id: string) => {
         try {
             await toggleVideoSource(id);
 
-            // 如果当前选中的站点是被禁用的内置源，则清除选中
-            const toggledSource = videoSources.find((s) => s.id === id);
-            if (toggledSource && !toggledSource.enabled && current_site === id) {
+            const updated = useVideoSourcesStore.getState().videoSources.find((s) => s.id === id);
+            if (updated && !updated.enabled && current_site === `custom_${id}`) {
                 updateSetting({
                     vod_hub_api: vod_hub_api || '',
                     site_name: site_name || '',
@@ -139,19 +164,106 @@ const CmsManagement = () => {
                 });
             }
 
-            // 刷新站点列表
             await getVodTypes();
-        } catch (error) {
+        } catch {
             // 错误已在store中处理
         }
     };
 
+    const handleDownloadTemplate = () => {
+        downloadJson(TEMPLATE_DATA, 'video-sources-template.json');
+        message.success('模板已下载');
+    };
+
+    const handleExport = () => {
+        if (videoSources.length === 0) {
+            message.info('没有可导出的视频源');
+            return;
+        }
+        const exportData = videoSources.map((s) => ({
+            name: s.name,
+            url: s.url,
+            description: s.description,
+            enabled: s.enabled
+        }));
+        downloadJson(exportData, 'video-sources-export.json');
+        message.success('导出成功');
+    };
+
+    const executeImport = (items: ImportVideoSourceItem[], mode: ImportMode) => {
+        if (items.length === 0) {
+            message.warning('导入数据为空');
+            return;
+        }
+        const { imported } = importVideoSources(items, mode);
+        message.success(`成功导入 ${imported} 条视频源`);
+        resetImportState();
+        getVodTypes().catch(() => {});
+    };
+
+    const handleFileImport = () => {
+        setIsUrlImportMode(false);
+        setImportMode('overwrite');
+        setPendingImportItems(null);
+        setIsImportModalOpen(true);
+    };
+
+    const handleFileUpload = async (file: File) => {
+        try {
+            const text = await file.text();
+            const items = JSON.parse(text) as ImportVideoSourceItem[];
+            if (!Array.isArray(items)) {
+                message.error('JSON 格式错误，应为数组');
+                return false;
+            }
+            setPendingImportItems(items);
+            message.success(`已加载 ${items.length} 条视频源`);
+        } catch {
+            message.error('解析 JSON 文件失败');
+        }
+        return false;
+    };
+
+    const handleUrlImport = () => {
+        setIsUrlImportMode(true);
+        setImportMode('overwrite');
+        setImportUrl('');
+        setPendingImportItems(null);
+        setIsImportModalOpen(true);
+    };
+
+    const handleImportModalOk = async () => {
+        if (isUrlImportMode) {
+            if (!importUrl.trim()) {
+                message.warning('请输入 JSON 地址');
+                return;
+            }
+            setIsImporting(true);
+            try {
+                const res = await fetch(importUrl.trim());
+                const items = (await res.json()) as ImportVideoSourceItem[];
+                if (!Array.isArray(items)) {
+                    message.error('返回数据格式错误，应为数组');
+                    return;
+                }
+                executeImport(items, importMode);
+            } catch {
+                message.error('获取或解析 JSON 失败');
+            } finally {
+                setIsImporting(false);
+            }
+        } else if (pendingImportItems) {
+            executeImport(pendingImportItems, importMode);
+        } else {
+            message.warning('请先选择 JSON 文件');
+        }
+    };
+
+    const handleImportModalCancel = () => {
+        resetImportState();
+    };
+
     const columns = [
-        {
-            title: '类型',
-            key: 'type',
-            render: (_: any, record: VideoSource) => (record.type === 'builtin' ? <Tag color="blue">内置</Tag> : <Tag color="green">自定义</Tag>)
-        },
         {
             title: '名称',
             dataIndex: 'name',
@@ -167,6 +279,8 @@ const CmsManagement = () => {
             title: '地址',
             dataIndex: 'url',
             key: 'url',
+            ellipsis: true,
+            responsive: ['md'] as Breakpoint[],
             render: (text: string) => (
                 <Text type="secondary" copyable>
                     {text}
@@ -177,45 +291,32 @@ const CmsManagement = () => {
             title: '描述',
             dataIndex: 'description',
             key: 'description',
+            responsive: ['lg'] as Breakpoint[],
             render: (text?: string) => text || '-'
         },
         {
             title: '状态',
             dataIndex: 'enabled',
             key: 'enabled',
-            render: (enabled: boolean, record: VideoSource) =>
-                record.type === 'builtin' ? (
-                    <Switch checked={enabled} onChange={() => handleToggleBuiltin(record.id)} checkedChildren="启用" unCheckedChildren="禁用" />
-                ) : (
-                    <Tag color={enabled ? 'success' : 'default'}>{enabled ? '启用' : '禁用'}</Tag>
-                )
+            render: (enabled: boolean, record: VideoSource) => <Switch checked={enabled} onChange={() => handleToggle(record.id)} checkedChildren="启用" unCheckedChildren="禁用" />
         },
         {
             title: '创建时间',
             dataIndex: 'createdAt',
             key: 'createdAt',
+            responsive: ['lg'] as Breakpoint[],
             render: (date: string) => new Date(date).toLocaleString()
         },
         {
             title: '操作',
             key: 'action',
-            render: (_: any, record: VideoSource) => (
+            render: (_: unknown, record: VideoSource) => (
                 <Space size="small">
                     <Button type="text" size="small" icon={<EyeOutlined />} onClick={() => handleView(record)} />
-                    {record.type === 'builtin' ? (
-                        // 内置视频源只能查看，不能编辑/删除
-                        <Button type="text" size="small" icon={<EditOutlined />} disabled title="内置视频源不可编辑" />
-                    ) : (
-                        <Button type="text" size="small" icon={<EditOutlined />} onClick={() => handleEdit(record)} />
-                    )}
-                    {record.type === 'builtin' ? (
-                        // 内置视频源不能删除
-                        <Button type="text" size="small" icon={<DeleteOutlined />} disabled title="内置视频源不可删除" />
-                    ) : (
-                        <Popconfirm title="确定要删除这个CMS地址吗？" onConfirm={() => handleDelete(record.id)} okText="确定" cancelText="取消">
-                            <Button type="text" size="small" danger icon={<DeleteOutlined />} />
-                        </Popconfirm>
-                    )}
+                    <Button type="text" size="small" icon={<EditOutlined />} onClick={() => handleEdit(record)} />
+                    <Popconfirm title="确定要删除这个视频源吗？" onConfirm={() => handleDelete(record.id)} okText="确定" cancelText="取消">
+                        <Button type="text" size="small" danger icon={<DeleteOutlined />} />
+                    </Popconfirm>
                 </Space>
             )
         }
@@ -223,22 +324,32 @@ const CmsManagement = () => {
 
     return (
         <>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
-                <Space>
-                    <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
-                        添加CMS地址
-                    </Button>
-                    <Button icon={<ReloadOutlined />} onClick={fetchVideoSources} loading={mergedLoading}>
-                        刷新
-                    </Button>
-                </Space>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 16 }}>
+                <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd} style={{ width: 124 }}>
+                    添加视频源
+                </Button>
+                <Button icon={<ReloadOutlined />} onClick={fetchVideoSources} loading={isLoading}>
+                    刷新
+                </Button>
+                <Button icon={<DownloadOutlined />} onClick={handleDownloadTemplate} style={{ width: 124 }}>
+                    下载模板
+                </Button>
+                <Button icon={<UploadOutlined />} onClick={handleExport} style={{ width: 124 }}>
+                    导出
+                </Button>
+                <Button icon={<LinkOutlined />} onClick={handleUrlImport} style={{ width: 124 }}>
+                    从 URL 导入
+                </Button>
+                <Button icon={<UploadOutlined />} onClick={handleFileImport} style={{ width: 124 }}>
+                    导入文件
+                </Button>
             </div>
 
             <Table
                 columns={columns}
-                dataSource={mergedCmsList}
-                rowKey={(record) => (record.isBuiltin ? `builtin_${record.id}` : `custom_${record.id}`)}
-                loading={mergedLoading}
+                dataSource={videoSources}
+                rowKey="id"
+                loading={isLoading}
                 pagination={{ pageSize: 10 }}
                 scroll={{
                     x: 'fit-content'
@@ -246,10 +357,19 @@ const CmsManagement = () => {
             />
 
             {/* 添加/编辑模态框 */}
-            <Modal title={editingCms ? '编辑CMS地址' : '添加CMS地址'} open={isModalOpen} onOk={handleModalOk} onCancel={handleModalCancel} confirmLoading={isLoading} width={600}>
-                <Form form={form} layout="vertical" initialValues={{ enabled: true }}>
+            <Modal
+                title={editingCms ? '编辑视频源' : '添加视频源'}
+                open={isModalOpen}
+                onOk={handleModalOk}
+                onCancel={handleModalCancel}
+                confirmLoading={isLoading}
+                width={600}
+                centered
+                destroyOnHidden
+            >
+                <Form form={form} layout="vertical" initialValues={{ enabled: true }} autoComplete="off">
                     <Form.Item name="name" label="名称" rules={[{ required: true, message: '请输入名称' }]}>
-                        <Input placeholder="例如: 我的CMS资源" />
+                        <Input placeholder="例如: 我的视频源" />
                     </Form.Item>
 
                     <Form.Item
@@ -275,7 +395,7 @@ const CmsManagement = () => {
 
             {/* 查看模态框 */}
             <Modal
-                title="CMS地址详情"
+                title="视频源详情"
                 open={isViewModalOpen}
                 onCancel={handleViewModalCancel}
                 footer={[
@@ -287,7 +407,6 @@ const CmsManagement = () => {
             >
                 {viewingCms && (
                     <Descriptions column={1} bordered>
-                        <Descriptions.Item label="类型">{viewingCms.type === 'builtin' ? <Tag color="blue">内置视频源</Tag> : <Tag color="green">自定义CMS</Tag>}</Descriptions.Item>
                         <Descriptions.Item label="ID">
                             <Text copyable>{viewingCms.id}</Text>
                         </Descriptions.Item>
@@ -303,6 +422,47 @@ const CmsManagement = () => {
                         <Descriptions.Item label="更新时间">{new Date(viewingCms.updatedAt).toLocaleString()}</Descriptions.Item>
                     </Descriptions>
                 )}
+            </Modal>
+
+            {/* 导入模式选择模态框 */}
+            <Modal
+                title={isUrlImportMode ? '从 URL 导入' : '导入视频源'}
+                open={isImportModalOpen}
+                onOk={handleImportModalOk}
+                onCancel={handleImportModalCancel}
+                confirmLoading={isImporting}
+                width={500}
+                centered
+                destroyOnHidden
+            >
+                {isUrlImportMode ? (
+                    <Form.Item label="JSON 地址" style={{ marginBottom: 16 }}>
+                        <Input placeholder="https://example.com/video-sources.json" value={importUrl} onChange={(e) => setImportUrl(e.target.value)} />
+                    </Form.Item>
+                ) : (
+                    <Form.Item label="选择 JSON 文件" style={{ marginBottom: 16 }}>
+                        <Upload accept=".json" maxCount={1} beforeUpload={handleFileUpload}>
+                            <Button icon={<UploadOutlined />}>选择文件</Button>
+                        </Upload>
+                        {pendingImportItems && <Text type="success">已加载 {pendingImportItems.length} 条视频源</Text>}
+                    </Form.Item>
+                )}
+                <Form.Item label="导入模式">
+                    <Radio.Group value={importMode} onChange={(e) => setImportMode(e.target.value)}>
+                        <Space direction="vertical">
+                            <Radio value="overwrite">
+                                <Text strong>全覆盖</Text>
+                                <br />
+                                <Text type="secondary">清空现有视频源，仅保留导入的数据</Text>
+                            </Radio>
+                            <Radio value="merge">
+                                <Text strong>合并</Text>
+                                <br />
+                                <Text type="secondary">将导入数据合并到现有列表，相同 URL 的源会被替换</Text>
+                            </Radio>
+                        </Space>
+                    </Radio.Group>
+                </Form.Item>
             </Modal>
         </>
     );

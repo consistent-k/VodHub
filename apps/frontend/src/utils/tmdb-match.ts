@@ -24,7 +24,7 @@ export const matchTmdbToCmsTop = async (item: TmdbMediaItem, limit = 3): Promise
     const sources = useVideoSourcesStore.getState().videoSources.filter((s) => s.enabled);
     if (sources.length === 0) return [];
 
-    const siteIds = sources.map((s) => (s.type === 'custom' ? `custom_${s.id}` : s.id));
+    const siteIds = sources.map((s) => `custom_${s.id}`);
 
     return new Promise((resolve) => {
         const results: CmsMatchResult[] = [];
@@ -72,7 +72,7 @@ export const matchTmdbToCms = async (item: TmdbMediaItem): Promise<CmsMatchResul
     }
 
     try {
-        const siteIds = sources.map((s) => (s.type === 'custom' ? `custom_${s.id}` : s.id));
+        const siteIds = sources.map((s) => `custom_${s.id}`);
         const settled = await Promise.allSettled(siteIds.map((siteId, i) => searchSource(siteId, sources[i].name, item)));
 
         const results: CmsMatchResult[] = [];
@@ -106,7 +106,7 @@ export const matchTmdbToCmsStream = (item: TmdbMediaItem, onMatch: (result: CmsM
         return Promise.resolve([]);
     }
 
-    const siteIds = sources.map((s) => (s.type === 'custom' ? `custom_${s.id}` : s.id));
+    const siteIds = sources.map((s) => `custom_${s.id}`);
 
     return new Promise((resolve) => {
         const allResults: CmsMatchResult[] = [];
