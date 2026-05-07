@@ -5,8 +5,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Project Overview
 
 VodHub is a pnpm monorepo with two applications:
-- **Backend** (`apps/backend`): Hono‑based video aggregation API with a single built‑in provider (`360kan`) and support for custom CMS addresses via a proxy system, providing a unified REST API (categories, search, details, playback). Node.js ≥ 24, ESM.
-- **Frontend** (`apps/frontend`): Vite + React 19 + React Router video player application with Ant Design 6, Zustand state management, multi‑theme support, integrated CMS management, and TMDB metadata integration.
+- **Backend** (`apps/backend`): Hono‑based video aggregation API with a single built‑in provider (`360kan`) and support for custom CMS addresses via a proxy system, providing a unified REST API (categories, search, details, playback). Node.js ≥ 24, ESM.
+- **Frontend** (`apps/frontend`): Vite + React 19 + React Router video player application with Ant Design 6, Zustand state management, multi‑theme support, integrated CMS management, and TMDB metadata integration.
 
 A shared package (`packages/shared`) provides core TypeScript types used by both apps, including video source definitions.
 
@@ -30,7 +30,7 @@ pnpm build               # Build all apps (backend + frontend)
 ### Backend‑Specific Commands
 ```bash
 pnpm --filter @vodhub/backend start     # Start backend without watch
-pnpm --filter @vodhub/backend build     # Build backend (generates routes first)
+pnpm --filter @vodhub/backend build     # Build backend (generates routes first, then tsup)
 pnpm --filter @vodhub/backend gen:routes # Generate route registry
 pnpm --filter @vodhub/backend lint      # Lint backend only
 pnpm --filter @vodhub/backend lint:fix  # Lint backend with auto‑fix
@@ -91,7 +91,7 @@ pnpm --filter @vodhub/frontend typecheck # Type check frontend only
 
 ### Middleware Order
 1. `cors()` – CORS handling
-2. `trimTrailingSlash()` – trailing slash normalization  
+2. `trimTrailingSlash()` – trailing slash normalization
 3. `compress()` – response compression
 4. `jsonReturn` – JSON response serialization
 5. `cache` – Redis/memory caching with deduplication
@@ -144,11 +144,15 @@ Each custom route file exports a `route` object with the following properties:
 - The handler function must be named `handler` (constant) in each route file
 - Use typed `RouteItem<T>` generic for route definitions
 
+### Build Tooling
+- Backend builds with **tsup** (ESM output, target Node 24, source maps enabled)
+- `@vodhub/*` packages are bundled inline (`noExternal` in tsup config)
+
 ## Frontend Architecture
 
 ### Tech Stack
-- **Framework**: Vite + React 19 + React Router + TypeScript
-- **UI**: Ant Design 6 with SCSS Modules
+- **Framework**: Vite + React 19 + React Router + TypeScript
+- **UI**: Ant Design 6 with CSS-in-JS (antd-style)
 - **State Management**: Zustand stores with `persist` middleware
 - **Video Player**: xgplayer + HLS.js
 - **Styling**: CSS variables for multi‑theme support
@@ -156,9 +160,9 @@ Each custom route file exports a `route` object with the following properties:
 
 ### Theme System
 Three built‑in themes defined in `themes/index.ts`:
-- **midnight**: dark with red accent
-- **aurora**: light with cyan accent  
-- **cyber**: dark with purple accent
+- **vercel**: light with dark primary (#171717)
+- **airbnb**: light with Rausch red accent (#ff385c)
+- **claude**: warm neutral palette with terracotta accent (#c96442)
 
 **Key Rule**: All colors must use CSS variables (`var(--color‑bg‑container)`) – never hardcode hex/rgba values.
 
@@ -192,9 +196,14 @@ Three built‑in themes defined in `themes/index.ts`:
 
 ### Component Structure
 - Components are client‑side by default (no `'use client'` directive needed)
-- SCSS Modules with `vod‑next‑` class prefix (historical naming convention)
+- CSS-in-JS with antd-style (`createStyles`)
 - Props defined with `interface` and destructured in params
 - Components use `export default`
+
+### HTTP Client
+- `BaseRequest` class in `utils/request/index.ts` wraps Axios
+- Default prefix: `/api/vodhub` (configurable via `customPreFix`)
+- Custom API base URL read from localStorage key `vod_hub_api` (via `store2`)
 
 ### Error Handling
 - **HTTP errors**: Rejected via fetch/HTTP client
@@ -206,9 +215,6 @@ Three built‑in themes defined in `themes/index.ts`:
 - Use `useMemo` and `useCallback` for expensive computations
 - Use `React.lazy()` with `Suspense` for heavy components (e.g., video player)
 - Use `Suspense` for async loading
-
-### Design System
-- Vercel‑inspired visual guidelines (colors, typography, shadows, component styling).
 
 ### CMS Management UI
 - Component: `components/CmsManagement/index.tsx`
@@ -229,11 +235,10 @@ Core types defined in `packages/shared/src/types/index.ts`:
 - `DetailData`, `PlayData`, `SearchData` – response types
 - `ApiResponse<T>` – standard API response wrapper
 
-Video source types defined in `packages/shared/src/types/video-source.ts` (formerly `custom-cms.ts`):
-- `VideoSource` – unified type for both built-in and custom video sources
-- `VideoSourceType` – type alias: `'builtin' | 'custom'`
-- `BuiltinVideoSource` – pre-configured video source definition
-- `CustomVideoSource` – user-defined CMS address configuration
+Video source types defined in `packages/shared/src/types/video-source.ts`:
+- `VideoSource` – unified type for both built-in and custom video sources (id, name, url, enabled, timestamps)
+- `CreateVideoSourceInput` / `UpdateVideoSourceInput` – CRUD input types
+- `ImportVideoSourceItem` / `ImportMode` – bulk import types
 
 ## Deployment
 
@@ -243,9 +248,19 @@ Video source types defined in `packages/shared/src/types/video-source.ts` (forme
 
 ### Production Environment
 - **Services**: frontend, backend, redis
-- **Ports**: 3000→80 (frontend), 8888→8888 (backend), 6379→6379 (redis)
+- **Ports**: 3000→80 (frontend via nginx), 8888→8888 (backend), 6379→6379 (redis)
 - **Environment Variables**: `REDIS_URL`, `CACHE_TTL`, `BANNED_KEYWORDS`, `TMDB_ENABLED`, `TMDB_API_TOKEN`
 - **Log Persistence**: `./logs` mapped to `/app/apps/backend/logs`
+- Frontend nginx config at `apps/frontend/conf/nginx.conf` handles SPA fallback and API proxy to backend
+
+## CI/CD
+
+GitHub Actions workflows in `.github/workflows/`:
+- **ci.yml**: On push/PR to main – runs ESLint, TypeScript type check, Prettier format check, and commitlint (PRs only)
+- **docker-image.yml**: On release – multi-arch Docker build, pushes to DockerHub (`consistentlee/vod_hub`, `consistentlee/vod_next`)
+- **audit.yml**: Weekly security audit (Mondays UTC 00:00)
+- **dependency-review.yml**: Reviews dependency changes on PRs
+- **labeler.yml**: Auto-labels PRs (frontend, backend, styles, ci, dependencies)
 
 ## Development Standards
 
@@ -268,7 +283,7 @@ Video source types defined in `packages/shared/src/types/video-source.ts` (forme
 | Backend handler functions | `handler` | `const handler = async (ctx) => { … }` |
 
 ### Git Workflow
-- Husky + lint‑staged for pre‑commit hooks
+- Husky hooks: `pre-commit` runs `lint-staged`, `commit-msg` runs `commitlint --edit`
 - Commitlint enforces conventional commits (body 每行不超过 100 字符)
 - `pnpm commit` for interactive commit messages
 - **Commit Message Format**: 使用中文，body 逐文件列出变更，格式为：
@@ -292,10 +307,12 @@ Video source types defined in `packages/shared/src/types/video-source.ts` (forme
 
 ## Important Notes
 - No test framework is configured in this project
-- Backend uses ESM (`"type": "module"`)
+- Backend uses ESM (`"type": "module"`), builds with tsup targeting Node 24
 - CMS handlers check `res.code === 1` for upstream success
 - All error responses return `data: []` (empty array)
 - Route handlers must never throw – always return structured response
 - **Video Source Management**: Frontend manages video sources through `useVideoSourcesStore` (replaces old `useCmsStore`), with built-in sources in `apps/frontend/src/data/builtin-cms.json`
 - **Proxy Routes**: Custom CMS addresses are dynamically handled through `/api/vodhub/proxy` using the CMS factory pattern
 - **TMDB View**: Homepage supports TMDB/CMS dual-mode, toggled via SiteHeader; TMDB-only mode can skip CMS initialization entirely
+- NPM registry is overridden to Chinese mirror via `.npmrc` (`registry=https://registry.npmmirror.com/`)
+- DevContainer available (`.devcontainer/devcontainer.json`) for isolated development

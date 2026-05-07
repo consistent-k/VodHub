@@ -16,6 +16,10 @@ export default defineConfig({
             '/api/vodhub': {
                 target: process.env.API_BASE_URL || 'http://127.0.0.1:8888',
                 changeOrigin: true
+            },
+            '/api/tmdb': {
+                target: process.env.API_BASE_URL || 'http://127.0.0.1:8888',
+                changeOrigin: true
             }
         }
     }

@@ -3,6 +3,7 @@ import type { VideoSource } from '@vodhub/shared/types/video-source';
 
 import useVideoSourcesStore from '@/store/useVideoSourcesStore';
 import { HomeData, HomeVodData, CategoryVodData, DetailData, PlayData, SearchData } from '@/types';
+import type { TmdbDetailData, TmdbHomeData, TmdbSearchData } from '@/types/tmdb';
 import request from '@/utils/request';
 
 interface VodHubResponse<T> {
@@ -163,6 +164,26 @@ export const searchApi = async (site_name: string, params: SearchParams) => {
         });
     }
     return request.get<VodHubResponse<SearchData[]>>(`/${site_name}/search`, {
+        params
+    });
+};
+
+export const tmdbHomeApi = () => {
+    return request.get<{ code: number; data: TmdbHomeData }>(`/home`, {
+        customPreFix: '/api/tmdb'
+    });
+};
+
+export const tmdbSearchApi = (params: { query: string; page?: number }) => {
+    return request.get<{ code: number; data: TmdbSearchData }>(`/search`, {
+        customPreFix: '/api/tmdb',
+        params
+    });
+};
+
+export const tmdbDetailApi = (params: { id: number; mediaType: 'movie' | 'tv' }) => {
+    return request.get<{ code: number; data: TmdbDetailData }>(`/detail`, {
+        customPreFix: '/api/tmdb',
         params
     });
 };

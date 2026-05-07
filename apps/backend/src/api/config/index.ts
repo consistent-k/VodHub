@@ -17,8 +17,7 @@ const handler: RouteHandler<typeof route> = (ctx) =>
     ctx.json({
         tmdb: {
             enabled: config.tmdb.enabled,
-            hasToken: !!config.tmdb.apiToken,
-            apiToken: config.tmdb.apiToken
+            hasToken: !!config.tmdb.apiToken
         }
     });
 

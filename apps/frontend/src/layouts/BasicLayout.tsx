@@ -8,7 +8,7 @@ import { useStyles } from './styles';
 import Disclaimer from '@/components/Disclaimer';
 import SiteHeader from '@/components/SiteHeader';
 import VodTypes from '@/components/VodTypes';
-import useAppConfigStore from '@/store/useAppConfigStore';
+import { useIsTmdbView } from '@/hooks/useTmdb';
 import useSettingStore from '@/store/useSettingStore';
 
 const { Content, Footer } = Layout;
@@ -21,21 +21,17 @@ const BasicLayout: React.FC<PropsWithChildren<BasicLayoutProps>> = ({ children, 
     const location = useLocation();
     const { styles } = useStyles();
 
-    const { current_site, tmdb_view_cms } = useSettingStore();
-    const { tmdb_enabled } = useAppConfigStore();
-    const isTmdbView = tmdb_enabled && !tmdb_view_cms;
+    const { current_site } = useSettingStore();
 
-    const isHomePage = useMemo(() => {
-        return location.pathname === '/home';
-    }, [location.pathname]);
+    const isTmdbView = useIsTmdbView();
 
     const isCategoryPage = useMemo(() => {
         return location.pathname === '/category';
     }, [location.pathname]);
 
     const showVodTypes = useMemo(() => {
-        return (isHomePage || isCategoryPage) && !isTmdbView;
-    }, [isHomePage, isCategoryPage, isTmdbView]);
+        return isCategoryPage && !isTmdbView;
+    }, [isCategoryPage, isTmdbView]);
 
     return (
         <Layout className={styles.layout}>

@@ -10,9 +10,8 @@ import MediaList, { MediaListItem } from '../MediaList';
 import SearchTmdb from '../SearchTmdb';
 
 import useIsMobile from '@/hooks/useIsMobile';
+import { useIsTmdbView } from '@/hooks/useTmdb';
 import { searchApi } from '@/services';
-import useAppConfigStore from '@/store/useAppConfigStore';
-import useSettingStore from '@/store/useSettingStore';
 import { SearchData } from '@/types';
 
 export interface VodSearchProps {
@@ -256,10 +255,9 @@ const CmsVodSearch: React.FC<VodSearchProps> = (props) => {
 };
 
 const VodSearch: React.FC<VodSearchProps> = (props) => {
-    const { tmdb_enabled } = useAppConfigStore();
-    const { tmdb_view_cms } = useSettingStore();
+    const isTmdbView = useIsTmdbView();
 
-    if (tmdb_enabled && !tmdb_view_cms) {
+    if (isTmdbView) {
         return <SearchTmdb style={props.style} />;
     }
 

@@ -8,6 +8,11 @@ export const useStyles = createStyles(({ css, token }) => ({
         flex-direction: column;
         gap: 40px;
     `,
+    section: css`
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    `,
     empty: css`
         display: flex;
         flex-direction: column;
@@ -16,5 +21,8 @@ export const useStyles = createStyles(({ css, token }) => ({
         min-height: 400px;
         gap: 16px;
         color: ${token.colorTextTertiary};
+        svg {
+            opacity: 0.3;
+        }
     `
 }));

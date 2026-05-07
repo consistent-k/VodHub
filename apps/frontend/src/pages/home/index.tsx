@@ -1,105 +1,108 @@
-import { uniq } from 'lodash';
-import { useCallback, useEffect, useState } from 'react';
+import { message } from 'antd';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import { useStyles } from './styles';
-import TmdbHomePage from './tmdb';
 
+import FeaturedCarousel from '@/components/FeaturedCarousel';
 import Loading from '@/components/Loading';
 import MediaList, { MediaListItem } from '@/components/MediaList';
-import { homeVodApi } from '@/services';
-import useAppConfigStore from '@/store/useAppConfigStore';
-import useSettingStore from '@/store/useSettingStore';
-import { HomeVodData } from '@/types';
+import { useTmdbHome } from '@/hooks/useTmdb';
+import useTmdbDetailStore from '@/store/useTmdbDetailStore';
+import useTmdbStore from '@/store/useTmdbStore';
+import type { TmdbMediaItem } from '@/types/tmdb';
+import { getPosterUrl } from '@/utils/tmdb';
+import { matchTmdbToCmsTop } from '@/utils/tmdb-match';
 
-const CmsHomePage: React.FC = () => {
-    const [homeVodData, setHomeVodData] = useState<HomeVodData[]>([]);
-    const [homeVodTypes, setHomeVodTypes] = useState<string[]>([]);
-    const [loading, setLoading] = useState(true);
-    const { current_site } = useSettingStore();
+const toMediaListItems = (items: TmdbMediaItem[]): MediaListItem[] =>
+    items.map((item) => ({
+        id: `${item.mediaType}-${item.id}`,
+        title: item.title,
+        posterUrl: getPosterUrl(item.posterPath),
+        extra: item.releaseDate?.slice(0, 4),
+        tmdbItem: item
+    }));
+
+const TmdbHomePage: React.FC = () => {
+    const navigate = useNavigate();
+    const store = useTmdbStore();
+    useTmdbHome();
+    const [matching, setMatching] = useState(false);
     const { styles } = useStyles();
 
-    const navigate = useNavigate();
-
-    const getHomeVod = useCallback(async (site: string) => {
-        try {
-            const res = await homeVodApi(site);
-            const { code, data } = res;
-            if (code === 0) {
-                setHomeVodData(data);
-                setHomeVodTypes(uniq(data.map((item) => item.type_name)));
+    const handleItemClick = useCallback(
+        async (item: MediaListItem) => {
+            const tmdbItem = (item as MediaListItem & { tmdbItem: TmdbMediaItem }).tmdbItem;
+            setMatching(true);
+            try {
+                const matches = await matchTmdbToCmsTop(tmdbItem);
+                if (matches.length === 0) {
+                    message.info('未找到匹配的播放源');
+                } else {
+                    useTmdbDetailStore.getState().setTmdbDetail(tmdbItem, matches);
+                    navigate(`/detail?id=${encodeURIComponent(String(matches[0].vod_id))}&site=${matches[0].site}&tmdbId=${tmdbItem.id}&mediaType=${tmdbItem.mediaType}`);
+                }
+            } catch {
+                message.error('匹配播放源失败');
+            } finally {
+                setMatching(false);
             }
-        } catch (error) {
-            console.log(error);
-        } finally {
-            setLoading(false);
-        }
-    }, []);
+        },
+        [navigate]
+    );
 
-    useEffect(() => {
-        getHomeVod(current_site);
-    }, [current_site, getHomeVod]);
+    const sections = useMemo(
+        () => [
+            { title: '热门电影', items: store.popularMovies },
+            { title: '热门剧集', items: store.popularTvShows },
+            { title: '正在上映', items: store.nowPlaying },
+            { title: '即将上映', items: store.upcoming },
+            { title: '高分电影', items: store.topRatedMovies },
+            { title: '高分剧集', items: store.topRatedTv }
+        ],
+        [store.popularMovies, store.popularTvShows, store.nowPlaying, store.upcoming, store.topRatedMovies, store.topRatedTv]
+    );
+
+    if (store.isLoading) {
+        return <Loading fullscreen description="加载 TMDB 数据中" />;
+    }
+
+    if (store.error) {
+        return (
+            <div className={styles.empty}>
+                <p>加载失败: {store.error}</p>
+            </div>
+        );
+    }
+
+    if (store.isLoaded && store.trending.length === 0 && store.popularMovies.length === 0 && store.popularTvShows.length === 0) {
+        return (
+            <div className={styles.empty}>
+                <p>TMDB 数据为空，请检查网络连接或 API Token 配置</p>
+            </div>
+        );
+    }
 
     return (
         <div className={styles.home}>
-            {loading ? (
-                <Loading fullscreen description="加载中" />
-            ) : (
-                <>
-                    {homeVodTypes?.length > 0 ? (
-                        homeVodTypes.map((item, index) => {
-                            return (
-                                <div key={`${item}-${index.toString()}`} className={styles.section}>
-                                    <MediaList
-                                        title={item}
-                                        onMore={() => {
-                                            const typeData = homeVodData.find((mItem) => mItem.type_name === item);
-                                            if (typeData) {
-                                                navigate(`/category?id=${typeData.type_id}&name=${item}&site=${current_site}`);
-                                            }
-                                        }}
-                                        items={homeVodData
-                                            .filter((mItem) => mItem.type_name === item)
-                                            .map(
-                                                (vod): MediaListItem => ({
-                                                    id: vod.vod_id,
-                                                    title: vod.vod_name,
-                                                    posterUrl: vod.vod_pic,
-                                                    badge: vod.vod_remarks || undefined
-                                                })
-                                            )}
-                                        onItemClick={(media) => {
-                                            navigate(`/detail?id=${encodeURIComponent(String(media.id))}&site=${current_site}`);
-                                        }}
-                                    />
-                                </div>
-                            );
-                        })
-                    ) : (
-                        <div className={styles.empty}>
-                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M4 4H20V16H4V4Z" stroke="#666666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                <path d="M8 20H16" stroke="#666666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                <path d="M12 16V20" stroke="#666666" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                            <span>暂无数据</span>
-                        </div>
-                    )}
-                </>
-            )}
+            {matching && <Loading fullscreen description="正在匹配播放源" />}
+            <FeaturedCarousel
+                items={store.trending}
+                onItemClick={(item) =>
+                    handleItemClick({
+                        id: `${item.mediaType}-${item.id}`,
+                        title: item.title,
+                        posterUrl: getPosterUrl(item.posterPath),
+                        extra: item.releaseDate?.slice(0, 4),
+                        tmdbItem: item
+                    } as MediaListItem & { tmdbItem: TmdbMediaItem })
+                }
+            />
+            {sections.map((s) => (
+                <MediaList key={s.title} title={s.title} items={toMediaListItems(s.items)} onItemClick={handleItemClick} />
+            ))}
         </div>
     );
 };
 
-const HomePage: React.FC = () => {
-    const { tmdb_enabled, tmdb_api_token } = useAppConfigStore();
-    const { tmdb_view_cms } = useSettingStore();
-
-    if (tmdb_enabled && tmdb_api_token && !tmdb_view_cms) {
-        return <TmdbHomePage />;
-    }
-
-    return <CmsHomePage />;
-};
-
-export default HomePage;
+export default TmdbHomePage;

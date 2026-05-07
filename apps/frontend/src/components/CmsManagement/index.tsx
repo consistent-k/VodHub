@@ -1,4 +1,4 @@
-import { PlusOutlined, EditOutlined, DeleteOutlined, EyeOutlined, DownloadOutlined, UploadOutlined, LinkOutlined, ReloadOutlined } from '@ant-design/icons';
+import { PlusOutlined, EditOutlined, DeleteOutlined, EyeOutlined, DownloadOutlined, UploadOutlined, LinkOutlined, ReloadOutlined, ClearOutlined } from '@ant-design/icons';
 import type { CreateVideoSourceInput, ImportMode, ImportVideoSourceItem, VideoSource } from '@vodhub/shared/types/video-source';
 import { Button, Table, Tag, Space, Modal, Form, Input, Switch, message, Popconfirm, Typography, Descriptions, Radio, Upload } from 'antd';
 import type { Breakpoint } from 'antd';
@@ -50,7 +50,8 @@ const CmsManagement = () => {
         setIsImporting(false);
     };
 
-    const { videoSources, isLoading, error, fetchVideoSources, addVideoSource, updateVideoSource, deleteVideoSource, toggleVideoSource, importVideoSources, clearError } = useVideoSourcesStore();
+    const { videoSources, isLoading, error, fetchVideoSources, addVideoSource, updateVideoSource, deleteVideoSource, toggleVideoSource, importVideoSources, clearVideoSources, clearError } =
+        useVideoSourcesStore();
     const { vod_hub_api, site_name, current_site, updateSetting } = useSettingStore();
     const { getVodTypes } = useVodSitesStore();
 
@@ -188,6 +189,17 @@ const CmsManagement = () => {
         }));
         downloadJson(exportData, 'video-sources-export.json');
         message.success('导出成功');
+    };
+
+    const handleClearAll = async () => {
+        clearVideoSources();
+        updateSetting({
+            vod_hub_api: vod_hub_api || '',
+            site_name: site_name || '',
+            current_site: ''
+        });
+        await getVodTypes();
+        message.success('已清空所有视频源');
     };
 
     const executeImport = (items: ImportVideoSourceItem[], mode: ImportMode) => {
@@ -343,6 +355,11 @@ const CmsManagement = () => {
                 <Button icon={<UploadOutlined />} onClick={handleFileImport} style={{ width: 124 }}>
                     导入文件
                 </Button>
+                <Popconfirm title="确定要清空所有视频源吗？" onConfirm={handleClearAll} okText="确定" cancelText="取消">
+                    <Button danger icon={<ClearOutlined />} style={{ width: 124 }}>
+                        清空全部
+                    </Button>
+                </Popconfirm>
             </div>
 
             <Table

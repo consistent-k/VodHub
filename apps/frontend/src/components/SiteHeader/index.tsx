@@ -6,6 +6,7 @@ import { useStyles } from './styles';
 
 import VodSearch from '@/components/VodSearch';
 import VodSites from '@/components/VodSites';
+import { useIsTmdbView } from '@/hooks/useTmdb';
 import useAppConfigStore from '@/store/useAppConfigStore';
 import useSettingStore from '@/store/useSettingStore';
 import { useVodSitesStore } from '@/store/useVodSitesStore';
@@ -16,13 +17,13 @@ const SiteHeader = () => {
     const navigate = useNavigate();
     const { styles } = useStyles();
 
-    const { vod_hub_api, site_name, current_site, tmdb_view_cms, updateSetting } = useSettingStore();
-    const { tmdb_enabled, tmdb_api_token } = useAppConfigStore();
+    const { vod_hub_api, site_name, current_site, updateSetting } = useSettingStore();
+    const { tmdb_enabled } = useAppConfigStore();
 
     const { sites } = useVodSitesStore();
 
-    const showTmdbToggle = !!vod_hub_api && !!tmdb_api_token;
-    const isTmdbView = tmdb_enabled && !tmdb_view_cms;
+    const showTmdbToggle = !!vod_hub_api && tmdb_enabled;
+    const isTmdbView = useIsTmdbView();
 
     return (
         <Header className={styles.header}>
@@ -48,7 +49,6 @@ const SiteHeader = () => {
                         value={current_site}
                         onChange={(value) => {
                             updateSetting({ vod_hub_api, site_name, current_site: value });
-                            navigate('/home');
                         }}
                     />
                 )}
@@ -61,8 +61,7 @@ const SiteHeader = () => {
                             className={styles.btn}
                             icon={isTmdbView ? <AppstoreOutlined /> : <VideoCameraOutlined />}
                             onClick={() => {
-                                updateSetting({ tmdb_view_cms: !tmdb_view_cms });
-                                navigate('/home');
+                                navigate(isTmdbView ? '/cms' : '/home');
                             }}
                         />
                     </Tooltip>

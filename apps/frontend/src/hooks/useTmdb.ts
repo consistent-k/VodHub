@@ -1,48 +1,42 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useLocation } from 'react-router';
 
+import { tmdbDetailApi, tmdbHomeApi, tmdbSearchApi } from '@/services';
 import useAppConfigStore from '@/store/useAppConfigStore';
 import useTmdbStore from '@/store/useTmdbStore';
-import type { TmdbDetail, TmdbGenre, TmdbMediaItem } from '@/types/tmdb';
-import { getTmdbClient, normalizeMovie, normalizeTv } from '@/utils/tmdb';
+import type { TmdbDetail, TmdbMediaItem } from '@/types/tmdb';
 
-const LANGUAGE = 'zh-CN';
+export const useIsTmdbView = (): boolean => {
+    const location = useLocation();
+    const { tmdb_enabled } = useAppConfigStore();
+    return tmdb_enabled && (location.pathname === '/home' || location.pathname === '/');
+};
 
 export const useTmdbHome = () => {
-    const { tmdb_api_token, tmdb_enabled } = useAppConfigStore();
+    const { tmdb_enabled } = useAppConfigStore();
     const { isLoading, error } = useTmdbStore();
     const fetchedRef = useRef(false);
 
     const fetch = useCallback(async () => {
-        if (!tmdb_api_token || !tmdb_enabled) return;
+        if (!tmdb_enabled) return;
         const store = useTmdbStore.getState();
         store.setLoading(true);
         store.setError(null);
 
         try {
-            const client = getTmdbClient();
-
-            const [trendingRes, popularMoviesRes, popularTvRes, nowPlayingRes, upcomingRes, topRatedMoviesRes, topRatedTvRes, movieGenresRes, tvGenresRes] = await Promise.all([
-                client.trending.trending('all', 'day', { language: LANGUAGE }),
-                client.movies.popular({ language: LANGUAGE }),
-                client.tvShows.popular({ language: LANGUAGE }),
-                client.movies.nowPlaying({ language: LANGUAGE }),
-                client.movies.upcoming({ language: LANGUAGE }),
-                client.movies.topRated({ language: LANGUAGE }),
-                client.tvShows.topRated({ language: LANGUAGE }),
-                client.genres.movies({ language: LANGUAGE }),
-                client.genres.tvShows({ language: LANGUAGE })
-            ]);
-
-            const trending = trendingRes.results.filter((r) => r.media_type === 'movie' || r.media_type === 'tv').map((r) => (r.media_type === 'movie' ? normalizeMovie(r) : normalizeTv(r)));
-
-            store.setTrending(trending);
-            store.setPopularMovies(popularMoviesRes.results.map(normalizeMovie));
-            store.setPopularTvShows(popularTvRes.results.map(normalizeTv));
-            store.setNowPlaying(nowPlayingRes.results.map(normalizeMovie));
-            store.setUpcoming(upcomingRes.results.map(normalizeMovie));
-            store.setTopRatedMovies(topRatedMoviesRes.results.map(normalizeMovie));
-            store.setTopRatedTv(topRatedTvRes.results.map(normalizeTv));
-            store.setGenres(movieGenresRes.genres as TmdbGenre[], tvGenresRes.genres as TmdbGenre[]);
+            const res = await tmdbHomeApi();
+            if (res.code !== 0 || !res.data) {
+                throw new Error('TMDB home API returned error');
+            }
+            const data = res.data;
+            store.setTrending(data.trending);
+            store.setPopularMovies(data.popularMovies);
+            store.setPopularTvShows(data.popularTvShows);
+            store.setNowPlaying(data.nowPlaying);
+            store.setUpcoming(data.upcoming);
+            store.setTopRatedMovies(data.topRatedMovies);
+            store.setTopRatedTv(data.topRatedTv);
+            store.setGenres(data.movieGenres, data.tvGenres);
             store.setLoaded(true);
         } catch (e) {
             const msg = e instanceof Error ? e.message : 'Failed to fetch TMDB data';
@@ -51,17 +45,17 @@ export const useTmdbHome = () => {
         } finally {
             store.setLoading(false);
         }
-    }, [tmdb_api_token, tmdb_enabled]);
+    }, [tmdb_enabled]);
 
     useEffect(() => {
-        if (tmdb_enabled && tmdb_api_token && !fetchedRef.current) {
+        if (tmdb_enabled && !fetchedRef.current) {
             fetchedRef.current = true;
             fetch();
         }
         if (!tmdb_enabled) {
             fetchedRef.current = false;
         }
-    }, [tmdb_enabled, tmdb_api_token, fetch]);
+    }, [tmdb_enabled, fetch]);
 
     return { isLoading, error, refetch: fetch };
 };
@@ -83,20 +77,24 @@ export const useTmdbSearch = () => {
         setIsLoading(true);
 
         try {
-            const client = getTmdbClient();
-            const res = await client.search.multi({ query, page, language: LANGUAGE });
+            const res = await tmdbSearchApi({ query, page });
 
             if (requestId !== abortRef.current) return;
 
-            const items = res.results.filter((r) => r.media_type === 'movie' || r.media_type === 'tv').map((r) => (r.media_type === 'movie' ? normalizeMovie(r) : normalizeTv(r)));
+            if (res.code !== 0 || !res.data) {
+                if (page === 1) setResults([]);
+                return;
+            }
+
+            const items = res.data.results;
 
             if (page === 1) {
                 setResults(items);
             } else {
                 setResults((prev) => [...prev, ...items]);
             }
-            setTotalPages(res.total_pages);
-            setTotalResults(res.total_results);
+            setTotalPages(res.data.totalPages);
+            setTotalResults(res.data.totalResults);
         } catch {
             if (requestId !== abortRef.current) return;
             if (page === 1) setResults([]);
@@ -128,58 +126,11 @@ export const useTmdbDetail = () => {
         setError(null);
 
         try {
-            const client = getTmdbClient();
-            let raw: TmdbDetail;
-
-            if (mediaType === 'movie') {
-                const res = await client.movies.details(id, ['credits', 'recommendations', 'similar'], LANGUAGE);
-                raw = {
-                    id: res.id,
-                    mediaType: 'movie',
-                    title: res.title,
-                    originalTitle: res.original_title,
-                    overview: res.overview,
-                    posterPath: res.poster_path || null,
-                    backdropPath: res.backdrop_path || null,
-                    releaseDate: res.release_date,
-                    voteAverage: res.vote_average,
-                    voteCount: res.vote_count,
-                    genreIds: res.genres.map((g) => g.id),
-                    genres: res.genres,
-                    popularity: res.popularity,
-                    originalLanguage: res.original_language,
-                    runtime: res.runtime,
-                    status: res.status,
-                    tagline: res.tagline,
-                    homepage: res.homepage
-                };
-            } else {
-                const res = await client.tvShows.details(id, ['credits', 'recommendations', 'similar'], LANGUAGE);
-                raw = {
-                    id: res.id,
-                    mediaType: 'tv',
-                    title: res.name,
-                    originalTitle: res.original_name,
-                    overview: res.overview,
-                    posterPath: res.poster_path || null,
-                    backdropPath: res.backdrop_path || null,
-                    releaseDate: res.first_air_date,
-                    voteAverage: res.vote_average,
-                    voteCount: res.vote_count,
-                    genreIds: res.genres.map((g) => g.id),
-                    genres: res.genres,
-                    popularity: res.popularity,
-                    originalLanguage: res.original_language,
-                    episodeRunTime: res.episode_run_time,
-                    numberOfSeasons: res.number_of_seasons,
-                    numberOfEpisodes: res.number_of_episodes,
-                    status: res.status,
-                    tagline: res.tagline,
-                    homepage: res.homepage
-                };
+            const res = await tmdbDetailApi({ id, mediaType });
+            if (res.code !== 0 || !res.data) {
+                throw new Error('TMDB detail API returned error');
             }
-
-            setDetail(raw);
+            setDetail(res.data.detail);
         } catch (e) {
             setError(e instanceof Error ? e.message : 'Failed to fetch detail');
         } finally {

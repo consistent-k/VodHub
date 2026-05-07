@@ -113,6 +113,9 @@ importers:
       query-string:
         specifier: ^9.3.1
         version: 9.3.1
+      tmdb-ts:
+        specifier: ^2.3.0
+        version: 2.3.0
       winston:
         specifier: ^3.19.0
         version: 3.19.0
@@ -192,9 +195,6 @@ importers:
       store2:
         specifier: ^2.14.4
         version: 2.14.4
-      tmdb-ts:
-        specifier: ^2.3.0
-        version: 2.3.0
       valtio:
         specifier: ^2.3.1
         version: 2.3.1(@types/react@19.2.14)(react@19.2.5)

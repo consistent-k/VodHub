@@ -40,14 +40,6 @@ export interface TmdbDetail extends TmdbMediaItem {
     homepage: string;
 }
 
-export interface CmsMatchResult {
-    vod_id: string | number;
-    vod_name: string;
-    vod_pic: string;
-    site: string;
-    sourceName: string;
-}
-
 export interface TmdbHomeData {
     trending: TmdbMediaItem[];
     popularMovies: TmdbMediaItem[];

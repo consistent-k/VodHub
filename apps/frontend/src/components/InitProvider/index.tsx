@@ -10,44 +10,36 @@ import { useVodSitesStore } from '@/store/useVodSitesStore';
 export default function InitProvider({ children }: { children: React.ReactNode }) {
     const { getVodTypes, isInitialized, hasError } = useVodSitesStore();
     const { vod_hub_api } = useSettingStore();
-    const { tmdb_enabled, tmdb_api_token, isConfigLoaded, fetchConfig } = useAppConfigStore();
-
-    const isTmdbMode = tmdb_enabled && !!tmdb_api_token;
-    const isCmsMode = !!vod_hub_api;
+    const { tmdb_enabled, isConfigLoaded, fetchConfig } = useAppConfigStore();
 
     const navigate = useNavigate();
     const location = useLocation();
 
-    // Fetch backend config on mount
     useEffect(() => {
         fetchConfig();
     }, [fetchConfig]);
 
-    // Redirect to settings if neither CMS nor TMDB is configured
     useEffect(() => {
-        if (isConfigLoaded && !isTmdbMode && (!vod_hub_api || hasError)) {
+        if (isConfigLoaded && !tmdb_enabled && (!vod_hub_api || hasError)) {
             navigate('/setting', { replace: true });
         }
-    }, [vod_hub_api, navigate, hasError, isTmdbMode, isConfigLoaded]);
+    }, [vod_hub_api, navigate, hasError, tmdb_enabled, isConfigLoaded]);
 
-    // Only fetch CMS types if CMS is configured
     useEffect(() => {
-        if (isCmsMode && !isInitialized && location.pathname !== '/setting') {
+        if (!!vod_hub_api && !isInitialized && location.pathname !== '/setting') {
             getVodTypes();
         }
-    }, [getVodTypes, isInitialized, location.pathname, isCmsMode]);
+    }, [getVodTypes, isInitialized, location.pathname, vod_hub_api]);
 
-    // Wait for backend config to load
     if (!isConfigLoaded && location.pathname !== '/setting') {
         return <Loading fullscreen />;
     }
 
-    // Loading gate: only block on CMS initialization, TMDB needs no init
-    if (isCmsMode && !isInitialized && !isTmdbMode && location.pathname !== '/setting') {
+    if (!!vod_hub_api && !isInitialized && !tmdb_enabled && location.pathname !== '/setting') {
         return <Loading fullscreen />;
     }
 
-    if (!isTmdbMode && !vod_hub_api && location.pathname !== '/setting') {
+    if (!tmdb_enabled && !vod_hub_api && location.pathname !== '/setting') {
         return <Loading fullscreen />;
     }
 
