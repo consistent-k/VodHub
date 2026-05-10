@@ -1,3 +1,4 @@
+import { Hono } from 'hono';
 import type { Context } from 'hono';
 
 import { getTmdbClient, LANGUAGE, normalizeCast, normalizeMovie, normalizeTv } from './client';
@@ -5,6 +6,8 @@ import type { TmdbDetail, TmdbDetailData } from './types';
 
 import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
 import logger from '@/utils/logger';
+
+const app = new Hono();
 
 const handler = async (ctx: Context) => {
     try {
@@ -96,10 +99,6 @@ const handler = async (ctx: Context) => {
     }
 };
 
-export const route = {
-    path: '/detail',
-    name: 'tmdb-detail',
-    example: '/api/tmdb/detail?id=550&mediaType=movie',
-    description: 'TMDB 电影/剧集详情',
-    handler
-};
+app.get('/', async (ctx) => ctx.json(await handler(ctx)));
+
+export default app;

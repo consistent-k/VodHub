@@ -25,13 +25,9 @@ const BasicLayout: React.FC<PropsWithChildren<BasicLayoutProps>> = ({ children, 
 
     const isTmdbView = useIsTmdbView();
 
-    const isCategoryPage = useMemo(() => {
-        return location.pathname === '/category';
-    }, [location.pathname]);
-
     const showVodTypes = useMemo(() => {
-        return isCategoryPage && !isTmdbView;
-    }, [isCategoryPage, isTmdbView]);
+        return (location.pathname === '/cms' || location.pathname === '/category') && !isTmdbView;
+    }, [location.pathname, isTmdbView]);
 
     return (
         <Layout className={styles.layout}>

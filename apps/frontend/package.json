@@ -17,22 +17,22 @@
         "ahooks": "^3.9.6",
         "antd": "^6.3.3",
         "antd-style": "^4.1.0",
-        "axios": "^1.13.6",
+        "axios": "^1.16.0",
         "crypto-js": "^4.2.0",
         "dayjs": "^1.11.20",
         "hls.js": "^1.6.15",
         "lodash": "^4.17.23",
         "query-string": "^9.3.1",
-        "react": "^19.2.4",
-        "react-dom": "^19.2.4",
-        "react-router": "^7.13.2",
+        "react": "^19.2.6",
+        "react-dom": "^19.2.6",
+        "react-router": "^7.15.0",
         "store2": "^2.14.4",
-        "valtio": "^2.3.1",
+        "valtio": "^2.3.2",
         "xgplayer": "^3.0.24",
         "xgplayer-flv": "^3.0.24",
         "xgplayer-hls": "^3.0.24",
         "xgplayer-mp4": "^3.0.24",
-        "zustand": "^5.0.12"
+        "zustand": "^5.0.13"
     },
     "devDependencies": {
         "@types/crypto-js": "^4.2.2",
@@ -41,6 +41,6 @@
         "@types/react-dom": "^19.2.3",
         "@vitejs/plugin-react": "^6.0.1",
         "typescript": "^6.0.0",
-        "vite": "^8.0.3"
+        "vite": "^8.0.11"
     }
 }

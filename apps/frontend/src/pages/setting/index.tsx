@@ -1,5 +1,5 @@
-import { Form, Input, Button, Flex, Select, App, Card, Typography, Space } from 'antd';
-import React, { useEffect } from 'react';
+import { Form, Input, Button, Flex, App, Card, Typography, Space } from 'antd';
+import React from 'react';
 import { useNavigate } from 'react-router';
 
 import { useStyles } from './styles';
@@ -7,37 +7,19 @@ import { useStyles } from './styles';
 import CmsManagement from '@/components/CmsManagement';
 import { ThemeSelector } from '@/components/ThemeSelector';
 import useSettingStore from '@/store/useSettingStore';
-import { useVodSitesStore } from '@/store/useVodSitesStore';
 
 const { Text } = Typography;
 
 const SettingPage: React.FC = () => {
-    const { vod_hub_api, site_name, current_site, updateSetting } = useSettingStore();
+    const { site_name, updateSetting } = useSettingStore();
     const [form] = Form.useForm();
     const { styles } = useStyles();
-
-    const { getVodTypes, sites, isInitialized, hasError, clearVodTypes } = useVodSitesStore();
 
     const { message } = App.useApp();
     const navigate = useNavigate();
 
-    // 同步 current_site 变化到表单
-    useEffect(() => {
-        form.setFieldValue('current_site', current_site || '');
-    }, [current_site, form]);
-
     const handleSubmit = async () => {
         try {
-            if (!isInitialized) {
-                message.warning('请先点击测试接口后保存配置');
-                return;
-            }
-
-            if (hasError) {
-                message.warning('VodHub API 配置错误，请修改后重新点击接口测试');
-                return;
-            }
-
             await form.validateFields();
             const values = form.getFieldsValue(true);
 
@@ -46,26 +28,6 @@ const SettingPage: React.FC = () => {
             navigate('/home');
         } catch (error) {
             console.error(error);
-        }
-    };
-
-    const handleApiChange = async () => {
-        const apiValue = form.getFieldValue('vod_hub_api');
-        if (!apiValue) {
-            message.warning('请输入 API 地址');
-            return;
-        }
-
-        updateSetting({ vod_hub_api: apiValue, site_name, current_site: '' });
-        form.setFieldValue('current_site', '');
-        clearVodTypes();
-
-        try {
-            await getVodTypes();
-            message.success('API 地址验证成功');
-        } catch (error) {
-            console.error(error);
-            message.error('验证接口失败');
         }
     };
 
@@ -127,16 +89,7 @@ const SettingPage: React.FC = () => {
                             form={form}
                             layout="vertical"
                             initialValues={{
-                                site_name: site_name || 'VodNext',
-                                vod_hub_api: vod_hub_api || '/',
-                                current_site: ''
-                            }}
-                            onValuesChange={(changedValues) => {
-                                if ('current_site' in changedValues) {
-                                    if (changedValues.current_site) {
-                                        updateSetting({ vod_hub_api, site_name, current_site: changedValues.current_site });
-                                    }
-                                }
+                                site_name: site_name || 'VodNext'
                             }}
                             autoComplete="off"
                         >
@@ -153,50 +106,12 @@ const SettingPage: React.FC = () => {
                                     }}
                                 />
                             </Form.Item>
-
-                            <Form.Item
-                                label={<Text style={{ fontWeight: 500, color: 'var(--color-text-secondary)' }}>VodHub API 地址</Text>}
-                                name="vod_hub_api"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: '请输入 API 地址'
-                                    },
-                                    {
-                                        validator: (_, value) => {
-                                            if (!value) {
-                                                return Promise.reject('请输入 API 地址');
-                                            }
-                                            if (value.startsWith('/') || /^https?:\/\//.test(value)) {
-                                                return Promise.resolve();
-                                            }
-                                            return Promise.reject('请输入正确的 URL 或以 / 开头的路径');
-                                        }
-                                    }
-                                ]}
-                                style={{ marginBottom: 0 }}
-                            >
-                                <Input
-                                    placeholder="请输入 VodHub API 地址"
-                                    style={{
-                                        width: 280,
-                                        height: 40
-                                    }}
-                                    suffix={
-                                        <Button
-                                            type="default"
-                                            onClick={handleApiChange}
-                                            style={{
-                                                height: '32px',
-                                                fontWeight: 500
-                                            }}
-                                        >
-                                            验证
-                                        </Button>
-                                    }
-                                />
-                            </Form.Item>
                         </Form>
+
+                        <Flex vertical gap={12}>
+                            <Text style={{ fontWeight: 500, color: 'var(--color-text-secondary)' }}>主题设置</Text>
+                            <ThemeSelector />
+                        </Flex>
                     </Card>
                     {/* CMS地址管理 */}
                     <Card
@@ -211,50 +126,6 @@ const SettingPage: React.FC = () => {
                         }}
                     >
                         <CmsManagement />
-                    </Card>
-
-                    {/* 站点选择卡片 */}
-                    <Card
-                        title={
-                            <Flex align="center" gap={8}>
-                                <span style={{ fontSize: '16px', fontWeight: 600, letterSpacing: '-0.32px' }}>站点选择</span>
-                            </Flex>
-                        }
-                        className={styles.card}
-                        styles={{
-                            body: { padding: '24px' }
-                        }}
-                    >
-                        <Form form={form}>
-                            <Flex gap={24} vertical>
-                                <Form.Item label={<Text style={{ fontWeight: 500, color: 'var(--color-text-secondary)' }}>默认资源站点</Text>} name="current_site" style={{ marginBottom: 0 }}>
-                                    <Select options={sites} style={{ width: 280 }} placeholder="请选择默认站点" />
-                                </Form.Item>
-
-                                {!isInitialized && (
-                                    <Flex gap={8} align="center">
-                                        <Text type="secondary" style={{ fontSize: '14px' }}>
-                                            请先验证 API 地址以获取站点列表
-                                        </Text>
-                                    </Flex>
-                                )}
-                            </Flex>
-                        </Form>
-                    </Card>
-
-                    {/* 主题选择器 */}
-                    <Card
-                        title={
-                            <Flex align="center" gap={8}>
-                                <span style={{ fontSize: '16px', fontWeight: 600, letterSpacing: '-0.32px' }}>主题设置</span>
-                            </Flex>
-                        }
-                        className={styles.card}
-                        styles={{
-                            body: { padding: '24px' }
-                        }}
-                    >
-                        <ThemeSelector />
                     </Card>
                 </Flex>
             </div>

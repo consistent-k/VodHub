@@ -4,8 +4,6 @@ import { create } from 'zustand';
 
 import useVideoSourcesStore from './useVideoSourcesStore';
 
-import { namespaceApi } from '@/services';
-
 interface VodSitesStore {
     hasError: boolean; // 是否有错误
     errorMessage?: string;
@@ -31,14 +29,7 @@ export const useVodSitesStore = create<VodSitesStore>((set) => ({
     },
     getVodTypes: async () => {
         try {
-            const res = await namespaceApi();
             const newSites: SelectProps['options'] = [];
-            Object.keys(res).forEach((key) => {
-                newSites.push({
-                    label: res[key].name || '',
-                    value: key
-                });
-            });
 
             // 确保视频源已加载（处理冷启动场景）
             const videoSourcesState = useVideoSourcesStore.getState();

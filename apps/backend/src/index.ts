@@ -1,9 +1,7 @@
 import { serve } from '@hono/node-server';
-import { Hono } from 'hono';
 
 import app from '@/app';
 import { config } from '@/config';
-import tmdbApp from '@/tmdb/app';
 import { getLocalhostAddress } from '@/utils/common-utils';
 import logger from '@/utils/logger';
 
@@ -21,12 +19,8 @@ if (config.connect.listenInaddrAny) {
 
 logger.info(`⚙ Config: 👉 ${JSON.stringify(config, null, 2)}`);
 
-const root = new Hono();
-root.route('/', app);
-root.route('/', tmdbApp);
-
 const server = serve({
-    fetch: root.fetch,
+    fetch: app.fetch,
     hostname: config.connect.listenInaddrAny ? '::' : '127.0.0.1',
     port
 });

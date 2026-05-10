@@ -8,6 +8,8 @@ import logger from '@/utils/logger';
 
 const { Hex } = CryptoJS.enc;
 
+const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null && !Array.isArray(value);
+
 const middleware: MiddlewareHandler = async (ctx, next) => {
     const path = ctx.req.path;
     const query = ctx.req.query();
@@ -16,7 +18,7 @@ const middleware: MiddlewareHandler = async (ctx, next) => {
     let cacheKey = `vod-hub:redis-cache:${path}${queryHash}`;
     let pathKey = `vod-hub:path-requested:${path}${queryHash}`;
 
-    if (path === '/api/vodhub/proxy' || path === '/proxy') {
+    if (path === '/api/vodhub/cms/proxy' || path === '/cms/proxy' || path === '/proxy') {
         const target = ctx.req.header('x-proxy-target') || '';
         const action = ctx.req.header('x-proxy-action') || '';
         const headerHash = '-' + CryptoJS.MD5(`${target}:${action}`).toString(Hex);
@@ -50,22 +52,37 @@ const middleware: MiddlewareHandler = async (ctx, next) => {
         ctx.header('Vod-Hub-Cache-Status', 'HIT');
         logger.info(`Cache hit for ${ctx.req.method} ${ctx.req.path}`);
         try {
-            ctx.set('data', JSON.parse(value as string));
+            return ctx.json(JSON.parse(value as string));
         } catch {
             logger.error(`Cache parse error for ${cacheKey}`);
         }
-        await next();
-        return;
     }
 
     await cache.set(pathKey, '1');
     try {
         await next();
-        const data = ctx.get('data');
+
+        let data = ctx.get('data') as unknown;
+        if (!data && ctx.res.body && ctx.res.headers.get('Content-Type')?.includes('application/json')) {
+            data = await ctx.res.clone().json();
+        }
+
         if (ctx.res.headers.get('Cache-Control') !== 'no-cache' && data) {
-            data.update_time = dayjs().format('YYYY-MM-DD HH:mm:ss');
+            if (isRecord(data)) {
+                data.update_time = dayjs().format('YYYY-MM-DD HH:mm:ss');
+            }
             ctx.set('data', data);
             await cache.set(cacheKey, JSON.stringify(data));
+
+            if (ctx.res.body) {
+                const headers = new Headers(ctx.res.headers);
+                headers.set('Content-Type', 'application/json');
+                headers.set('Vod-Hub-Cache-Status', 'MISS');
+                ctx.res = new Response(JSON.stringify(data), {
+                    headers,
+                    status: ctx.res.status
+                });
+            }
         }
     } catch (error) {
         logger.error(`Cache middleware error for ${path}: ${error instanceof Error ? error.message : String(error)}`);

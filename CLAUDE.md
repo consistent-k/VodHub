@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Project Overview
 
 VodHub is a pnpm monorepo with two applications:
-- **Backend** (`apps/backend`): Hono‑based video aggregation API with a single built‑in provider (`360kan`) and support for custom CMS addresses via a proxy system, providing a unified REST API (categories, search, details, playback). Node.js ≥ 24, ESM.
+- **Backend** (`apps/backend`): Hono‑based video aggregation API with a CMS proxy system and TMDB metadata integration, providing a unified REST API (categories, search, details, playback). Node.js ≥ 24, ESM.
 - **Frontend** (`apps/frontend`): Vite + React 19 + React Router video player application with Ant Design 6, Zustand state management, multi‑theme support, integrated CMS management, and TMDB metadata integration.
 
 A shared package (`packages/shared`) provides core TypeScript types used by both apps, including video source definitions.
@@ -22,7 +22,7 @@ pnpm lint                 # Lint all apps
 pnpm lint:fix            # Lint with auto‑fix
 pnpm typecheck           # Type check all apps
 pnpm format              # Prettier write
-pnpm format:check        # Prettier check
+pnpm format:check        # Prettier format check
 pnpm commit              # Interactive conventional commit
 pnpm build               # Build all apps (backend + frontend)
 ```
@@ -30,8 +30,7 @@ pnpm build               # Build all apps (backend + frontend)
 ### Backend‑Specific Commands
 ```bash
 pnpm --filter @vodhub/backend start     # Start backend without watch
-pnpm --filter @vodhub/backend build     # Build backend (generates routes first, then tsup)
-pnpm --filter @vodhub/backend gen:routes # Generate route registry
+pnpm --filter @vodhub/backend build     # Build backend (tsup)
 pnpm --filter @vodhub/backend lint      # Lint backend only
 pnpm --filter @vodhub/backend lint:fix  # Lint backend with auto‑fix
 pnpm --filter @vodhub/backend typecheck # Type check backend only
@@ -49,61 +48,48 @@ pnpm --filter @vodhub/frontend typecheck # Type check frontend only
 ## Backend Architecture
 
 ### Route System
-- **URL Pattern**: `GET/POST /api/vodhub/<provider>/<action>`
-- **Actions**: `home`, `homeVod`, `category`, `detail`, `play`, `search`
-- **Auto‑discovery**: Routes are automatically registered via `directory‑import` in `apps/backend/src/routes/registry.ts`
-- **Production optimization**: Routes are pre‑generated to `registry.gen.ts` for faster startup
-- **Current Built‑in Provider**: Only `360kan` remains as the single built‑in video source provider; all other hard‑coded providers have been removed
+- **URL Pattern**: `GET /api/vodhub/<module>/<action>`
+- **Module Routes**: Explicitly registered in `apps/backend/src/app.tsx` (no auto-discovery)
+- **Three route modules**:
+  1. `/api/vodhub/config` – returns TMDB configuration (enabled status, API token presence)
+  2. `/api/vodhub/cms` – CMS proxy system for custom video sources
+  3. `/api/vodhub/tmdb` – TMDB metadata API (home, search, detail)
 
-### Provider Types
-1. **Built‑in Provider**: `360kan` – the only remaining hard‑coded video source provider
-2. **Custom CMS Providers**: User‑defined CMS sources managed via the frontend CMS management interface, dynamically proxied through the `/api/vodhub/proxy` endpoint
-3. **CMS Factory Pattern**: The `createCMSRoutes()` factory in `apps/backend/src/utils/cms/factory.ts` dynamically creates route handlers for custom CMS addresses
+### Module Routes
 
-### CMS Management & Proxy
-- **Proxy API**: `ALL /api/vodhub/proxy` – forwards requests to user‑defined CMS URLs using `x-proxy-target` and `x-proxy-action` headers to translate actions to the target CMS's API format
-- **Video Source Store**: CMS and video source configurations are managed locally via `useVideoSourcesStore` (Zustand + localStorage), which replaces the old `useCmsStore`
-- **Video Source Types**: Two categories:
-  1. **Built-in Sources**: Pre-configured video sources defined in `apps/frontend/src/data/builtin-cms.json`
-  2. **Custom Sources**: User-defined CMS addresses with full CRUD support
-- **CMS Factory**: The `createCMSRoutes()` factory dynamically generates route handlers for custom CMS addresses, enabling flexible video source management without hard‑coded backend routes
+#### Config (`/api/vodhub/config`)
+- `GET /` – Returns `{ tmdb: { enabled: boolean, hasToken: boolean } }`
 
-### TMDB Integration
-- **Config API**: `GET /api/config` – returns TMDB enabled status and API token to the frontend
-- **Config Store**: `useAppConfigStore` fetches config from backend and initializes TMDB client
-- **Environment Variables**: `TMDB_ENABLED` (boolean string), `TMDB_API_TOKEN` (TMDB API read access token)
-- **TMDB Stores**:
-  - `useTmdbStore` – homepage data (trending/popular/now playing etc.)
-  - `useTmdbDetailStore` – current TMDB item detail and CMS match results
-  - `useTmdbMatchStore` – TMDB-to-CMS match cache with 24h TTL, persisted to localStorage
-- **TMDB Hooks** (`hooks/useTmdb.ts`):
-  - `useTmdbHome` – batch fetch homepage categories (trending/popular/now playing)
-  - `useTmdbSearch` – multi-type search with debounce and request cancellation
-  - `useTmdbDetail` – movie/TV detail fetch
-- **TMDB Utils**:
-  - `utils/tmdb.ts` – client management, image URL construction, Movie/TV data normalization
-  - `utils/tmdb-match.ts` – parallel search across enabled CMS sources, cache results to matchStore
-- **TMDB Components**:
-  - `FeaturedCarousel` – hero carousel with background image, title, rating, overview
-  - `SearchTmdb` – TMDB search with Cmd/Ctrl+K shortcut, auto-match CMS sources on click
-  - `MediaList` – universal media list replacing `VodList`, supports custom columns, badges, hover overlay
-- **View Mode**: Site header has TMDB/CMS toggle button (shown when both API and TMDB token are configured)
+#### CMS Proxy (`/api/vodhub/cms`)
+- `GET /proxy` – Proxies requests to user‑defined CMS URLs using `x-proxy-target` and `x-proxy-action` headers
+- Supported actions: `home`, `homeVod`, `category`, `detail`, `play`, `search`
+- All actions are GET requests; parameters are passed as query params
+- Custom CMS URL is provided via the `x-proxy-target` header
+- The `x-proxy-action` header determines which CMS handler to invoke
+
+#### TMDB (`/api/vodhub/tmdb`)
+- `GET /home` – Homepage categories (trending, popular movies/TV, now playing, upcoming, top rated, genres)
+- `GET /search` – Multi-type search (`query`, `page` params)
+- `GET /detail` – Movie/TV detail (`id`, `mediaType` params)
 
 ### Middleware Order
-1. `cors()` – CORS handling
+1. `cors()` – CORS handling (on cmsApp and tmdbApp)
 2. `trimTrailingSlash()` – trailing slash normalization
 3. `compress()` – response compression
 4. `jsonReturn` – JSON response serialization
 5. `cache` – Redis/memory caching with deduplication
+
+Note: `logger()` is applied globally to the main Hono app. The config route only inherits the global logger.
 
 ### Caching System
 - Two‑level cache: memory LRU + optional Redis via Keyv
 - Deduplication: prevents concurrent identical requests
 - Cache key format: `vod‑hub:redis‑cache:${path}${bodyHash}`
 - Error responses: set `Cache‑Control: 'no‑cache'` to prevent caching failures
+- GET requests with `Cache-Control: no-cache` header are not cached
 
 ### Error Handling Pattern
-All handlers must follow this structure:
+All CMS and TMDB handlers must follow this structure:
 ```typescript
 try {
     logger.info(`${ACTION_MESSAGE.INFO} ‑ ${namespace.name}`);
@@ -125,24 +111,74 @@ try {
 - `ERROR_CODE = -1` – business logic error (upstream failure)
 - `SYSTEM_ERROR_CODE = -2` – exception/catch error
 
+### Directory Structure
+```
+apps/backend/src/
+├── api/
+│   └── config/           # TMDB config API
+├── modules/
+│   ├── cms/proxy.ts      # CMS proxy router (single entry point for all CMS requests)
+│   └── tmdb/
+│       ├── app.ts        # TMDB router setup (home, search, detail sub-routes)
+│       ├── client.ts     # TMDB client, normalization functions
+│       ├── detail.ts     # TMDB detail handler
+│       ├── home.ts       # TMDB homepage handler
+│       ├── search.ts     # TMDB search handler
+│       └── types.ts      # TMDB-specific types
+├── types/
+│   ├── cms.ts            # CMS-specific response types (CMSHomeData, CMSDetailData, etc.)
+│   ├── error.ts          # Error type definitions
+│   └── index.ts          # Type re-exports from @vodhub/shared
+├── utils/
+│   ├── cache/            # Cache utility (memory LRU + Redis via Keyv)
+│   ├── cms/
+│   │   ├── request.ts    # Axios instance and CMSResponse type for CMS API calls
+│   │   ├── home/         # Home data handler for CMS proxy
+│   │   ├── homeVod/      # HomeVod handler for CMS proxy
+│   │   ├── category/     # Category handler for CMS proxy
+│   │   ├── detail/       # Detail handler for CMS proxy
+│   │   ├── play/         # Play handler for CMS proxy
+│   │   └── search/       # Search handler for CMS proxy
+│   ├── common-utils.ts   # Shared utility functions
+│   ├── filters/          # Data filtering/normalization utilities
+│   ├── format/           # Format utilities (e.g., vod content formatting)
+│   ├── headers/          # HTTP header constants
+│   └── logger/           # Logger utility
+├── constant/
+│   ├── code.ts           # Status codes (SUCCESS_CODE, ERROR_CODE, SYSTEM_ERROR_CODE)
+│   ├── message.ts        # Action message constants
+│   ├── userAgent.ts      # User-Agent strings
+│   └── word.ts           # Word constants (e.g., banned keywords)
+├── config/
+│   └── index.ts          # Configuration (port, cache, banned keywords, TMDB settings)
+├── app.tsx               # Main application, route registration
+└── index.ts              # Application entry point
+```
+
+### CMS Proxy Pattern
+The CMS proxy eliminates the need for hard‑coded route files per video source. Instead:
+1. **Frontend** looks up the video source URL from `useVideoSourcesStore`
+2. **Frontend** sends request to `/api/vodhub/cms/proxy` with:
+   - `x-proxy-target` header: the CMS base URL
+   - `x-proxy-action` header: the action (`home`, `homeVod`, `category`, `detail`, `play`, `search`)
+   - Query parameters: action‑specific parameters
+3. **Backend** proxy handler dispatches to the appropriate CMS utility function
+4. **Backend** CMS utility makes the actual request to the target CMS and transforms the response
+
+### Provider Types
+1. **Custom CMS Providers**: User‑defined CMS sources managed via the frontend CMS management interface, dynamically proxied through the `/api/vodhub/cms/proxy` endpoint
+2. **TMDB**: Built‑in metadata provider at `/api/vodhub/tmdb/` for movie/TV data (no traditional video source; used alongside CMS sources)
+
 ### Import Conventions
 - **Groups**: Built‑ins → external packages → internal modules (`@/`), separated by blank lines
 - **Alphabetization**: Imports within each group should be alphabetized (case‑insensitive)
 - **Type imports**: Use `import type` for type‑only imports
 - **Node built‑ins**: Use the `node:` prefix (e.g., `import { join } from 'node:path'`)
 
-### Route Object Shape
-Each custom route file exports a `route` object with the following properties:
-- `path`: string or string[] – URL path segment(s)
-- `name`: string – route identifier (matches filename)
-- `example`: string – example URL path
-- `description`: string – what the route does
-- `handler`: (ctx: Context) => Promise<T> | T
-- `method?`: 'GET' | 'POST' – defaults to GET
-
 ### Handler Naming
-- The handler function must be named `handler` (constant) in each route file
-- Use typed `RouteItem<T>` generic for route definitions
+- CMS proxy handlers are named `handler` (constant) in each utility file
+- TMDB route handlers are defined inline in each module's app.ts
+- Use typed `RouteItem<T>` generic for route definitions where applicable
 
 ### Build Tooling
 - Backend builds with **tsup** (ESM output, target Node 24, source maps enabled)
@@ -216,27 +252,78 @@ Three built‑in themes defined in `themes/index.ts`:
 - Use `React.lazy()` with `Suspense` for heavy components (e.g., video player)
 - Use `Suspense` for async loading
 
-### CMS Management UI
-- Component: `components/CmsManagement/index.tsx`
-- Store: `store/useVideoSourcesStore.ts` (Zustand + localStorage) – replaces the old `useCmsStore`
-- Data Source: Built-in video sources defined in `apps/frontend/src/data/builtin-cms.json`
-- Features:
-  - Table display of all video sources (built‑in + custom)
-  - Enable/disable built‑in video sources
-  - Full CRUD operations for custom video sources
-  - Integration with site selector components
-- Changes are persisted locally in localStorage; backend API synchronization may be added in the future
+### Video Source Management
+- **Store**: `store/useVideoSourcesStore.ts` (Zustand + localStorage) — replaces old `useCmsStore` and `useVodSitesStore`
+- **Data**: Built‑in and custom video sources unified under `VideoSource` type from `@vodhub/shared`
+- **Features**:
+  - Full CRUD for custom video sources
+  - Enable/disable toggle for each source
+  - Bulk import with overwrite or merge mode (URL‑based dedup)
+  - Data persisted in localStorage
+
+### CMS API Calls via Proxy
+All CMS requests go through the proxy at `/api/vodhub/cms/proxy`:
+- The `x-proxy-target` header carries the CMS base URL
+- The `x-proxy-action` header specifies the action
+- Query parameters pass action‑specific data (keyword, id, page, filters, etc.)
+- Example: `GET /api/vodhub/cms/proxy?keyword=xxx&page=1` with `x-proxy-target: https://example.com` and `x-proxy-action: search`
+
+### TMDB Integration
+- **Config API**: `GET /api/vodhub/config` – returns TMDB enabled status and API token presence
+- **TMDB API Base**: `/api/vodhub/tmdb/` with sub‑routes:
+  - `GET /home` – Trending, popular (movies & TV), now playing, upcoming, top rated, genres
+  - `GET /search?query=xxx&page=n` – Multi-type search
+  - `GET /detail?id=n&mediaType=movie|tv` – Detailed info with credits, recommendations, similar
+- **TMDB Stores**:
+  - `useTmdbStore` – homepage data (trending/popular/now playing etc.)
+  - `useTmdbDetailStore` – current TMDB item detail and related data
+  - `useTmdbMatchStore` – TMDB-to-CMS match cache with 24h TTL, persisted to localStorage
+- **TMDB Hooks** (`hooks/useTmdb.ts`):
+  - `useTmdbHome` – batch fetch homepage categories
+  - `useTmdbSearch` – multi-type search with debounce and request cancellation
+  - `useTmdbDetail` – movie/TV detail fetch
+- **TMDB Utils**:
+  - `utils/tmdb.ts` – client management, image URL construction, Movie/TV data normalization
+  - `utils/tmdb-match.ts` – parallel search across enabled CMS sources, cache results to matchStore
+- **TMDB Components**:
+  - `FeaturedCarousel` – hero carousel with background image, title, rating, overview
+  - `SearchTmdb` – TMDB search with Cmd/Ctrl+K shortcut, auto-match CMS sources on click
+  - `MediaList` – universal media list component supporting custom columns, badges, hover overlay
+- **View Mode**: Site header has TMDB/CMS toggle button (shown when both API and TMDB token are configured)
+
+### Key UI Components
+| Component | Path | Purpose |
+|---|---|---|
+| `CmsManagement` | `components/CmsManagement/index.tsx` | Video source CRUD table (built‑in + custom) |
+| `SiteHeader` | `components/SiteHeader/index.tsx` | Navigation with TMDB/CMS view toggle |
+| `FeaturedCarousel` | `components/FeaturedCarousel/index.tsx` | Hero carousel for TMDB trending content |
+| `MediaList` | `components/MediaList/index.tsx` | Universal media grid/list with load‑more |
+| `SearchTmdb` | `components/SearchTmdb/index.tsx` | TMDB global search bar |
+| `VodPalyer` | `components/VodPalyer/index.tsx` | Video player (xgplayer + HLS) |
+| `VodSites` | `components/VodSites/index.tsx` | Video source site selector |
+| `VodTypes` | `components/VodTypes/index.tsx` | Category/type selector |
+
+### Pages
+| Page | Path | Purpose |
+|---|---|---|
+| Home | `pages/home/index.tsx` | Main page (TMDB carousel + CMS content) |
+| Category | `pages/category/index.tsx` | Category listing with filters |
+| Detail | `pages/detail/index.tsx` | Video detail page |
+| Setting | `pages/setting/index.tsx` | Settings (API URL, theme, video source management) |
+| CMS | `pages/cms/index.tsx` | Video source management page |
 
 ## Shared Types
 
 Core types defined in `packages/shared/src/types/index.ts`:
-- `Namespace` – provider metadata
-- `HomeData`, `HomeVodData`, `CategoryVodData` – data structures
-- `DetailData`, `PlayData`, `SearchData` – response types
-- `ApiResponse<T>` – standard API response wrapper
+- `Namespace` – provider metadata (name, url?, description?)
+- `HomeData`, `HomeVodData`, `CategoryVodData` – CMS data structures
+- `DetailData`, `PlayData`, `SearchData` – CMS response types
+- `ApiResponse<T>` – standard API response wrapper `{ code, message, data }`
+- `Filter`, `FilterItem` – filter data types
+- `VodPlayList`, `VodPlayUrl` – playlist types
 
 Video source types defined in `packages/shared/src/types/video-source.ts`:
-- `VideoSource` – unified type for both built-in and custom video sources (id, name, url, enabled, timestamps)
+- `VideoSource` – unified type for both built‑in and custom video sources (id, name, url, description, enabled, createdAt, updatedAt)
 - `CreateVideoSourceInput` / `UpdateVideoSourceInput` – CRUD input types
 - `ImportVideoSourceItem` / `ImportMode` – bulk import types
 
@@ -257,10 +344,10 @@ Video source types defined in `packages/shared/src/types/video-source.ts`:
 
 GitHub Actions workflows in `.github/workflows/`:
 - **ci.yml**: On push/PR to main – runs ESLint, TypeScript type check, Prettier format check, and commitlint (PRs only)
-- **docker-image.yml**: On release – multi-arch Docker build, pushes to DockerHub (`consistentlee/vod_hub`, `consistentlee/vod_next`)
+- **docker-image.yml**: On release – multi‑arch Docker build, pushes to DockerHub (`consistentlee/vod_hub`, `consistentlee/vod_next`)
 - **audit.yml**: Weekly security audit (Mondays UTC 00:00)
 - **dependency-review.yml**: Reviews dependency changes on PRs
-- **labeler.yml**: Auto-labels PRs (frontend, backend, styles, ci, dependencies)
+- **labeler.yml**: Auto‑labels PRs (frontend, backend, styles, ci, dependencies)
 
 ## Development Standards
 
@@ -278,8 +365,7 @@ GitHub Actions workflows in `.github/workflows/`:
 | Constants | `UPPER_SNAKE_CASE` | `SUCCESS_CODE` |
 | Frontend components | `PascalCase` | `MediaList` |
 | Frontend hooks | `use` prefix | `useIsMobile` |
-| Frontend stores | `use` + `Store` suffix | `useSettingStore` |
-| Video source store | `use` + `Store` suffix | `useVideoSourcesStore` |
+| Frontend stores | `use` + `Store` suffix | `useVideoSourcesStore` |
 | Backend handler functions | `handler` | `const handler = async (ctx) => { … }` |
 
 ### Git Workflow
@@ -309,10 +395,10 @@ GitHub Actions workflows in `.github/workflows/`:
 - No test framework is configured in this project
 - Backend uses ESM (`"type": "module"`), builds with tsup targeting Node 24
 - CMS handlers check `res.code === 1` for upstream success
-- All error responses return `data: []` (empty array)
+- All error responses return `data: []` (empty array) or `data: null` (for detail/single queries)
 - Route handlers must never throw – always return structured response
-- **Video Source Management**: Frontend manages video sources through `useVideoSourcesStore` (replaces old `useCmsStore`), with built-in sources in `apps/frontend/src/data/builtin-cms.json`
-- **Proxy Routes**: Custom CMS addresses are dynamically handled through `/api/vodhub/proxy` using the CMS factory pattern
+- **Video Source Management**: Frontend manages video sources through `useVideoSourcesStore`, with built-in sources defined in the frontend
+- **CMS Proxy**: Custom CMS addresses are dynamically handled through `/api/vodhub/cms/proxy` — no per‑source backend routes needed
 - **TMDB View**: Homepage supports TMDB/CMS dual-mode, toggled via SiteHeader; TMDB-only mode can skip CMS initialization entirely
 - NPM registry is overridden to Chinese mirror via `.npmrc` (`registry=https://registry.npmmirror.com/`)
 - DevContainer available (`.devcontainer/devcontainer.json`) for isolated development

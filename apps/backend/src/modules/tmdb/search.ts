@@ -1,3 +1,4 @@
+import { Hono } from 'hono';
 import type { Context } from 'hono';
 
 import { getTmdbClient, LANGUAGE, normalizeMultiResults } from './client';
@@ -5,6 +6,8 @@ import type { TmdbSearchData } from './types';
 
 import { ERROR_CODE, SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
 import logger from '@/utils/logger';
+
+const app = new Hono();
 
 const handler = async (ctx: Context) => {
     try {
@@ -36,10 +39,6 @@ const handler = async (ctx: Context) => {
     }
 };
 
-export const route = {
-    path: '/search',
-    name: 'tmdb-search',
-    example: '/api/tmdb/search?query=盗梦空间&page=1',
-    description: 'TMDB 多类型搜索',
-    handler
-};
+app.get('/', async (ctx) => ctx.json(await handler(ctx)));
+
+export default app;

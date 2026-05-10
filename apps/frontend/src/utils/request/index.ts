@@ -1,6 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { merge } from 'lodash';
-import store from 'store2';
 
 const request = axios.create();
 
@@ -22,15 +21,8 @@ export interface BaseRequestConfig extends AxiosRequestConfig {
 }
 
 const transRequestConfig = (url: string, config: BaseRequestConfig) => {
-    const basePath = config.customPreFix || '/api/vodhub';
-    let prefix = basePath;
-
-    const { vod_hub_api } = store.get('vod_next_setting') || {};
-
-    if (vod_hub_api && vod_hub_api !== '/') {
-        prefix = `${vod_hub_api}${basePath}`;
-    }
-    config.url = `${prefix}${url}`;
+    const basePath = config.customPreFix || '/api/vodhub/cms';
+    config.url = `${basePath}${url}`;
 
     return config;
 };

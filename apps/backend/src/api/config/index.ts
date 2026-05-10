@@ -1,24 +1,16 @@
-import { createRoute, RouteHandler } from '@hono/zod-openapi';
+import { Hono } from 'hono';
 
 import { config } from '@/config';
 
-const route = createRoute({
-    method: 'get',
-    path: '/config',
-    tags: ['Config'],
-    responses: {
-        200: {
-            description: 'App configuration'
-        }
-    }
-});
+const app = new Hono();
 
-const handler: RouteHandler<typeof route> = (ctx) =>
+app.get('/', (ctx) =>
     ctx.json({
         tmdb: {
             enabled: config.tmdb.enabled,
             hasToken: !!config.tmdb.apiToken
         }
-    });
+    })
+);
 
-export { route, handler };
+export default app;

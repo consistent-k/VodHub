@@ -6,12 +6,6 @@ import { HomeData, HomeVodData, CategoryVodData, DetailData, PlayData, SearchDat
 import type { TmdbDetailData, TmdbHomeData, TmdbSearchData } from '@/types/tmdb';
 import request from '@/utils/request';
 
-interface VodHubResponse<T> {
-    code: number;
-    data: T;
-    update_time: string;
-}
-
 const getVideoSourceBySite = async (site: string): Promise<VideoSource | undefined> => {
     const videoSourcesState = useVideoSourcesStore.getState();
 
@@ -56,18 +50,6 @@ interface SearchParams {
     page: number;
 }
 
-export const namespaceApi = () => {
-    return request.get<
-        Record<
-            string,
-            {
-                name: string;
-                description: string;
-            }
-        >
-    >(`/namespace`);
-};
-
 export const configApi = () => {
     return request.get<{
         tmdb: {
@@ -75,7 +57,9 @@ export const configApi = () => {
             hasToken: boolean;
             apiToken: string;
         };
-    }>(`/config`);
+    }>(``, {
+        customPreFix: '/api/vodhub/config'
+    });
 };
 
 export const homeApi = async (site_name: string) => {
@@ -88,7 +72,7 @@ export const homeApi = async (site_name: string) => {
             }
         });
     }
-    return request.get<VodHubResponse<HomeData[]>>(`/${site_name}/home`);
+    return Promise.reject(new Error('CMS source not found'));
 };
 
 export const homeVodApi = async (site_name: string) => {
@@ -101,7 +85,7 @@ export const homeVodApi = async (site_name: string) => {
             }
         });
     }
-    return request.get<VodHubResponse<HomeVodData[]>>(`/${site_name}/homeVod`);
+    return Promise.reject(new Error('CMS source not found'));
 };
 
 export const categoryApi = async (site_name: string, params: CategoryParams) => {
@@ -115,9 +99,7 @@ export const categoryApi = async (site_name: string, params: CategoryParams) => 
             params
         });
     }
-    return request.get<VodHubResponse<CategoryVodData[]>>(`/${site_name}/category`, {
-        params
-    });
+    return Promise.reject(new Error('CMS source not found'));
 };
 
 export const detailApi = async (site_name: string, params: { id: string | number }) => {
@@ -131,9 +113,7 @@ export const detailApi = async (site_name: string, params: { id: string | number
             params
         });
     }
-    return request.get<VodHubResponse<DetailData[]>>(`/${site_name}/detail`, {
-        params
-    });
+    return Promise.reject(new Error('CMS source not found'));
 };
 
 export const playApi = async (site_name: string, params: PlayParams) => {
@@ -147,9 +127,7 @@ export const playApi = async (site_name: string, params: PlayParams) => {
             params
         });
     }
-    return request.get<VodHubResponse<PlayData[]>>(`/${site_name}/play`, {
-        params
-    });
+    return Promise.reject(new Error('CMS source not found'));
 };
 
 export const searchApi = async (site_name: string, params: SearchParams) => {
@@ -163,27 +141,25 @@ export const searchApi = async (site_name: string, params: SearchParams) => {
             params
         });
     }
-    return request.get<VodHubResponse<SearchData[]>>(`/${site_name}/search`, {
-        params
-    });
+    return Promise.reject(new Error('CMS source not found'));
 };
 
 export const tmdbHomeApi = () => {
     return request.get<{ code: number; data: TmdbHomeData }>(`/home`, {
-        customPreFix: '/api/tmdb'
+        customPreFix: '/api/vodhub/tmdb'
     });
 };
 
 export const tmdbSearchApi = (params: { query: string; page?: number }) => {
     return request.get<{ code: number; data: TmdbSearchData }>(`/search`, {
-        customPreFix: '/api/tmdb',
+        customPreFix: '/api/vodhub/tmdb',
         params
     });
 };
 
 export const tmdbDetailApi = (params: { id: number; mediaType: 'movie' | 'tv' }) => {
     return request.get<{ code: number; data: TmdbDetailData }>(`/detail`, {
-        customPreFix: '/api/tmdb',
+        customPreFix: '/api/vodhub/tmdb',
         params
     });
 };

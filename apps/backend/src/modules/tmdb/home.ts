@@ -1,3 +1,4 @@
+import { Hono } from 'hono';
 import type { Context } from 'hono';
 
 import { getTmdbClient, LANGUAGE, normalizeMovie, normalizeMultiResults, normalizeTv } from './client';
@@ -5,6 +6,8 @@ import type { TmdbHomeData } from './types';
 
 import { SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
 import logger from '@/utils/logger';
+
+const app = new Hono();
 
 const handler = async (ctx: Context) => {
     try {
@@ -45,10 +48,6 @@ const handler = async (ctx: Context) => {
     }
 };
 
-export const route = {
-    path: '/home',
-    name: 'tmdb-home',
-    example: '/api/tmdb/home',
-    description: 'TMDB 首页数据',
-    handler
-};
+app.get('/', async (ctx) => ctx.json(await handler(ctx)));
+
+export default app;

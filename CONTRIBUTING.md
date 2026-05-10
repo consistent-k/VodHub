@@ -1,6 +1,6 @@
 ## 📝 开始之前
 
-> 要新建一个VodHub的路由，您需要熟练使用Git、Node.js 和 TypeScript。
+> 要新建一个VodHub的路由（视频源），您需要熟练使用Git、Node.js 和 TypeScript。
 
 - 参照 [README.md](README.md) 中的 `开发环境` 进行环境搭建
 - 学习如何提交PR: [视频链接](https://www.bilibili.com/video/BV1ei4y1s7pU/)
@@ -8,233 +8,171 @@
 
 ## 📚 基本概念
 
-### 1. 路由
-VodHub中的路由是指一个独立的视频源，例如：`360kan`、`360zy`等。
+### 1. 视频源
+VodHub中的视频源是指一个独立的CMS视频数据提供商。每个视频源由一个 `Namespace` 对象标识，包含名称（name）、地址（url）和描述（description）。
 
-### 2. 路由类型
+### 2. 视频源类型
 
-VodHub 支持两种路由创建方式：
+VodHub 支持两种视频源：
 
-#### 方式一：CMS 路由（推荐）
-适用于标准 CMS 类型的视频源，只需创建两个文件即可完成路由：
-- `namespace.ts` - 声明路由的基本信息
-- `index.ts` - 使用工厂函数自动生成所有路由
+#### 类型一：自定义CMS视频源（推荐）
+适用于标准CMS类型的视频源（使用 `api.php/provide/vod` 接口），只需创建一个文件即可完成：
+- `namespace.ts` - 声明视频源的基本信息
 
-#### 方式二：自定义路由
-适用于非标准 CMS 或需要特殊处理的视频源，需要手动创建各个路由文件：
-- `namespace.ts` - 声明路由的基本信息
-- `home.ts` - 首页分类
-- `homeVod.ts` - 最近更新
-- `category.ts` - 分类查询
-- `detail.ts` - 视频详情
-- `play.ts` - 播放地址
-- `search.ts` - 关键词搜索
+所有CMS标准操作（首页、分类、详情、搜索、播放）由后端的CMS代理系统自动处理，无需手动编写每个路由。
 
-## 🔨 方式一：创建 CMS 路由（推荐）
+#### 类型二：TMDB元数据
+TMDB是内置的元数据提供商，无需额外配置即可使用。包含：
+- 首页推荐（趋势、热门电影/剧集、正在上映、即将上映、评分最高）
+- 多类型搜索
+- 详情查看
 
-### 步骤 1：创建目录和 namespace.ts
+## 🔨 创建自定义CMS视频源
 
-在 `apps/backend/src/routes` 目录下新建文件夹（如 `mymovie`），并创建 `namespace.ts`：
+### 步骤 1：创建 namespace.ts
+
+在 `apps/frontend/src/data/` 目录下（或通过前端CMS管理界面）添加视频源配置：
 
 ```typescript
-import type { Namespace } from '@/types';
-
-export const namespace: Namespace = {
-    name: 'mymovie',           // 路由名称（英文）
+{
+    id: 'mymovie',           // 视频源唯一标识
+    name: '我的电影网',       // 显示名称
     url: 'https://mymovie.com', // 视频源网站地址
-    description: '我的电影网'    // 描述
-};
+    description: '我的电影网',  // 描述
+    enabled: true            // 是否启用
+}
 ```
 
-### 步骤 2：创建 index.ts
+### 步骤 2：使用视频源
 
-在同目录下创建 `index.ts`，使用工厂函数自动生成所有路由：
+前端通过 `useVideoSourcesStore` 管理所有视频源。创建后，视频源会自动出现在站点选择器中。
 
-```typescript
-import { namespace } from './namespace';
-import { createCMSRoutes } from '@/utils/cms/factory';
+所有CMS请求通过统一代理发送：
+- **API路径**: `/api/vodhub/cms/proxy`
+- **请求头**:
+  - `x-proxy-target`: 视频源的基地址（如 `https://mymovie.com`）
+  - `x-proxy-action`: 操作类型（`home`, `homeVod`, `category`, `detail`, `play`, `search`）
+- **查询参数**: 根据操作类型传递（如 `keyword`, `id`, `page` 等）
 
-export const routes = createCMSRoutes(namespace);
+### 工作原理
+
+前端 → `/api/vodhub/cms/proxy`（带 `x-proxy-target` 和 `x-proxy-action` 头）
+  → 后端代理处理器（`modules/cms/proxy.ts`）
+    → 对应的CMS工具函数（`utils/cms/{action}/index.ts`）
+      → 目标CMS网站的实际API请求
+
+## 📂 后端目录结构
+
+```
+apps/backend/src/
+├── api/
+│   └── config/           # TMDB配置API
+├── modules/
+│   ├── cms/proxy.ts      # CMS代理路由器（所有CMS请求的统一入口）
+│   └── tmdb/
+│       ├── app.ts        # TMDB路由设置
+│       ├── client.ts     # TMDB客户端和数据规范化函数
+│       ├── detail.ts     # TMDB详情处理器
+│       ├── home.ts       # TMDB首页处理器
+│       ├── search.ts     # TMDB搜索处理器
+│       └── types.ts      # TMDB专用类型
+├── types/
+│   ├── cms.ts            # CMS响应类型
+│   ├── error.ts          # 错误类型
+│   └── index.ts          # 类型汇总（从 @vodhub/shared 重导出）
+├── utils/
+│   ├── cache/            # 缓存工具
+│   ├── cms/
+│   │   ├── request.ts    # Axios实例和CMSResponse类型
+│   │   ├── home/         # 首页数据处理器
+│   │   ├── homeVod/      # 最近更新处理器
+│   │   ├── category/     # 分类处理器
+│   │   ├── detail/       # 详情处理器
+│   │   ├── play/         # 播放地址处理器
+│   │   └── search/       # 搜索处理器
+│   ├── common-utils.ts   # 通用工具函数
+│   ├── filters/          # 数据过滤/规范化
+│   ├── format/           # 格式化工具
+│   ├── headers/          # HTTP头常量
+│   └── logger/           # 日志工具
+├── constant/
+│   ├── code.ts           # 状态码
+│   ├── message.ts        # 消息常量
+│   ├── userAgent.ts      # User-Agent字符串
+│   └── word.ts           # 关键词常量
+├── config/
+│   └── index.ts          # 配置（端口、缓存、TMDB设置等）
+├── app.tsx               # 主应用，路由注册
+└── index.ts              # 应用入口
 ```
 
-### 步骤 3：完成
+## 🛠 创建自定义路由（高级）
 
-就这样！CMS 工厂函数会自动为你创建以下路由：
-- `/{name}/home` - 首页分类列表
-- `/{name}/homeVod` - 最近更新
-- `/{name}/category` - 获取分类列表（POST）
-- `/{name}/detail` - 获取详情（POST）
-- `/{name}/play` - 获取播放地址（POST）
-- `/{name}/search` - 关键词搜索（POST）
+如果视频源不符合标准CMS格式，可以创建自定义的CMS处理器：
 
-## 🔨 方式二：创建自定义路由
+### 步骤 1：在 `utils/cms/` 下创建处理器
 
-如果视频源不符合标准 CMS 格式，可以手动创建各个路由文件。
-
-### 步骤 1：创建目录和 namespace.ts
-
-```typescript
-import type { Namespace } from '@/types';
-
-export const namespace: Namespace = {
-    name: '360kan',
-    url: 'https://www.360kan.com',
-    description: '360影视'
-};
-```
-
-### 步骤 2：创建路由文件
-
-以 `home.ts` 为例：
+参照现有处理器（如 `home/index.ts`）的模式，创建自定义操作处理器：
 
 ```typescript
 import type { Context } from 'hono';
-import { namespace } from './namespace';
-import { SUCCESS_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
-import { HOME_MESSAGE } from '@/constant/message';
-import type { HomeData, HomeRoute } from '@/types';
-import { filterHomeData } from '@/utils/filters';
+import type { Namespace } from '@/types';
+import { SUCCESS_CODE, ERROR_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
+import { YOUR_MESSAGE } from '@/constant/message';
 import logger from '@/utils/logger';
 
-const handler = async (ctx: Context) => {
+export const handler = async (ctx: Context, namespace: Namespace) => {
     try {
-        logger.info(`${HOME_MESSAGE.INFO} - ${namespace.name}`);
-
-        // 在这里编写请求源网站的代码
-        // 按照 HomeData 的格式返回数据
-        const data: HomeData[] = [
-            {
-                type_id: '1',
-                type_name: '电影',
-                filters: [
-                    {
-                        type: 'class',
-                        children: [
-                            { label: '全部', value: '全部' },
-                            { label: '喜剧', value: '喜剧' },
-                            { label: '动作', value: '动作' }
-                        ]
-                    }
-                ]
-            }
-        ];
-
+        logger.info(`${YOUR_MESSAGE.INFO} - ${namespace.name}`);
+        // 调用目标API并处理响应
         return {
             code: SUCCESS_CODE,
-            message: HOME_MESSAGE.SUCCESS,
-            data: filterHomeData(data)
+            message: YOUR_MESSAGE.SUCCESS,
+            data: []
         };
     } catch (error) {
         ctx.res.headers.set('Cache-Control', 'no-cache');
-        logger.error(`${HOME_MESSAGE.ERROR} - ${namespace.name} - ${error instanceof Error ? error.message : String(error)}`);
+        logger.error(`${YOUR_MESSAGE.ERROR} - ${namespace.name} - ${error}`);
         return {
             code: SYSTEM_ERROR_CODE,
-            message: HOME_MESSAGE.ERROR,
+            message: YOUR_MESSAGE.ERROR,
             data: []
         };
     }
 };
-
-export const route: HomeRoute = {
-    path: '/home',
-    name: 'home',
-    example: '/360kan/home',
-    description: '首页分类列表',
-    handler
-};
 ```
 
-### 步骤 3：创建其他路由文件
+### 步骤 2：在 `modules/cms/proxy.ts` 中注册新action
 
-参照 `home.ts` 的模式，创建其他路由文件：
-- `homeVod.ts` - 最近更新
-- `category.ts` - 分类查询（POST）
-- `detail.ts` - 视频详情（POST）
-- `play.ts` - 播放地址（POST）
-- `search.ts` - 关键词搜索（POST）
+在proxy.ts的switch语句中添加新action的case：
 
-## 📂 路由目录结构示例
-
-### CMS 路由（推荐）
-```
-apps/backend/src/routes/
-└── 360zy/
-    ├── namespace.ts
-    └── index.ts
-```
-
-### 自定义路由
-```
-apps/backend/src/routes/
-└── 360kan/
-    ├── namespace.ts
-    ├── home.ts
-    ├── homeVod.ts
-    ├── category.ts
-    ├── detail.ts
-    ├── play.ts
-    └── search.ts
-```
-
-## 🔧 常用工具和类型
-
-### 状态码
 ```typescript
-import { SUCCESS_CODE, ERROR_CODE, SYSTEM_ERROR_CODE } from '@/constant/code';
+case 'yourAction':
+    result = ctx.json(await yourHandler(ctx, namespace));
+    break;
 ```
 
-- `SUCCESS_CODE (0)` - 成功
-- `ERROR_CODE (-1)` - 业务逻辑错误
-- `SYSTEM_ERROR_CODE (-2)` - 系统异常
+## 🧪 测试视频源
 
-### 消息常量
-```typescript
-import { HOME_MESSAGE, SEARCH_MESSAGE, DETAIL_MESSAGE } from '@/constant/message';
-```
-
-### 类型定义
-```typescript
-import type { 
-    HomeRoute, 
-    HomeVodRoute, 
-    CategoryRoute, 
-    DetailRoute, 
-    PlayRoute, 
-    SearchRoute,
-    HomeData,
-    CategoryVodData,
-    DetailData,
-    PlayData,
-    SearchData
-} from '@/types';
-```
-
-### 工具函数
-```typescript
-import { filterHomeData } from '@/utils/filters';  // 过滤首页数据
-import logger from '@/utils/logger';                // 日志工具
-```
-
-## 🧪 测试路由
-
-启动开发服务器后，测试你的路由：
+启动开发服务器后，测试视频源：
 
 ```bash
 # 启动服务
 pnpm dev:backend
 
-# 测试首页接口
-curl http://localhost:8888/api/vodhub/mymovie/home
+# 测试首页（通过代理）
+curl --location 'http://localhost:8888/api/vodhub/cms/proxy?action=home' \
+  --header 'x-proxy-target: https://mymovie.com'
 
-# 测试搜索接口
-curl -X POST http://localhost:8888/api/vodhub/mymovie/search \
-  -H "Content-Type: application/json" \
-  -d '{"keyword": "测试", "page": 1}'
+# 测试搜索
+curl --location 'http://localhost:8888/api/vodhub/cms/proxy?action=search&keyword=测试&page=1' \
+  --header 'x-proxy-target: https://mymovie.com'
+
+# 测试TMDB首页
+curl --location 'http://localhost:8888/api/vodhub/tmdb/home'
 ```
 
-## 📦 提交路由
-
-当您完成新路由的开发后：
+## 📦 提交代码
 
 1. 确保代码符合项目规范
    ```bash
@@ -255,15 +193,9 @@ curl -X POST http://localhost:8888/api/vodhub/mymovie/search \
 
 ## ⚠️ 注意事项
 
-1. **错误处理**：所有 handler 必须使用 try/catch 包裹，返回统一格式
-2. **日志记录**：在 handler 开头添加 `logger.info`，在 catch 中添加 `logger.error`
+1. **错误处理**：所有处理器必须使用 try/catch 包裹，返回统一格式
+2. **日志记录**：在处理器开头添加 `logger.info`，在 catch 中添加 `logger.error`
 3. **缓存控制**：在错误时设置 `ctx.res.headers.set('Cache-Control', 'no-cache')`
-4. **数据过滤**：首页数据使用 `filterHomeData` 进行过滤
-5. **类型安全**：使用 TypeScript 类型定义，确保类型安全
-
-## 🔗 相关资源
-
-- [VodHub API 文档](README.md#后端-api-使用示例)
-- [类型定义文件](apps/backend/src/types/index.ts)
-- [CMS 工厂函数](apps/backend/src/utils/cms/factory.ts)
-- [现有路由示例](apps/backend/src/routes/)
+4. **类型安全**：使用 TypeScript 类型定义，确保类型安全
+5. **CMS代理**：所有CMS请求现在通过统一代理 `/api/vodhub/cms/proxy` 处理，不再需要为每个视频源创建单独的路由文件
+6. **视频源管理**：视频源配置由前端 `useVideoSourcesStore` 管理（Zustand + localStorage），不再使用旧的 `useCmsStore`

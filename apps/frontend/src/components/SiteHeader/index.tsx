@@ -17,12 +17,11 @@ const SiteHeader = () => {
     const navigate = useNavigate();
     const { styles } = useStyles();
 
-    const { vod_hub_api, site_name, current_site, updateSetting } = useSettingStore();
+    const { site_name, current_site, updateSetting } = useSettingStore();
     const { tmdb_enabled } = useAppConfigStore();
 
     const { sites } = useVodSitesStore();
 
-    const showTmdbToggle = !!vod_hub_api && tmdb_enabled;
     const isTmdbView = useIsTmdbView();
 
     return (
@@ -48,13 +47,13 @@ const SiteHeader = () => {
                         options={sites}
                         value={current_site}
                         onChange={(value) => {
-                            updateSetting({ vod_hub_api, site_name, current_site: value });
+                            updateSetting({ site_name, current_site: value });
                         }}
                     />
                 )}
             </Flex>
             <Flex gap={8} align="center">
-                {showTmdbToggle && (
+                {tmdb_enabled && (
                     <Tooltip title={isTmdbView ? '切换到 CMS' : '切换到 TMDB'}>
                         <Button
                             type="text"

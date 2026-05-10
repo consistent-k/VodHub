@@ -52,7 +52,7 @@ const CmsManagement = () => {
 
     const { videoSources, isLoading, error, fetchVideoSources, addVideoSource, updateVideoSource, deleteVideoSource, toggleVideoSource, importVideoSources, clearVideoSources, clearError } =
         useVideoSourcesStore();
-    const { vod_hub_api, site_name, current_site, updateSetting } = useSettingStore();
+    const { site_name, current_site, updateSetting } = useSettingStore();
     const { getVodTypes } = useVodSitesStore();
 
     useEffect(() => {
@@ -95,7 +95,6 @@ const CmsManagement = () => {
 
             if (current_site === `custom_${id}`) {
                 updateSetting({
-                    vod_hub_api: vod_hub_api || '',
                     site_name: site_name || '',
                     current_site: ''
                 });
@@ -123,7 +122,6 @@ const CmsManagement = () => {
 
                 if (!input.enabled && current_site === `custom_${editingCms.id}`) {
                     updateSetting({
-                        vod_hub_api: vod_hub_api || '',
                         site_name: site_name || '',
                         current_site: ''
                     });
@@ -159,7 +157,6 @@ const CmsManagement = () => {
             const updated = useVideoSourcesStore.getState().videoSources.find((s) => s.id === id);
             if (updated && !updated.enabled && current_site === `custom_${id}`) {
                 updateSetting({
-                    vod_hub_api: vod_hub_api || '',
                     site_name: site_name || '',
                     current_site: ''
                 });
@@ -194,12 +191,25 @@ const CmsManagement = () => {
     const handleClearAll = async () => {
         clearVideoSources();
         updateSetting({
-            vod_hub_api: vod_hub_api || '',
             site_name: site_name || '',
             current_site: ''
         });
         await getVodTypes();
         message.success('已清空所有视频源');
+    };
+
+    const handleSetDefault = async (source: VideoSource) => {
+        if (!source.enabled) {
+            message.warning('禁用的视频源不能设为默认');
+            return;
+        }
+
+        updateSetting({
+            site_name: site_name || '',
+            current_site: `custom_${source.id}`
+        });
+        await getVodTypes();
+        message.success(`已将 ${source.name} 设为默认`);
     };
 
     const executeImport = (items: ImportVideoSourceItem[], mode: ImportMode) => {
@@ -280,9 +290,11 @@ const CmsManagement = () => {
             title: '名称',
             dataIndex: 'name',
             key: 'name',
+            width: 160,
             render: (text: string, record: VideoSource) => (
                 <Space>
                     <Text strong>{text}</Text>
+                    {current_site === `custom_${record.id}` && <Tag color="processing">默认</Tag>}
                     {!record.enabled && <Tag color="default">已禁用</Tag>}
                 </Space>
             )
@@ -310,12 +322,14 @@ const CmsManagement = () => {
             title: '状态',
             dataIndex: 'enabled',
             key: 'enabled',
+            width: 100,
             render: (enabled: boolean, record: VideoSource) => <Switch checked={enabled} onChange={() => handleToggle(record.id)} checkedChildren="启用" unCheckedChildren="禁用" />
         },
         {
             title: '创建时间',
             dataIndex: 'createdAt',
             key: 'createdAt',
+            width: 150,
             responsive: ['lg'] as Breakpoint[],
             render: (date: string) => new Date(date).toLocaleString()
         },
@@ -324,6 +338,9 @@ const CmsManagement = () => {
             key: 'action',
             render: (_: unknown, record: VideoSource) => (
                 <Space size="small">
+                    <Button type="text" size="small" disabled={!record.enabled || current_site === `custom_${record.id}`} onClick={() => handleSetDefault(record)}>
+                        设为默认
+                    </Button>
                     <Button type="text" size="small" icon={<EyeOutlined />} onClick={() => handleView(record)} />
                     <Button type="text" size="small" icon={<EditOutlined />} onClick={() => handleEdit(record)} />
                     <Popconfirm title="确定要删除这个视频源吗？" onConfirm={() => handleDelete(record.id)} okText="确定" cancelText="取消">
@@ -362,16 +379,7 @@ const CmsManagement = () => {
                 </Popconfirm>
             </div>
 
-            <Table
-                columns={columns}
-                dataSource={videoSources}
-                rowKey="id"
-                loading={isLoading}
-                pagination={{ pageSize: 10 }}
-                scroll={{
-                    x: 'fit-content'
-                }}
-            />
+            <Table columns={columns} dataSource={videoSources} rowKey="id" loading={isLoading} pagination={{ pageSize: 10 }} />
 
             {/* 添加/编辑模态框 */}
             <Modal
