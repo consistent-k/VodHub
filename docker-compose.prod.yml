@@ -27,6 +27,9 @@ services:
       - CACHE_TTL=60
       - TMDB_ENABLED=${TMDB_ENABLED:-false}
       - TMDB_API_TOKEN=${TMDB_API_TOKEN:-}
+      - CLASH_ENABLED=${CLASH_ENABLED:-false}
+      - CLASH_SUBSCRIBE_URL=${CLASH_SUBSCRIBE_URL:-}
+      - CLASH_KERNEL_NAME=${CLASH_KERNEL_NAME:-mihomo}
     volumes:
       - ./logs:/app/apps/backend/logs
     depends_on:
