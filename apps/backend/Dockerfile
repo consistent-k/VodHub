@@ -38,5 +38,4 @@ COPY apps/backend/scripts/entrypoint.sh /entrypoint.sh
 
 ENV NODE_ENV=production
 EXPOSE 8888
-ENTRYPOINT ["/entrypoint.sh"]
-CMD ["node", "apps/backend/dist/index.js"]
+CMD ["/entrypoint.sh", "node", "apps/backend/dist/index.js"]
