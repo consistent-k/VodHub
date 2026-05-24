@@ -140,5 +140,18 @@ PATCH
   fi
 fi
 
+# Fallback: ensure proxy env vars are set if clashproxy on didn't take effect
+if [ -n "${http_proxy:-}" ] || [ -n "${HTTP_PROXY:-}" ]; then
+  : # already set by clashproxy
+else
+  export http_proxy=http://127.0.0.1:7890
+  export https_proxy=http://127.0.0.1:7890
+  export HTTP_PROXY=http://127.0.0.1:7890
+  export HTTPS_PROXY=http://127.0.0.1:7890
+  export ALL_PROXY=http://127.0.0.1:7890
+  export all_proxy=http://127.0.0.1:7890
+  echo "[Clash] Fallback proxy env vars applied"
+fi
+
 cd /app
 exec "$@"
