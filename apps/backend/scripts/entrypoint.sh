@@ -88,9 +88,16 @@ PATCH
     YQ_PATH="${CLASH_BASE_DIR}/bin/yq"
     if [[ ! -f "$YQ_PATH" ]]; then
       echo "[Clash] yq binary missing, downloading directly..."
+      YQ_ARCH=$(uname -m)
+      case "$YQ_ARCH" in
+        x86_64)  YQ_ARCH_SUFFIX="amd64" ;;
+        aarch64) YQ_ARCH_SUFFIX="arm64" ;;
+        armv7l)  YQ_ARCH_SUFFIX="arm" ;;
+        *)       YQ_ARCH_SUFFIX="$YQ_ARCH" ;;
+      esac
       YQ_URLS=(
-        "https://gh-proxy.org/https://github.com/mikefarah/yq/releases/download/v4.49.2/yq_linux_arm64.tar.gz"
-        "https://github.com/mikefarah/yq/releases/download/v4.49.2/yq_linux_arm64.tar.gz"
+        "https://gh-proxy.org/https://github.com/mikefarah/yq/releases/download/v4.49.2/yq_linux_${YQ_ARCH_SUFFIX}.tar.gz"
+        "https://github.com/mikefarah/yq/releases/download/v4.49.2/yq_linux_${YQ_ARCH_SUFFIX}.tar.gz"
       )
       for yq_url in "${YQ_URLS[@]}"; do
         if curl -fsL --connect-timeout 15 --max-time 60 "$yq_url" \
@@ -127,7 +134,19 @@ PATCH
       # Start proxy
       echo "[Clash] Starting proxy..."
       clashon 2>&1 || true
-      sleep 1
+
+      # Wait for mihomo to be ready
+      echo "[Clash] Waiting for mihomo to start..."
+      for _i in $(seq 1 10); do
+        if pgrep -f "${CLASH_BASE_DIR}/bin/mihomo" >/dev/null 2>&1; then
+          echo "[Clash] mihomo is running"
+          break
+        fi
+        sleep 1
+      done
+      if ! pgrep -f "${CLASH_BASE_DIR}/bin/mihomo" >/dev/null 2>&1; then
+        echo "[Clash] WARNING: mihomo failed to start after 10s"
+      fi
 
       # Enable system proxy (sets http_proxy/https_proxy env vars)
       echo "[Clash] Setting proxy environment..."
@@ -140,10 +159,12 @@ PATCH
   fi
 fi
 
-# Fallback: ensure proxy env vars are set if clashproxy on didn't take effect
+# Fallback: ensure proxy env vars are set if clashproxy on did not take effect
+# Only set fallback if mihomo is actually running, otherwise proxy would just cause timeouts
+CLASH_BIN="${CLASH_BASE_DIR:-$HOME/clashctl}/bin/mihomo"
 if [ -n "${http_proxy:-}" ] || [ -n "${HTTP_PROXY:-}" ]; then
   : # already set by clashproxy
-else
+elif pgrep -f "$CLASH_BIN" >/dev/null 2>&1; then
   export http_proxy=http://127.0.0.1:7890
   export https_proxy=http://127.0.0.1:7890
   export HTTP_PROXY=http://127.0.0.1:7890
@@ -151,6 +172,8 @@ else
   export ALL_PROXY=http://127.0.0.1:7890
   export all_proxy=http://127.0.0.1:7890
   echo "[Clash] Fallback proxy env vars applied"
+else
+  echo "[Clash] mihomo not running, skipping proxy env vars"
 fi
 
 cd /app
