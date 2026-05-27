@@ -1,3 +1,11 @@
+import { EnvHttpProxyAgent, setGlobalDispatcher } from 'undici';
+
+// Enable proxy for globalThis.fetch when HTTP_PROXY/HTTPS_PROXY is set
+if (process.env.http_proxy || process.env.HTTP_PROXY || process.env.https_proxy || process.env.HTTPS_PROXY) {
+    const proxyAgent = new EnvHttpProxyAgent();
+    setGlobalDispatcher(proxyAgent);
+}
+
 import { serve } from '@hono/node-server';
 
 import app from '@/app';
