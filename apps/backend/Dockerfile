@@ -4,7 +4,7 @@ RUN corepack enable
 
 FROM base AS builder
 WORKDIR /app
-COPY package.json pnpm-workspace.yaml pnpm-lock.yaml tsconfig.base.json ./
+COPY .npmrc package.json pnpm-workspace.yaml pnpm-lock.yaml tsconfig.base.json ./
 COPY packages/ ./packages/
 COPY apps/backend/package.json ./apps/backend/
 COPY apps/frontend/package.json ./apps/frontend/
@@ -15,17 +15,13 @@ RUN mkdir -p apps/backend/logs && cd apps/backend && pnpm build
 FROM node:24-alpine AS runner
 WORKDIR /app
 RUN corepack enable && \
-    apk add --no-cache \
-        bash \
-        ca-certificates \
-        xz \
-        curl \
-        tar \
-        unzip \
-        procps \
-        coreutils \
-        iproute2 \
-        gcompat
+    apk add --no-cache bash git curl xz tar unzip procps
+RUN git clone --branch master --depth 1 \
+    https://gh-proxy.org/https://github.com/nelvko/clash-for-linux-install.git \
+    && cd clash-for-linux-install \
+    && sed -i 's/^_quit "/: # _quit "/' install.sh \
+    && bash install.sh \
+    && cd .. && rm -rf clash-for-linux-install
 
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/apps/backend/node_modules ./apps/backend/node_modules
