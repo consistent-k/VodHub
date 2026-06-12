@@ -161,7 +161,7 @@ importers:
         version: 6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       antd-style:
         specifier: ^4.1.0
-        version: 4.1.0(@types/react@19.2.16)(antd@6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+        version: 4.1.0(@types/react@19.2.17)(antd@6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       axios:
         specifier: ^1.16.0
         version: 1.17.0
@@ -194,7 +194,7 @@ importers:
         version: 2.14.4
       valtio:
         specifier: ^2.3.2
-        version: 2.3.2(@types/react@19.2.16)(react@19.2.7)
+        version: 2.3.2(@types/react@19.2.17)(react@19.2.7)
       xgplayer:
         specifier: ^3.0.24
         version: 3.0.24(core-js@3.49.0)
@@ -209,7 +209,7 @@ importers:
         version: 3.0.24(core-js@3.49.0)(xgplayer@3.0.24(core-js@3.49.0))
       zustand:
         specifier: ^5.0.13
-        version: 5.0.14(@types/react@19.2.16)(react@19.2.7)
+        version: 5.0.14(@types/react@19.2.17)(react@19.2.7)
     devDependencies:
       '@types/crypto-js':
         specifier: ^4.2.2
@@ -219,10 +219,10 @@ importers:
         version: 4.17.24
       '@types/react':
         specifier: ^19.2.14
-        version: 19.2.16
+        version: 19.2.17
       '@types/react-dom':
         specifier: ^19.2.3
-        version: 19.2.3(@types/react@19.2.16)
+        version: 19.2.3(@types/react@19.2.17)
       '@vitejs/plugin-react':
         specifier: ^6.0.1
         version: 6.0.2(vite@8.0.16(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(tsx@4.22.4)(yaml@2.9.0))
@@ -1630,8 +1630,8 @@ packages:
     peerDependencies:
       '@types/react': ^19.2.0
 
-  '@types/react@19.2.16':
-    resolution: {integrity: sha512-esJiCAnl0kfpNdE69f3So4WJUXy95dLZydX0KwK46riIHDzHM7O9Vtf9xCHW0PXIqvgqNrswl522kA/5yx+F4w==}
+  '@types/react@19.2.17':
+    resolution: {integrity: sha512-MXfmqaVPEVgkBT/aY0aGCkRWWtByiYQXo3xdQ8r5RzuFrPiRn8Gar2tQdXSUQ2GKV3bkXckek89V8wQBY2Q/Aw==}
 
   '@types/triple-beam@1.3.5':
     resolution: {integrity: sha512-6WaYesThRMCl19iryMYP7/x2OVgCtbIVflDGFpWnb9irXI3UjYE4AzmYuiUKY1AJstGijoY+MgUszMgRxIYTYw==}
@@ -4740,7 +4740,7 @@ snapshots:
 
   '@emotion/memoize@0.9.0': {}
 
-  '@emotion/react@11.14.0(@types/react@19.2.16)(react@19.2.7)':
+  '@emotion/react@11.14.0(@types/react@19.2.17)(react@19.2.7)':
     dependencies:
       '@babel/runtime': 7.29.2
       '@emotion/babel-plugin': 11.13.5
@@ -4752,7 +4752,7 @@ snapshots:
       hoist-non-react-statics: 3.3.2
       react: 19.2.7
     optionalDependencies:
-      '@types/react': 19.2.16
+      '@types/react': 19.2.17
     transitivePeerDependencies:
       - supports-color
 
@@ -5632,11 +5632,11 @@ snapshots:
 
   '@types/parse-json@4.0.2': {}
 
-  '@types/react-dom@19.2.3(@types/react@19.2.16)':
+  '@types/react-dom@19.2.3(@types/react@19.2.17)':
     dependencies:
-      '@types/react': 19.2.16
+      '@types/react': 19.2.17
 
-  '@types/react@19.2.16':
+  '@types/react@19.2.17':
     dependencies:
       csstype: 3.2.3
 
@@ -5862,13 +5862,13 @@ snapshots:
 
   ansi-styles@6.2.3: {}
 
-  antd-style@4.1.0(@types/react@19.2.16)(antd@6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
+  antd-style@4.1.0(@types/react@19.2.17)(antd@6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7))(react-dom@19.2.7(react@19.2.7))(react@19.2.7):
     dependencies:
       '@ant-design/cssinjs': 2.1.2(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@babel/runtime': 7.29.2
       '@emotion/cache': 11.14.0
       '@emotion/css': 11.13.5
-      '@emotion/react': 11.14.0(@types/react@19.2.16)(react@19.2.7)
+      '@emotion/react': 11.14.0(@types/react@19.2.17)(react@19.2.7)
       '@emotion/serialize': 1.3.3
       '@emotion/utils': 1.4.2
       antd: 6.4.3(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -8523,11 +8523,11 @@ snapshots:
 
   util-deprecate@1.0.2: {}
 
-  valtio@2.3.2(@types/react@19.2.16)(react@19.2.7):
+  valtio@2.3.2(@types/react@19.2.17)(react@19.2.7):
     dependencies:
       proxy-compare: 3.0.1
     optionalDependencies:
-      '@types/react': 19.2.16
+      '@types/react': 19.2.17
       react: 19.2.7
 
   vite@8.0.16(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.6.1)(less@4.6.4)(sass@1.99.0)(tsx@4.22.4)(yaml@2.9.0):
@@ -8729,7 +8729,7 @@ snapshots:
 
   zod@4.3.6: {}
 
-  zustand@5.0.14(@types/react@19.2.16)(react@19.2.7):
+  zustand@5.0.14(@types/react@19.2.17)(react@19.2.7):
     optionalDependencies:
-      '@types/react': 19.2.16
+      '@types/react': 19.2.17
       react: 19.2.7
