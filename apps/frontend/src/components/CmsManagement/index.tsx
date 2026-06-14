@@ -57,14 +57,14 @@ const CmsManagement = () => {
 
     useEffect(() => {
         fetchVideoSources();
-    }, []);
+    }, [fetchVideoSources]);
 
     useEffect(() => {
         if (error) {
             message.error(error);
             clearError();
         }
-    }, [error]);
+    }, [error, clearError]);
 
     const handleAdd = () => {
         setEditingCms(null);

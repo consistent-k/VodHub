@@ -35,6 +35,12 @@ app.get('/', async (ctx: Context): Promise<Response> => {
 
     const namespace = createNamespace(target);
 
+    // category、play、search 不缓存
+    const noCacheActions = ['category', 'play', 'search'];
+    if (noCacheActions.includes(action)) {
+        ctx.res.headers.set('Cache-Control', 'no-cache');
+    }
+
     let result: Response;
 
     switch (action) {
@@ -49,15 +55,12 @@ app.get('/', async (ctx: Context): Promise<Response> => {
             break;
         case 'category':
             result = ctx.json(await categoryHandler(ctx, namespace));
-            ctx.res.headers.set('Cache-Control', 'no-cache');
             break;
         case 'play':
             result = ctx.json(await playHandler(ctx, namespace));
-            ctx.res.headers.set('Cache-Control', 'no-cache');
             break;
         case 'search':
             result = ctx.json(await searchHandler(ctx, namespace));
-            ctx.res.headers.set('Cache-Control', 'no-cache');
             break;
         default:
             ctx.res.headers.set('Cache-Control', 'no-cache');

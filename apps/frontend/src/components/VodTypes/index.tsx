@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useMemo } from 'react';
+import { useCallback, useEffect, useState, useRef, useMemo } from 'react';
 import { useNavigate, useLocation, useSearchParams } from 'react-router';
 import store from 'store2';
 
@@ -30,13 +30,13 @@ const VodTypes: React.FC<VodTypesProps> = ({ site }) => {
         if (location.pathname.includes('category')) {
             return searchParams.get('id') || '';
         }
-        if (location.pathname.includes('home')) {
+        if (location.pathname.includes('cms')) {
             return 'all';
         }
         return '';
     }, [location.pathname, searchParams]);
 
-    const getHome = async (site: string) => {
+    const getHome = useCallback(async (site: string) => {
         try {
             const res = await homeApi(site);
             const { code, data } = res;
@@ -52,13 +52,13 @@ const VodTypes: React.FC<VodTypesProps> = ({ site }) => {
         } catch (error) {
             console.log(error);
         }
-    };
+    }, []);
 
     useEffect(() => {
         store.set('vod_next_home_data', []);
 
         getHome(site);
-    }, [site]);
+    }, [site, getHome]);
 
     const updateScrollButtons = () => {
         const container = scrollContainerRef.current;
@@ -94,7 +94,7 @@ const VodTypes: React.FC<VodTypesProps> = ({ site }) => {
 
     const handleTabClick = (key: string) => {
         if (key === 'all') {
-            navigate('/home');
+            navigate('/cms');
         } else {
             const name = items.find((item) => item.key === key)?.label || '';
             navigate(`/category?id=${key}&name=${name}&site=${site}`);

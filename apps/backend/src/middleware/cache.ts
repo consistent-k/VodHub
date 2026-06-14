@@ -18,7 +18,7 @@ const middleware: MiddlewareHandler = async (ctx, next) => {
     let cacheKey = `vod-hub:redis-cache:${path}${queryHash}`;
     let pathKey = `vod-hub:path-requested:${path}${queryHash}`;
 
-    if (path === '/api/vodhub/cms/proxy' || path === '/cms/proxy' || path === '/proxy') {
+    if (path === '/proxy') {
         const target = ctx.req.header('x-proxy-target') || '';
         const action = ctx.req.header('x-proxy-action') || '';
         const headerHash = '-' + CryptoJS.MD5(`${target}:${action}`).toString(Hex);

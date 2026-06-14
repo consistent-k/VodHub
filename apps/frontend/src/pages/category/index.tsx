@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router';
 import store from 'store2';
 
@@ -22,35 +22,38 @@ const CategoryPage = () => {
     const site = searchParams.get('site') || '';
     const [filters, setFilters] = useState<Record<string, string>>({});
 
-    const getCategory = async (id: string | number) => {
-        setLoading(true);
-        try {
-            const res = await categoryApi(site, {
-                id: id,
-                page: 1,
-                limit: 30,
-                ...filters
-            });
-            const { code, data } = res;
-            if (code === 0) {
-                setCategoryList(
-                    data.map((item) => {
-                        return {
-                            ...item,
-                            type_name: name,
-                            type_id: id
-                        };
-                    })
-                );
-            } else {
-                setCategoryList([]);
+    const getCategory = useCallback(
+        async (id: string | number) => {
+            setLoading(true);
+            try {
+                const res = await categoryApi(site, {
+                    id: id,
+                    page: 1,
+                    limit: 30,
+                    ...filters
+                });
+                const { code, data } = res;
+                if (code === 0) {
+                    setCategoryList(
+                        data.map((item) => {
+                            return {
+                                ...item,
+                                type_name: name,
+                                type_id: id
+                            };
+                        })
+                    );
+                } else {
+                    setCategoryList([]);
+                }
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setLoading(false);
             }
-        } catch (error) {
-            console.log(error);
-        } finally {
-            setLoading(false);
-        }
-    };
+        },
+        [site, filters, name]
+    );
 
     useEffect(() => {
         if (typeof site !== 'string' || !site) {
@@ -64,7 +67,7 @@ const CategoryPage = () => {
                 getCategory(id);
             }
         }
-    }, [filters, id, site]);
+    }, [filters, id, site, getCategory]);
 
     const currentData: HomeData | undefined = useMemo(() => {
         const homeData: HomeData[] = store.get('vod_next_home_data') || [];

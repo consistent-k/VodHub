@@ -1,6 +1,6 @@
 import { App, Col, Descriptions, Flex, Image, Row, Select, Tabs, Typography } from 'antd';
 import { includes } from 'lodash';
-import React, { Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router';
 
 import { useStyles } from './styles';
@@ -48,44 +48,50 @@ const DetailPage: React.FC = () => {
         return showType;
     }, [playerUrl]);
 
-    const handlePlay = async (url: string, parse_urls: string[]) => {
-        try {
-            const res = await playApi(site as string, {
-                url,
-                parse_urls
-            });
-            const { data, code } = res;
-            if (code === 0 && data.length > 0) {
-                setPlayerUrl(data[0].play_url);
-            } else {
-                message.error('播放失败, 清尝试更换播放线路');
+    const handlePlay = useCallback(
+        async (url: string, parse_urls: string[]) => {
+            try {
+                const res = await playApi(site as string, {
+                    url,
+                    parse_urls
+                });
+                const { data, code } = res;
+                if (code === 0 && data.length > 0) {
+                    setPlayerUrl(data[0].play_url);
+                } else {
+                    message.error('播放失败，请尝试更换播放线路');
+                }
+            } catch (error) {
+                console.log(error);
             }
-        } catch (error) {
-            console.log(error);
-        }
-    };
+        },
+        [site, message]
+    );
 
-    const handleDetail = async (id: string | number) => {
-        try {
-            const res = await detailApi(site as string, {
-                id
-            });
-            const { code, data } = res;
-            if (code === 0 && data.length > 0) {
-                setMovieDetail(data[0]);
-                setActivePlayList(data[0].vod_play_list[0]);
-                setActiveUrl(data[0].vod_play_list[0].urls[0].url);
-                handlePlay(data[0].vod_play_list[0].urls[0].url, data[0].vod_play_list[0].parse_urls || []);
+    const handleDetail = useCallback(
+        async (id: string | number) => {
+            try {
+                const res = await detailApi(site as string, {
+                    id
+                });
+                const { code, data } = res;
+                if (code === 0 && data.length > 0) {
+                    setMovieDetail(data[0]);
+                    setActivePlayList(data[0].vod_play_list[0]);
+                    setActiveUrl(data[0].vod_play_list[0].urls[0].url);
+                    handlePlay(data[0].vod_play_list[0].urls[0].url, data[0].vod_play_list[0].parse_urls || []);
+                }
+            } catch (error) {
+                console.log(error);
             }
-        } catch (error) {
-            console.log(error);
-        }
-    };
+        },
+        [site, handlePlay]
+    );
     useEffect(() => {
         if (typeof id === 'string' && id) {
             handleDetail(decodeURIComponent(id));
         }
-    }, [id, site]);
+    }, [id, site, handleDetail]);
 
     useEffect(() => {
         if (typeof site !== 'string' || !site) {
@@ -130,7 +136,7 @@ const DetailPage: React.FC = () => {
                 setTmdbMatches(results);
             });
         }
-    }, [tmdbId, mediaType, movieDetail?.vod_name]);
+    }, [tmdbId, mediaType, movieDetail?.vod_name, movieDetail?.vod_year]);
 
     // Background: stream-match all remaining sources one by one
     useEffect(() => {
@@ -161,7 +167,7 @@ const DetailPage: React.FC = () => {
                 return [...prev, match];
             });
         });
-    }, [tmdbId, mediaType, movieDetail?.vod_name, tmdbMatches.length]);
+    }, [tmdbId, mediaType, movieDetail?.vod_name, movieDetail?.vod_year, tmdbMatches.length]);
 
     if (!movieDetail) {
         return <Loading fullscreen />;
