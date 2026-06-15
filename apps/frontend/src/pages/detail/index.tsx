@@ -5,6 +5,7 @@ import { useSearchParams, useNavigate } from 'react-router';
 
 import { useStyles } from './styles';
 
+import AiSummary from '@/components/AiSummary';
 import Loading from '@/components/Loading';
 import { PlayerProps } from '@/components/VodPalyer';
 import useIsMobile from '@/hooks/useIsMobile';
@@ -278,24 +279,36 @@ const DetailPage: React.FC = () => {
                             key: 'info',
                             label: '基本信息',
                             children: (
-                                <Descriptions
-                                    title={<div>{movieDetail?.vod_name}</div>}
-                                    column={1}
-                                    styles={{
-                                        label: {
-                                            minWidth: 80
-                                        }
-                                    }}
-                                >
-                                    <Descriptions.Item label="简介">
-                                        <Paragraph ellipsis={{ rows: isMobile ? 8 : 10, expandable: false }}>{movieDetail?.vod_content.trimStart()}</Paragraph>
-                                    </Descriptions.Item>
-                                    {isMobile && CommonDescriptions()}
-                                    <Descriptions.Item label="演员">
-                                        <Paragraph ellipsis={{ rows: isMobile ? 5 : 10, expandable: false }}>{movieDetail?.vod_actor}</Paragraph>
-                                    </Descriptions.Item>
-                                    {!isMobile && CommonDescriptions()}
-                                </Descriptions>
+                                <>
+                                    <Descriptions
+                                        title={<div>{movieDetail?.vod_name}</div>}
+                                        column={1}
+                                        styles={{
+                                            label: {
+                                                minWidth: 80
+                                            }
+                                        }}
+                                    >
+                                        <Descriptions.Item label="简介">
+                                            <Paragraph ellipsis={{ rows: isMobile ? 8 : 10, expandable: false }}>{movieDetail?.vod_content.trimStart()}</Paragraph>
+                                        </Descriptions.Item>
+                                        {isMobile && CommonDescriptions()}
+                                        <Descriptions.Item label="演员">
+                                            <Paragraph ellipsis={{ rows: isMobile ? 5 : 10, expandable: false }}>{movieDetail?.vod_actor}</Paragraph>
+                                        </Descriptions.Item>
+                                        {!isMobile && CommonDescriptions()}
+                                    </Descriptions>
+                                    {movieDetail?.vod_content && (
+                                        <AiSummary
+                                            title={movieDetail.vod_name}
+                                            content={movieDetail.vod_content}
+                                            year={movieDetail.vod_year}
+                                            area={movieDetail.vod_area}
+                                            actor={movieDetail.vod_actor}
+                                            director={movieDetail.vod_director}
+                                        />
+                                    )}
+                                </>
                             )
                         }
                     ]}

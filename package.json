@@ -17,12 +17,12 @@
         "commit": "git-cz"
     },
     "devDependencies": {
-        "@commitlint/cli": "^21.0.0",
-        "@commitlint/config-conventional": "^21.0.0",
-        "@eslint/js": "^9.39.4",
-        "commitizen": "^4.3.1",
+        "@commitlint/cli": "^21.0.2",
+        "@commitlint/config-conventional": "^21.0.2",
+        "@eslint/js": "^10.0.1",
+        "commitizen": "^4.3.2",
         "cz-conventional-changelog": "^3.3.0",
-        "eslint": "^9.39.4",
+        "eslint": "^10.5.0",
         "eslint-config-prettier": "^10.1.8",
         "eslint-plugin-import": "^2.32.0",
         "eslint-plugin-import-x": "^4.16.2",
@@ -31,9 +31,9 @@
         "eslint-plugin-react-hooks": "^7.0.1",
         "eslint-plugin-unused-imports": "^4.4.1",
         "husky": "^9.1.7",
-        "lint-staged": "^17.0.4",
-        "prettier": "^3.8.2",
-        "typescript-eslint": "^8.57.2"
+        "lint-staged": "^17.0.7",
+        "prettier": "^3.8.4",
+        "typescript-eslint": "^8.61.0"
     },
     "packageManager": "pnpm@10.34.3",
     "config": {

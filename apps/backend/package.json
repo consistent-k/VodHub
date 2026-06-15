@@ -18,23 +18,25 @@
         "lint:fix": "eslint . --fix"
     },
     "dependencies": {
+        "@ai-sdk/openai-compatible": "^2.0.50",
         "@hono/node-server": "^2.0.2",
         "@keyv/redis": "^5.1.6",
         "@vodhub/shared": "workspace:*",
-        "axios": "^1.16.0",
+        "ai": "^6.0.205",
+        "axios": "^1.17.0",
         "cache-manager": "^7.2.8",
         "cacheable": "^2.3.4",
         "cross-env": "^10.1.0",
         "crypto-js": "^4.2.0",
         "dayjs": "^1.11.20",
         "dotenv": "^17.4.2",
-        "hono": "^4.12.18",
-        "ioredis": "^5.10.1",
+        "hono": "^4.12.25",
+        "ioredis": "^5.11.1",
         "keyv": "^5.6.0",
         "lodash-es": "^4.17.23",
         "query-string": "^9.3.1",
         "tmdb-ts": "^2.3.0",
-        "undici": "^7.10.0",
+        "undici": "^8.4.1",
         "winston": "^3.19.0"
     },
     "devDependencies": {
@@ -42,10 +44,10 @@
         "@types/crypto-js": "^4.2.2",
         "@types/lodash": "^4.17.24",
         "@types/lodash-es": "^4.17.12",
-        "@types/node": "^25.6.2",
+        "@types/node": "^25.9.3",
         "tsup": "^8.5.1",
-        "tsx": "^4.21.0",
+        "tsx": "^4.22.4",
         "typescript": "^6.0.0",
-        "typescript-eslint": "^8.57.1"
+        "typescript-eslint": "^8.61.0"
     }
 }

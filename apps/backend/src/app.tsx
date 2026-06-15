@@ -7,6 +7,7 @@ import { trimTrailingSlash } from 'hono/trailing-slash';
 import configRoutes from '@/api/config';
 import cache from '@/middleware/cache';
 import jsonReturn from '@/middleware/jsonReturn';
+import aiSummaryApp from '@/modules/ai-summary/app';
 import proxyRoutes from '@/modules/cms/proxy';
 import tmdbApp from '@/modules/tmdb/app';
 
@@ -24,6 +25,7 @@ cmsApp.use(cache);
 
 cmsApp.route('/proxy', proxyRoutes);
 
+app.route('/ai', aiSummaryApp);
 app.route('/cms', cmsApp);
 app.route('/config', configRoutes);
 app.route('/tmdb', tmdbApp);

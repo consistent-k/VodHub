@@ -19,5 +19,10 @@ export const config = {
     tmdb: {
         enabled: process.env.TMDB_ENABLED === 'true',
         apiToken: process.env.TMDB_API_TOKEN || ''
+    },
+    ai: {
+        apiKey: process.env.LLM_API_KEY || '',
+        baseURL: process.env.LLM_BASE_URL || '',
+        model: process.env.LLM_MODEL || ''
     }
 };
