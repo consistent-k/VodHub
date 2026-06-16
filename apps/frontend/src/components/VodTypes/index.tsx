@@ -27,10 +27,10 @@ const VodTypes: React.FC<VodTypesProps> = ({ site }) => {
     const [searchParams] = useSearchParams();
 
     const activeKey = useMemo(() => {
-        if (location.pathname.includes('category')) {
+        if (location.pathname.endsWith('/cms/category')) {
             return searchParams.get('id') || '';
         }
-        if (location.pathname.includes('cms')) {
+        if (location.pathname === '/cms') {
             return 'all';
         }
         return '';
@@ -97,7 +97,7 @@ const VodTypes: React.FC<VodTypesProps> = ({ site }) => {
             navigate('/cms');
         } else {
             const name = items.find((item) => item.key === key)?.label || '';
-            navigate(`/category?id=${key}&name=${name}&site=${site}`);
+            navigate(`/cms/category?id=${key}&name=${name}&site=${site}`);
         }
     };
 

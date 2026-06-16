@@ -9,6 +9,7 @@ import cache from '@/middleware/cache';
 import jsonReturn from '@/middleware/jsonReturn';
 import aiSummaryApp from '@/modules/ai-summary/app';
 import proxyRoutes from '@/modules/cms/proxy';
+import matchApp from '@/modules/match/app';
 import tmdbApp from '@/modules/tmdb/app';
 
 const app = new Hono().basePath('/api/vodhub');
@@ -28,6 +29,7 @@ cmsApp.route('/proxy', proxyRoutes);
 app.route('/ai', aiSummaryApp);
 app.route('/cms', cmsApp);
 app.route('/config', configRoutes);
+app.route('/match', matchApp);
 app.route('/tmdb', tmdbApp);
 
 export default app;

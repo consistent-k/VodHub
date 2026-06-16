@@ -2,7 +2,6 @@ import { useKeyPress } from 'ahooks';
 import { Button, Flex, Image, Input, Modal, Spin, Tag, theme } from 'antd';
 import { debounce, trim } from 'lodash';
 import React, { useCallback, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router';
 
 import SearchIcon from '../Icons/SearchIcon';
 
@@ -10,10 +9,8 @@ import { useStyles } from './styles';
 
 import useIsMobile from '@/hooks/useIsMobile';
 import { useTmdbSearch } from '@/hooks/useTmdb';
-import useTmdbDetailStore from '@/store/useTmdbDetailStore';
 import type { TmdbMediaItem } from '@/types/tmdb';
 import { getPosterUrl } from '@/utils/tmdb';
-import { matchTmdbToCms } from '@/utils/tmdb-match';
 
 interface SearchTmdbContentProps {
     onCancel: () => void;
@@ -22,11 +19,9 @@ interface SearchTmdbContentProps {
 
 const SearchTmdbContent: React.FC<SearchTmdbContentProps> = ({ onCancel, style }) => {
     const { token } = theme.useToken();
-    const navigate = useNavigate();
     const { styles } = useStyles();
     const { results, isLoading, totalResults, search, reset } = useTmdbSearch();
     const [value, setValue] = useState('');
-    const [matchingId, setMatchingId] = useState<number | null>(null);
 
     const debouncedSearch = useMemo(() => debounce((val: string) => search(val), 800), [search]);
 
@@ -41,23 +36,9 @@ const SearchTmdbContent: React.FC<SearchTmdbContentProps> = ({ onCancel, style }
         [debouncedSearch, reset]
     );
 
-    const handleItemClick = async (item: TmdbMediaItem) => {
-        setMatchingId(item.id);
-        try {
-            const results = await matchTmdbToCms(item);
-            if (results.length === 0) {
-                // no match
-            } else if (results.length === 1) {
-                onCancel();
-                navigate(`/detail?id=${encodeURIComponent(String(results[0].vod_id))}&site=${results[0].site}`);
-            } else {
-                useTmdbDetailStore.getState().setTmdbDetail(item, results);
-                onCancel();
-                navigate(`/detail?id=${encodeURIComponent(String(results[0].vod_id))}&site=${results[0].site}&tmdbId=${item.id}&mediaType=${item.mediaType}`);
-            }
-        } finally {
-            setMatchingId(null);
-        }
+    const handleItemClick = (item: TmdbMediaItem) => {
+        onCancel();
+        window.open(`/detail/tmdb/${item.id}?mediaType=${item.mediaType}`, '_blank', 'noopener,noreferrer');
     };
 
     return (
@@ -90,11 +71,6 @@ const SearchTmdbContent: React.FC<SearchTmdbContentProps> = ({ onCancel, style }
                                     <div className={styles.itemCover}>
                                         <Tag className={styles.itemType}>{item.mediaType === 'movie' ? '电影' : '剧集'}</Tag>
                                         <div className={styles.itemScore}>{item.voteAverage.toFixed(1)}</div>
-                                        {matchingId === item.id && (
-                                            <div className={styles.itemMatching}>
-                                                <Spin size="small" />
-                                            </div>
-                                        )}
                                         <Image
                                             rootClassName={styles.itemPic}
                                             src={getPosterUrl(item.posterPath, 'w342')}

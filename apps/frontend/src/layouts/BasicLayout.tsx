@@ -1,42 +1,20 @@
 import { Layout } from 'antd';
 import dayjs from 'dayjs';
-import React, { PropsWithChildren, useMemo } from 'react';
-import { useLocation } from 'react-router';
+import { Outlet } from 'react-router';
 
-import { useStyles } from './styles';
+import { useStyles } from './basicLayoutStyles';
 
 import Disclaimer from '@/components/Disclaimer';
-import SiteHeader from '@/components/SiteHeader';
-import VodTypes from '@/components/VodTypes';
-import { useIsTmdbView } from '@/hooks/useTmdb';
-import useSettingStore from '@/store/useSettingStore';
 
-const { Content, Footer } = Layout;
+const { Footer } = Layout;
 
-interface BasicLayoutProps {
-    isSettingPage?: boolean;
-}
-
-const BasicLayout: React.FC<PropsWithChildren<BasicLayoutProps>> = ({ children, isSettingPage = false }) => {
-    const location = useLocation();
+const BasicLayout = () => {
     const { styles } = useStyles();
-
-    const { current_site } = useSettingStore();
-
-    const isTmdbView = useIsTmdbView();
-
-    const showVodTypes = useMemo(() => {
-        return (location.pathname === '/cms' || location.pathname === '/category') && !isTmdbView;
-    }, [location.pathname, isTmdbView]);
 
     return (
         <Layout className={styles.layout}>
-            <Disclaimer></Disclaimer>
-            {!isSettingPage && <SiteHeader></SiteHeader>}
-            <Content className={styles.content}>
-                {showVodTypes && <VodTypes site={current_site}></VodTypes>}
-                <div className={styles.main}>{children}</div>
-            </Content>
+            <Disclaimer />
+            <Outlet />
             <Footer className={styles.footer}>
                 <span>©{dayjs().year()} VodNext</span>
                 <span className={styles.footerDivider}>|</span>

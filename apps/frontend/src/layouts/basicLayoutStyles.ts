@@ -7,17 +7,6 @@ export const useStyles = createStyles(({ css, token }) => ({
         height: 100%;
         background: ${token.colorBgLayout};
     `,
-    content: css`
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        padding: 0;
-    `,
-    main: css`
-        flex: 1;
-        overflow-y: auto;
-        padding: 24px;
-    `,
     footer: css`
         display: flex;
         align-items: center;

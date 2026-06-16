@@ -2,7 +2,6 @@ import { useKeyPress } from 'ahooks';
 import { Button, Flex, Input, Modal, theme } from 'antd';
 import { debounce, trim } from 'lodash';
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router';
 
 import SearchIcon from '../Icons/SearchIcon';
 import Loading from '../Loading';
@@ -128,8 +127,6 @@ const CmsVodSearch: React.FC<VodSearchProps> = (props) => {
     const { isMobile } = useIsMobile();
 
     const [showSearch, setShowSearch] = useState(false);
-    const navigate = useNavigate();
-
     useKeyPress(['meta.k'], () => {
         setShowSearch(true);
     });
@@ -211,7 +208,7 @@ const CmsVodSearch: React.FC<VodSearchProps> = (props) => {
                         }}
                         onItemClick={(media) => {
                             setShowSearch(false);
-                            navigate(`/detail?id=${encodeURIComponent(String(media.id))}&site=${site}`);
+                            window.open(`/detail/cms/${encodeURIComponent(String(media.id))}?site=${site}`, '_blank', 'noopener,noreferrer');
                         }}
                         style={{
                             height: '100%',
@@ -245,7 +242,7 @@ const CmsVodSearch: React.FC<VodSearchProps> = (props) => {
                         }}
                         onItemClick={(media) => {
                             setShowSearch(false);
-                            navigate(`/detail?id=${encodeURIComponent(String(media.id))}&site=${site}`);
+                            window.open(`/detail/cms/${encodeURIComponent(String(media.id))}?site=${site}`, '_blank', 'noopener,noreferrer');
                         }}
                     ></SearchContent>
                 </Modal>

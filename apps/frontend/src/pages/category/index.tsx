@@ -137,7 +137,7 @@ const CategoryPage = () => {
                             })
                         )}
                         onItemClick={(media) => {
-                            navigate(`/detail?id=${encodeURIComponent(String(media.id))}&site=${site}`);
+                            window.open(`/detail/cms/${encodeURIComponent(String(media.id))}?site=${site}`, '_blank', 'noopener,noreferrer');
                         }}
                     />
                 </>

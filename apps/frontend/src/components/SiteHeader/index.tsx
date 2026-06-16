@@ -17,7 +17,7 @@ const SiteHeader = () => {
     const navigate = useNavigate();
     const { styles } = useStyles();
 
-    const { site_name, current_site, updateSetting } = useSettingStore();
+    const { site_name, current_site } = useSettingStore();
     const { tmdb_enabled } = useAppConfigStore();
 
     const { sites } = useVodSitesStore();
@@ -47,7 +47,9 @@ const SiteHeader = () => {
                         options={sites}
                         value={current_site}
                         onChange={(value) => {
-                            updateSetting({ site_name, current_site: value });
+                            const source = sites?.find((s) => s.value === value);
+                            const name = (source?.label as string) || site_name;
+                            navigate(`/cms?id=${encodeURIComponent(value)}&name=${encodeURIComponent(name)}`);
                         }}
                     />
                 )}

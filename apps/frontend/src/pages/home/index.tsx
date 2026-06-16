@@ -1,6 +1,4 @@
-import { message } from 'antd';
-import React, { useCallback, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router';
+import React, { useCallback, useMemo } from 'react';
 
 import { useStyles } from './styles';
 
@@ -8,11 +6,9 @@ import FeaturedCarousel from '@/components/FeaturedCarousel';
 import Loading from '@/components/Loading';
 import MediaList, { MediaListItem } from '@/components/MediaList';
 import { useTmdbHome } from '@/hooks/useTmdb';
-import useTmdbDetailStore from '@/store/useTmdbDetailStore';
 import useTmdbStore from '@/store/useTmdbStore';
 import type { TmdbMediaItem } from '@/types/tmdb';
 import { getPosterUrl } from '@/utils/tmdb';
-import { matchTmdbToCmsTop } from '@/utils/tmdb-match';
 
 const toMediaListItems = (items: TmdbMediaItem[]): MediaListItem[] =>
     items.map((item) => ({
@@ -24,32 +20,14 @@ const toMediaListItems = (items: TmdbMediaItem[]): MediaListItem[] =>
     }));
 
 const TmdbHomePage: React.FC = () => {
-    const navigate = useNavigate();
     const store = useTmdbStore();
     useTmdbHome();
-    const [matching, setMatching] = useState(false);
     const { styles } = useStyles();
 
-    const handleItemClick = useCallback(
-        async (item: MediaListItem) => {
-            const tmdbItem = (item as MediaListItem & { tmdbItem: TmdbMediaItem }).tmdbItem;
-            setMatching(true);
-            try {
-                const matches = await matchTmdbToCmsTop(tmdbItem);
-                if (matches.length === 0) {
-                    message.info('未找到匹配的播放源');
-                } else {
-                    useTmdbDetailStore.getState().setTmdbDetail(tmdbItem, matches);
-                    navigate(`/detail?id=${encodeURIComponent(String(matches[0].vod_id))}&site=${matches[0].site}&tmdbId=${tmdbItem.id}&mediaType=${tmdbItem.mediaType}`);
-                }
-            } catch {
-                message.error('匹配播放源失败');
-            } finally {
-                setMatching(false);
-            }
-        },
-        [navigate]
-    );
+    const handleItemClick = useCallback((item: MediaListItem) => {
+        const tmdbItem = (item as MediaListItem & { tmdbItem: TmdbMediaItem }).tmdbItem;
+        window.open(`/detail/tmdb/${tmdbItem.id}?mediaType=${tmdbItem.mediaType}`, '_blank', 'noopener,noreferrer');
+    }, []);
 
     const sections = useMemo(
         () => [
@@ -85,7 +63,6 @@ const TmdbHomePage: React.FC = () => {
 
     return (
         <div className={styles.home}>
-            {matching && <Loading fullscreen description="正在匹配播放源" />}
             <FeaturedCarousel
                 items={store.trending}
                 onItemClick={(item) =>

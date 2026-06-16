@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation } from 'react-router';
 
 import { tmdbDetailApi, tmdbHomeApi, tmdbSearchApi } from '@/services';
@@ -9,7 +9,13 @@ import type { TmdbDetail, TmdbMediaItem } from '@/types/tmdb';
 export const useIsTmdbView = (): boolean => {
     const location = useLocation();
     const { tmdb_enabled } = useAppConfigStore();
-    return tmdb_enabled && (location.pathname === '/home' || location.pathname === '/');
+
+    return useMemo(() => {
+        if (!tmdb_enabled) return false;
+        if (location.pathname === '/home' || location.pathname === '/') return true;
+        if (location.pathname.startsWith('/detail/tmdb/')) return true;
+        return false;
+    }, [tmdb_enabled, location.pathname]);
 };
 
 export const useTmdbHome = () => {

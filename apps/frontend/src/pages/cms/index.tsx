@@ -1,6 +1,6 @@
 import { uniq } from 'lodash';
-import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router';
 
 import { useStyles } from './styles';
 
@@ -14,13 +14,30 @@ const CmsHomePage: React.FC = () => {
     const [homeVodData, setHomeVodData] = useState<HomeVodData[]>([]);
     const [homeVodTypes, setHomeVodTypes] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
-    const { current_site } = useSettingStore();
+    const { current_site, site_name, updateSetting } = useSettingStore();
     const { styles } = useStyles();
 
+    const [searchParams] = useSearchParams();
     const navigate = useNavigate();
+
+    const currentSite = useMemo(() => searchParams.get('id') || '', [searchParams]);
+
+    useEffect(() => {
+        if (!currentSite && current_site) {
+            navigate(`/cms?id=${encodeURIComponent(current_site)}&name=${encodeURIComponent(site_name || '')}`, { replace: true });
+        }
+    }, [currentSite, current_site, site_name, navigate]);
+
+    useEffect(() => {
+        if (currentSite && currentSite !== current_site) {
+            updateSetting({ current_site: currentSite });
+        }
+    }, [currentSite, current_site, updateSetting]);
 
     const getHomeVod = useCallback(async (site: string) => {
         try {
+            setLoading(true);
+            setHomeVodData([]);
             const res = await homeVodApi(site);
             const { code, data } = res;
             if (code === 0) {
@@ -35,8 +52,10 @@ const CmsHomePage: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        getHomeVod(current_site);
-    }, [current_site, getHomeVod]);
+        if (currentSite) {
+            getHomeVod(currentSite);
+        }
+    }, [currentSite, getHomeVod]);
 
     return (
         <div className={styles.home}>
@@ -51,7 +70,7 @@ const CmsHomePage: React.FC = () => {
                                 onMore={() => {
                                     const typeData = homeVodData.find((mItem) => mItem.type_name === item);
                                     if (typeData) {
-                                        navigate(`/category?id=${typeData.type_id}&name=${item}&site=${current_site}`);
+                                        navigate(`/cms/category?id=${typeData.type_id}&name=${item}&site=${current_site}`);
                                     }
                                 }}
                                 items={homeVodData
@@ -65,7 +84,7 @@ const CmsHomePage: React.FC = () => {
                                         })
                                     )}
                                 onItemClick={(media) => {
-                                    navigate(`/detail?id=${encodeURIComponent(String(media.id))}&site=${current_site}`);
+                                    window.open(`/detail/cms/${encodeURIComponent(String(media.id))}?site=${current_site}`, '_blank', 'noopener,noreferrer');
                                 }}
                             />
                         </div>
