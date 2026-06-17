@@ -6,32 +6,21 @@ FROM base AS builder
 WORKDIR /app
 COPY .npmrc package.json pnpm-workspace.yaml pnpm-lock.yaml tsconfig.base.json ./
 COPY packages/ ./packages/
-COPY apps/backend/package.json ./apps/backend/
-COPY apps/frontend/package.json ./apps/frontend/
-RUN pnpm install --frozen-lockfile --prod=false
 COPY apps/backend/ ./apps/backend/
-RUN mkdir -p apps/backend/logs && cd apps/backend && pnpm build
+RUN pnpm install --frozen-lockfile
+RUN pnpm --filter @vodhub/backend build
 
-FROM node:24-alpine AS runner
+FROM base AS runner
 WORKDIR /app
-RUN corepack enable && \
-    apk add --no-cache bash git curl xz tar unzip procps
-RUN git clone --branch master --depth 1 \
-    https://gh-proxy.org/https://github.com/nelvko/clash-for-linux-install.git \
-    && cd clash-for-linux-install \
-    && sed -i 's/^_quit "/: # _quit "/' install.sh \
-    && bash install.sh \
-    && cd .. && rm -rf clash-for-linux-install
+RUN corepack enable
 
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/apps/backend/node_modules ./apps/backend/node_modules
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml .npmrc ./
+COPY packages/shared/package.json ./packages/shared/
 COPY --from=builder /app/apps/backend/dist ./apps/backend/dist
-COPY --from=builder /app/apps/backend/package.json ./apps/backend/
-COPY --from=builder /app/apps/backend/logs ./apps/backend/logs
-COPY package.json pnpm-workspace.yaml ./
+COPY apps/backend/package.json ./apps/backend/
 
-COPY apps/backend/scripts/entrypoint.sh /entrypoint.sh
+RUN pnpm install --frozen-lockfile --prod --filter @vodhub/backend
 
 ENV NODE_ENV=production
 EXPOSE 8888
-CMD ["/entrypoint.sh", "node", "apps/backend/dist/index.js"]
+CMD ["node", "apps/backend/dist/index.js"]
