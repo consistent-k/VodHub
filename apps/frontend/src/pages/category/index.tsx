@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router';
 import store from 'store2';
 
@@ -6,7 +6,7 @@ import { useStyles } from './styles';
 
 import Loading from '@/components/Loading';
 import MediaList, { MediaListItem } from '@/components/MediaList';
-import { categoryApi } from '@/services';
+import { categoryApi, homeApi } from '@/services';
 import { CategoryVodData, Filter, FilterItem, HomeData } from '@/types';
 
 const CategoryPage = () => {
@@ -21,6 +21,7 @@ const CategoryPage = () => {
     const name = searchParams.get('name') || '';
     const site = searchParams.get('site') || '';
     const [filters, setFilters] = useState<Record<string, string>>({});
+    const [currentData, setCurrentData] = useState<HomeData | undefined>();
 
     const getCategory = useCallback(
         async (id: string | number) => {
@@ -69,10 +70,24 @@ const CategoryPage = () => {
         }
     }, [filters, id, site, getCategory]);
 
-    const currentData: HomeData | undefined = useMemo(() => {
+    useEffect(() => {
         const homeData: HomeData[] = store.get('vod_next_home_data') || [];
-        return homeData.find((item) => String(item.type_id) === id);
-    }, [id]);
+        const found = homeData.find((item) => String(item.type_id) === id);
+        if (found) {
+            setCurrentData(found);
+            return;
+        }
+
+        homeApi(site)
+            .then((res) => {
+                if (res.code === 0) {
+                    store.set('vod_next_home_data', res.data);
+                    const match = res.data.find((item) => String(item.type_id) === id);
+                    if (match) setCurrentData(match);
+                }
+            })
+            .catch(() => {});
+    }, [id, site]);
 
     const typeMap: Record<string, string> = {
         class: '分类',

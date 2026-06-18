@@ -54,6 +54,8 @@ const CmsHomePage: React.FC = () => {
     useEffect(() => {
         if (currentSite) {
             getHomeVod(currentSite);
+        } else {
+            setLoading(false);
         }
     }, [currentSite, getHomeVod]);
 

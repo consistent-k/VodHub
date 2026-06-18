@@ -1,4 +1,5 @@
 import { TMDB } from 'tmdb-ts';
+import { EnvHttpProxyAgent, fetch as undiciFetch } from 'undici';
 
 import type { TmdbCastMember, TmdbMediaItem } from './types';
 
@@ -7,10 +8,30 @@ import { config } from '@/config';
 const LANGUAGE = 'zh-CN';
 
 let client: TMDB | null = null;
+let proxyAgent: EnvHttpProxyAgent | null = null;
+
+const TMDB_BASE_URL = config.tmdb.baseUrl.replace(/\/+$/, '');
+const getTargetUrl = (input: string | Request): string => {
+    const url = typeof input === 'string' ? input : input.url;
+    return url.startsWith('https://api.themoviedb.org/3') ? url.replace('https://api.themoviedb.org/3', TMDB_BASE_URL) : url;
+};
+const getFetch = (): typeof globalThis.fetch => {
+    const hasProxy = process.env.https_proxy || process.env.http_proxy || process.env.HTTPS_PROXY || process.env.HTTP_PROXY;
+
+    if (!hasProxy) {
+        return (input, init) => globalThis.fetch(getTargetUrl(input as string | Request), init);
+    }
+
+    if (!proxyAgent) {
+        proxyAgent = new EnvHttpProxyAgent();
+    }
+
+    return (input, init) => undiciFetch(getTargetUrl(input as string | Request), { ...init, dispatcher: proxyAgent } as never);
+};
 
 export const getTmdbClient = (): TMDB => {
     if (!client) {
-        client = new TMDB(config.tmdb.apiToken, { fetch: globalThis.fetch });
+        client = new TMDB(config.tmdb.apiToken, { fetch: getFetch() });
     }
     return client;
 };

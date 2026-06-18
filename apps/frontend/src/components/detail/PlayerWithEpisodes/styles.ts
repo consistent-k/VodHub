@@ -56,5 +56,13 @@ export const useStyles = createStyles(({ css, token }) => ({
         color: ${token.colorPrimary};
         background: var(--color-primary-alpha-low);
         box-shadow: 0px 0px 0px 1px rgba(23, 23, 23, 0.2);
+    `,
+    playerPlaceholder: css`
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        background: ${token.colorBgElevated};
     `
 }));

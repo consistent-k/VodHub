@@ -25,19 +25,23 @@ const PlayerWithEpisodes: React.FC<PlayerWithEpisodesProps> = ({ detail, site })
     const [activeUrl, setActiveUrl] = useState(detail.vod_play_list[0].urls[0].url);
     const [playerUrl, setPlayerUrl] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [playFailed, setPlayFailed] = useState(false);
 
     const handlePlay = useCallback(
         async (url: string, parseUrls: string[]) => {
             setIsLoading(true);
+            setPlayFailed(false);
             try {
                 const res = await playApi(site, { url, parse_urls: parseUrls });
                 const { data, code } = res;
                 if (code === 0 && data.length > 0) {
                     setPlayerUrl(data[0].play_url);
                 } else {
+                    setPlayFailed(true);
                     message.error('播放失败，请尝试更换播放线路');
                 }
             } catch {
+                setPlayFailed(true);
             } finally {
                 setIsLoading(false);
             }
@@ -56,12 +60,13 @@ const PlayerWithEpisodes: React.FC<PlayerWithEpisodesProps> = ({ detail, site })
     }, [detail]);
 
     useEffect(() => {
-        if (activeUrl && !playerUrl && activePlayList) {
+        if (activeUrl && !playerUrl && !playFailed && activePlayList) {
             handlePlay(activeUrl, activePlayList.parse_urls || []);
         }
-    }, [activeUrl, playerUrl]);
+    }, [activeUrl, playerUrl, playFailed, activePlayList, handlePlay]);
 
     const playerShowType = useMemo((): PlayerProps['showType'] => {
+        if (!playerUrl) return 'xgplayer';
         if (playerUrl.includes('m3u8')) return 'xgplayer';
         if (playerUrl.includes('mp4')) return 'xgplayer';
         return 'iframe';
@@ -70,14 +75,21 @@ const PlayerWithEpisodes: React.FC<PlayerWithEpisodesProps> = ({ detail, site })
     const handleEpisodeClick = useCallback((item: VodPlayUrl) => {
         setActiveUrl(item.url);
         setPlayerUrl('');
+        setPlayFailed(false);
     }, []);
 
     return (
         <Flex vertical={isMobile} gap={24} style={{ height: '100%' }}>
             <div className={styles.player} style={{ width: isMobile ? '100%' : 'calc(100% - 400px)' }}>
-                <Suspense fallback={<Loading />}>
-                    <PlayerComponent url={playerUrl} onError={(msg: string) => message.error(msg)} showType={playerShowType} style={{ width: '100%' }} />
-                </Suspense>
+                {playerUrl ? (
+                    <Suspense fallback={<Loading />}>
+                        <PlayerComponent url={playerUrl} onError={(msg: string) => message.error(msg)} showType={playerShowType} style={{ width: '100%' }} />
+                    </Suspense>
+                ) : (
+                    <div className={styles.playerPlaceholder}>
+                        <Spin />
+                    </div>
+                )}
             </div>
 
             <div className={styles.playlist} style={{ flex: 1 }}>

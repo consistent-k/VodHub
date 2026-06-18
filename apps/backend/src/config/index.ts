@@ -18,7 +18,8 @@ export const config = {
     bannedKeywords: process.env.BANNED_KEYWORDS?.split(',').filter((keyword) => keyword.trim()) || BANNED_KEYWORDS,
     tmdb: {
         enabled: process.env.TMDB_ENABLED === 'true',
-        apiToken: process.env.TMDB_API_TOKEN || ''
+        apiToken: process.env.TMDB_API_TOKEN || '',
+        baseUrl: process.env.TMDB_BASE_URL || 'https://api.themoviedb.org/3'
     },
     ai: {
         apiKey: process.env.LLM_API_KEY || '',

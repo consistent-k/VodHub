@@ -19,7 +19,8 @@ export const handler = async (ctx: Context, namespace: Namespace) => {
         const res = await request.get<CMSDetailData>(`${namespace.url}/api.php/provide/vod`, {
             params: {
                 ac: 'detail',
-                wd: keyword
+                wd: keyword,
+                pg: page
             },
             headers: {
                 'User-Agent': USER_AGENT_CHROME,
