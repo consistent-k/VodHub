@@ -209,7 +209,7 @@ importers:
         version: 3.0.24(core-js@3.49.0)(xgplayer@3.0.26(core-js@3.49.0))
       xgplayer-hls:
         specifier: ^3.0.24
-        version: 3.0.24(core-js@3.49.0)(xgplayer@3.0.26(core-js@3.49.0))
+        version: 3.0.26(core-js@3.49.0)(xgplayer@3.0.26(core-js@3.49.0))
       xgplayer-mp4:
         specifier: ^3.0.24
         version: 3.0.24(core-js@3.49.0)(xgplayer@3.0.26(core-js@3.49.0))
@@ -2297,6 +2297,9 @@ packages:
   crypto-es@1.2.7:
     resolution: {integrity: sha512-UUqiVJ2gUuZFmbFsKmud3uuLcNP2+Opt+5ysmljycFCyhA0+T16XJmo1ev/t5kMChMqWh7IEvURNCqsg+SjZGQ==}
 
+  crypto-es@2.1.0:
+    resolution: {integrity: sha512-C5Dbuv4QTPGuloy5c5Vv/FZHtmK+lobLAypFfuRaBbwCsk3qbCWWESCH3MUcBsrgXloRNMrzwUAiPg4U6+IaKA==}
+
   crypto-js@4.2.0:
     resolution: {integrity: sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==}
     deprecated: Active development of CryptoJS has been discontinued. This library is no longer maintained.
@@ -4334,11 +4337,11 @@ packages:
       core-js: '>=3.12.1'
       xgplayer: '>=3.0.1'
 
-  xgplayer-hls@3.0.24:
-    resolution: {integrity: sha512-R4saQRCnRk5zcYCFGc10BGCIWLXQ4vwjoWKJaPQEr7vGvrxMGLlWt63cmzGnL6HHSzzFna0nIe2BCDHtOQOaVw==}
+  xgplayer-hls@3.0.26:
+    resolution: {integrity: sha512-F+su9sAGGzZt9MhlrCHxOVhunWT5qy1S8ooKW331lEwueHsCeBR/VFsGsG12cj33FA/+jt0sE2BFpWHxeoEb2g==}
     peerDependencies:
       core-js: '>=3.12.1'
-      xgplayer: 3.0.24
+      xgplayer: 3.0.26
 
   xgplayer-mp4-loader@3.0.24:
     resolution: {integrity: sha512-nK57uCuoBopZa0Wdy1vBnLoYT10ynuUjFwajxtnFNZ7vqREqsUA7JohdaVKR3HikOrzBjObjgypiY/AU5sfgwg==}
@@ -4356,6 +4359,11 @@ packages:
     peerDependencies:
       core-js: '>=3.12.1'
 
+  xgplayer-streaming-shared@3.0.26:
+    resolution: {integrity: sha512-URZWNZX90Z2BMhpDXFuGrFwphqoNf5jnqb6zUV756ACgrnlHE5nyxDBYutueCaoCaFXH4ueeN67K8Xit8+xijA==}
+    peerDependencies:
+      core-js: '>=3.12.1'
+
   xgplayer-subtitles@3.0.26:
     resolution: {integrity: sha512-HiHlw3E8emEQCv0xFYHdmNUFgyzyWGBnSNmyI/fkuuvRBb+4IbsCfxg6PF3r1TNCfzOuNzA/OaMbtXBSH8n/Bw==}
     peerDependencies:
@@ -4363,6 +4371,11 @@ packages:
 
   xgplayer-transmuxer@3.0.24:
     resolution: {integrity: sha512-Mz0+Bne2Hg/gJ8Q/NGja83QUHuPewrn6i2gVFC/DVGApzClLikNpBRe17HYoME9noj775QEFbXYXZ+W+uptHUA==}
+    peerDependencies:
+      core-js: '>=3.12.1'
+
+  xgplayer-transmuxer@3.0.26:
+    resolution: {integrity: sha512-McJZPMbrS6hGMHM1dQ7AjDhbaHeeIe2ZrUDOShiHhS3AJFibldtH3+w/veprBs9tAMvtPGDq9mztW/qvdyKUNw==}
     peerDependencies:
       core-js: '>=3.12.1'
 
@@ -6514,6 +6527,8 @@ snapshots:
       which: 2.0.2
 
   crypto-es@1.2.7: {}
+
+  crypto-es@2.1.0: {}
 
   crypto-js@4.2.0: {}
 
@@ -8904,13 +8919,13 @@ snapshots:
       xgplayer-streaming-shared: 3.0.24(core-js@3.49.0)
       xgplayer-transmuxer: 3.0.24(core-js@3.49.0)
 
-  xgplayer-hls@3.0.24(core-js@3.49.0)(xgplayer@3.0.26(core-js@3.49.0)):
+  xgplayer-hls@3.0.26(core-js@3.49.0)(xgplayer@3.0.26(core-js@3.49.0)):
     dependencies:
       core-js: 3.49.0
       eventemitter3: 4.0.7
       xgplayer: 3.0.26(core-js@3.49.0)
-      xgplayer-streaming-shared: 3.0.24(core-js@3.49.0)
-      xgplayer-transmuxer: 3.0.24(core-js@3.49.0)
+      xgplayer-streaming-shared: 3.0.26(core-js@3.49.0)
+      xgplayer-transmuxer: 3.0.26(core-js@3.49.0)
 
   xgplayer-mp4-loader@3.0.24(core-js@3.49.0):
     dependencies:
@@ -8935,6 +8950,11 @@ snapshots:
       core-js: 3.49.0
       eventemitter3: 4.0.7
 
+  xgplayer-streaming-shared@3.0.26(core-js@3.49.0):
+    dependencies:
+      core-js: 3.49.0
+      eventemitter3: 4.0.7
+
   xgplayer-subtitles@3.0.26(core-js@3.49.0):
     dependencies:
       core-js: 3.49.0
@@ -8946,6 +8966,13 @@ snapshots:
       concat-typed-array: 1.0.2
       core-js: 3.49.0
       crypto-es: 1.2.7
+
+  xgplayer-transmuxer@3.0.26(core-js@3.49.0):
+    dependencies:
+      '@babel/runtime': 7.29.7
+      concat-typed-array: 1.0.2
+      core-js: 3.49.0
+      crypto-es: 2.1.0
 
   xgplayer@3.0.26(core-js@3.49.0):
     dependencies:
