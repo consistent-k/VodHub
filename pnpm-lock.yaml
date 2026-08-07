@@ -212,7 +212,7 @@ importers:
         version: 3.0.26(core-js@3.49.0)(xgplayer@3.0.26(core-js@3.49.0))
       xgplayer-mp4:
         specifier: ^3.0.24
-        version: 3.0.24(core-js@3.49.0)(xgplayer@3.0.26(core-js@3.49.0))
+        version: 3.0.26(core-js@3.49.0)(xgplayer@3.0.26(core-js@3.49.0))
       zustand:
         specifier: ^5.0.13
         version: 5.0.14(@types/react@19.2.17)(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))
@@ -4343,13 +4343,13 @@ packages:
       core-js: '>=3.12.1'
       xgplayer: 3.0.26
 
-  xgplayer-mp4-loader@3.0.24:
-    resolution: {integrity: sha512-nK57uCuoBopZa0Wdy1vBnLoYT10ynuUjFwajxtnFNZ7vqREqsUA7JohdaVKR3HikOrzBjObjgypiY/AU5sfgwg==}
+  xgplayer-mp4-loader@3.0.26:
+    resolution: {integrity: sha512-73CAkOkPJSmyZzKmnDNe6RtH1xANYrh3aYHEO13bQcZwIylges2ixDCBGHmBiy4SVT3OXvVQvbO7b+VlLB5wCQ==}
     peerDependencies:
       core-js: '>=3.12.1'
 
-  xgplayer-mp4@3.0.24:
-    resolution: {integrity: sha512-mMsJkVNh823BoIfwouse7oYg7H2BeRO9aV/82mWnqfuewmVvxTSuD+5hkztVydXVjYOFHOYnz6h/2FmPcmTUuQ==}
+  xgplayer-mp4@3.0.26:
+    resolution: {integrity: sha512-/0t6v+rL/5D6qyCXulgtWLXTd0fteNKE/ciMZpm0PhHLrL9D57U/2k13K/7I3hjqw7hzyUefWt2oggDy2G+OTg==}
     peerDependencies:
       core-js: '>=3.12.1'
       xgplayer: '>=3.0.0'
@@ -8927,23 +8927,23 @@ snapshots:
       xgplayer-streaming-shared: 3.0.26(core-js@3.49.0)
       xgplayer-transmuxer: 3.0.26(core-js@3.49.0)
 
-  xgplayer-mp4-loader@3.0.24(core-js@3.49.0):
+  xgplayer-mp4-loader@3.0.26(core-js@3.49.0):
     dependencies:
       core-js: 3.49.0
       eventemitter3: 4.0.7
-      xgplayer-streaming-shared: 3.0.24(core-js@3.49.0)
-      xgplayer-transmuxer: 3.0.24(core-js@3.49.0)
+      xgplayer-streaming-shared: 3.0.26(core-js@3.49.0)
+      xgplayer-transmuxer: 3.0.26(core-js@3.49.0)
 
-  xgplayer-mp4@3.0.24(core-js@3.49.0)(xgplayer@3.0.26(core-js@3.49.0)):
+  xgplayer-mp4@3.0.26(core-js@3.49.0)(xgplayer@3.0.26(core-js@3.49.0)):
     dependencies:
       concat-typed-array: 1.0.2
       core-js: 3.49.0
       deepmerge: 2.2.1
       eventemitter3: 4.0.7
       xgplayer: 3.0.26(core-js@3.49.0)
-      xgplayer-mp4-loader: 3.0.24(core-js@3.49.0)
-      xgplayer-streaming-shared: 3.0.24(core-js@3.49.0)
-      xgplayer-transmuxer: 3.0.24(core-js@3.49.0)
+      xgplayer-mp4-loader: 3.0.26(core-js@3.49.0)
+      xgplayer-streaming-shared: 3.0.26(core-js@3.49.0)
+      xgplayer-transmuxer: 3.0.26(core-js@3.49.0)
 
   xgplayer-streaming-shared@3.0.24(core-js@3.49.0):
     dependencies:
