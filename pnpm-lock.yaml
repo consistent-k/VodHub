@@ -76,7 +76,7 @@ importers:
         version: link:../../packages/shared
       ai:
         specifier: ^6.0.205
-        version: 6.0.244(zod@4.3.6)
+        version: 6.0.253(zod@4.3.6)
       axios:
         specifier: ^1.17.0
         version: 1.17.0
@@ -243,8 +243,8 @@ importers:
 
 packages:
 
-  '@ai-sdk/gateway@3.0.165':
-    resolution: {integrity: sha512-tDodJ6kNMvTql5gm5U35khO282BLV4tEs+uf76lektINYB2vk3ifcZLnkktZhYIwiP5r95s52Ytqp1HXKjKdZw==}
+  '@ai-sdk/gateway@3.0.172':
+    resolution: {integrity: sha512-FSH+0q6wKNq6/WjWy10m3gbeW8MR6D7Qt380evNQinpfG88mOT2sP3x1U82tBsLlKe9O306LPfgQ3NDXy7HNbA==}
     engines: {node: '>=18'}
     peerDependencies:
       zod: ^3.25.76 || ^4.1.8
@@ -1900,8 +1900,8 @@ packages:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  ai@6.0.244:
-    resolution: {integrity: sha512-5/KQrhbFfpcdem2Je6JVzPq4QGL+kerdnHQ/Tatsyk3BZXPZSu23/l9FNhodAEDjLlrY660wWLN/ug126bSJMg==}
+  ai@6.0.253:
+    resolution: {integrity: sha512-NNwp47xpD4c47NB0ad+MP8HL66f8g6l0JwZ2UdHR6PpBPk9WACEq1k7md3r0GVR6skqAU/Slt5Hk9mJYQwJkvA==}
     engines: {node: '>=18'}
     peerDependencies:
       zod: ^3.25.76 || ^4.1.8
@@ -4442,10 +4442,10 @@ packages:
 
 snapshots:
 
-  '@ai-sdk/gateway@3.0.165(zod@4.3.6)':
+  '@ai-sdk/gateway@3.0.172(zod@4.3.6)':
     dependencies:
-      '@ai-sdk/provider': 3.0.14
-      '@ai-sdk/provider-utils': 4.0.41(zod@4.3.6)
+      '@ai-sdk/provider': 3.0.15
+      '@ai-sdk/provider-utils': 4.0.45(zod@4.3.6)
       '@vercel/oidc': 3.2.0
       zod: 4.3.6
 
@@ -6028,11 +6028,11 @@ snapshots:
       screenfull: 5.2.0
       tslib: 2.8.1
 
-  ai@6.0.244(zod@4.3.6):
+  ai@6.0.253(zod@4.3.6):
     dependencies:
-      '@ai-sdk/gateway': 3.0.165(zod@4.3.6)
-      '@ai-sdk/provider': 3.0.14
-      '@ai-sdk/provider-utils': 4.0.41(zod@4.3.6)
+      '@ai-sdk/gateway': 3.0.172(zod@4.3.6)
+      '@ai-sdk/provider': 3.0.15
+      '@ai-sdk/provider-utils': 4.0.45(zod@4.3.6)
       '@opentelemetry/api': 1.9.1
       zod: 4.3.6
 
