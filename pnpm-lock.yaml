@@ -94,7 +94,7 @@ importers:
         version: 4.2.0
       dayjs:
         specifier: ^1.11.20
-        version: 1.11.21
+        version: 1.11.23
       dotenv:
         specifier: ^17.4.2
         version: 17.4.2
@@ -176,7 +176,7 @@ importers:
         version: 4.2.0
       dayjs:
         specifier: ^1.11.20
-        version: 1.11.21
+        version: 1.11.23
       hls.js:
         specifier: ^1.6.15
         version: 1.6.17
@@ -251,12 +251,6 @@ packages:
 
   '@ai-sdk/openai-compatible@2.0.69':
     resolution: {integrity: sha512-C99M0T0SpRkcCClmJxbQkpSqGmxLfh3NhTsNF3aNaUQZZ7oXN5sPWi9LGs49X5Q/r9FWxBYeZARXs15xxtGIig==}
-    engines: {node: '>=18'}
-    peerDependencies:
-      zod: ^3.25.76 || ^4.1.8
-
-  '@ai-sdk/provider-utils@4.0.45':
-    resolution: {integrity: sha512-7u5B/E2uZmU65SlJhhQGFHZwRCN0xOz4HHtFc4sEGV9PHbX3fGiEiZBpc/SABay1dGeJgK3VD60rvLGoWdWPXA==}
     engines: {node: '>=18'}
     peerDependencies:
       zod: ^3.25.76 || ^4.1.8
@@ -920,10 +914,6 @@ packages:
   '@eslint/plugin-kit@0.7.2':
     resolution: {integrity: sha512-+CNAzxglkrpNf/kKywqQfk74QjtceuOE7Qm+AF8miRvPF/wmmK5+OJOgVh3AVTT3RP2mH3+FOaxlE5v72owk0A==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
-
-  '@fastify/busboy@2.1.1':
-    resolution: {integrity: sha512-vBZP4NlzfOlerQTnba4aqZoMhE/a9HY7HRqoOPaETQcSQuWEIyZMHGfVu6w9wGtGK5fED5qRs2DteVCjOH60sA==}
-    engines: {node: '>=14'}
 
   '@hono/node-server@2.0.12':
     resolution: {integrity: sha512-eWpQYr67tqJLeaSUl0Q+TquuYfUdTibpOJlUMV2FfUP7+KqCC5TufnwnlXL6mobZBJbGAYRd7ZvEBDCbLInjhg==}
@@ -2333,8 +2323,8 @@ packages:
     resolution: {integrity: sha512-BS8PfmtDGnrgYdOonGZQdLZslWIeCGFP9tpan0hi1Co2Zr2NKADsvGYA8XxuG/4UWgJ6Cjtv+YJnB6MM69QGlQ==}
     engines: {node: '>= 0.4'}
 
-  dayjs@1.11.21:
-    resolution: {integrity: sha512-98IT+HOahAisibz/yjKbzuOBwYcjJ7BCLPzARyHiyEBmRz4fatF+KPJszEHXsGYjUG234aH/cOjW1wwTbKUZlA==}
+  dayjs@1.11.23:
+    resolution: {integrity: sha512-QDTCU0M0MxR3hQfnlDJfwekQiaanm1ubOD231u73WBckQ/fsamwRLiE2GBz6D3a/xF1NgfiDLJjXBa1hYOYTtQ==}
 
   debug@3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
@@ -4187,10 +4177,6 @@ packages:
   undici-types@7.24.6:
     resolution: {integrity: sha512-WRNW+sJgj5OBN4/0JpHFqtqzhpbnV0GuB+OozA9gCL7a993SmU+1JBZCzLNxYsbMfIeDL+lTsphD5jN5N+n0zg==}
 
-  undici@5.29.0:
-    resolution: {integrity: sha512-raqeBD6NQK4SkWhQzeYKd1KmIG6dllBOTt55Rmkt4HtI9mwdWtJljnrXjAFUBLTSN67HWrOIZ3EPF4kjUw80Bg==}
-    engines: {node: '>=14.0'}
-
   undici@6.28.0:
     resolution: {integrity: sha512-LIY910g9TI13YS95lrMFrs8Rm/u/irgHeTWoKCoteeJ04CUJ92eEfj0rVn+7VKMPBpUPiUoBKfhNyLI23EE/KA==}
     engines: {node: '>=18.17'}
@@ -4449,14 +4435,6 @@ snapshots:
     dependencies:
       '@ai-sdk/provider': 3.0.15
       '@ai-sdk/provider-utils': 4.0.46(zod@4.3.6)
-      zod: 4.3.6
-
-  '@ai-sdk/provider-utils@4.0.45(zod@4.3.6)':
-    dependencies:
-      '@ai-sdk/provider': 3.0.15
-      '@standard-schema/spec': 1.1.0
-      eventsource-parser: 3.1.1
-      undici: 5.29.0
       zod: 4.3.6
 
   '@ai-sdk/provider-utils@4.0.46(zod@4.3.6)':
@@ -5107,8 +5085,6 @@ snapshots:
       '@eslint/core': 1.2.1
       levn: 0.4.1
 
-  '@fastify/busboy@2.1.1': {}
-
   '@hono/node-server@2.0.12(hono@4.12.32)':
     dependencies:
       hono: 4.12.32
@@ -5416,7 +5392,7 @@ snapshots:
       react: 19.2.8
       react-dom: 19.2.7(react@19.2.8)
 
-  '@rc-component/picker@1.10.0(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.8))(react@19.2.8)':
+  '@rc-component/picker@1.10.0(dayjs@1.11.23)(react-dom@19.2.7(react@19.2.8))(react@19.2.8)':
     dependencies:
       '@rc-component/overflow': 1.0.1(react-dom@19.2.7(react@19.2.8))(react@19.2.8)
       '@rc-component/resize-observer': 1.1.2(react-dom@19.2.7(react@19.2.8))(react@19.2.8)
@@ -5426,7 +5402,7 @@ snapshots:
       react: 19.2.8
       react-dom: 19.2.7(react@19.2.8)
     optionalDependencies:
-      dayjs: 1.11.21
+      dayjs: 1.11.23
 
   '@rc-component/portal@2.2.1(react-dom@19.2.7(react@19.2.8))(react@19.2.8)':
     dependencies:
@@ -6009,7 +5985,7 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.29.2
       '@types/js-cookie': 3.0.6
-      dayjs: 1.11.21
+      dayjs: 1.11.23
       intersection-observer: 0.12.2
       js-cookie: 3.0.5
       lodash: 4.18.1
@@ -6107,7 +6083,7 @@ snapshots:
       '@rc-component/mutate-observer': 2.0.1(react-dom@19.2.7(react@19.2.8))(react@19.2.8)
       '@rc-component/notification': 2.0.7(react-dom@19.2.7(react@19.2.8))(react@19.2.8)
       '@rc-component/pagination': 1.3.0(react-dom@19.2.7(react@19.2.8))(react@19.2.8)
-      '@rc-component/picker': 1.10.0(dayjs@1.11.21)(react-dom@19.2.7(react@19.2.8))(react@19.2.8)
+      '@rc-component/picker': 1.10.0(dayjs@1.11.23)(react-dom@19.2.7(react@19.2.8))(react@19.2.8)
       '@rc-component/progress': 1.0.2(react-dom@19.2.7(react@19.2.8))(react@19.2.8)
       '@rc-component/qrcode': 2.0.0(react-dom@19.2.7(react@19.2.8))(react@19.2.8)
       '@rc-component/rate': 1.0.1(react-dom@19.2.7(react@19.2.8))(react@19.2.8)
@@ -6127,7 +6103,7 @@ snapshots:
       '@rc-component/upload': 1.1.1(react-dom@19.2.7(react@19.2.8))(react@19.2.8)
       '@rc-component/util': 1.11.1(react-dom@19.2.7(react@19.2.8))(react@19.2.8)
       clsx: 2.1.1
-      dayjs: 1.11.21
+      dayjs: 1.11.23
       react: 19.2.8
       react-dom: 19.2.7(react@19.2.8)
       scroll-into-view-if-needed: 3.1.0
@@ -6578,7 +6554,7 @@ snapshots:
       es-errors: 1.3.0
       is-data-view: 1.0.2
 
-  dayjs@1.11.21: {}
+  dayjs@1.11.23: {}
 
   debug@3.2.7:
     dependencies:
@@ -8741,10 +8717,6 @@ snapshots:
       which-boxed-primitive: 1.1.1
 
   undici-types@7.24.6: {}
-
-  undici@5.29.0:
-    dependencies:
-      '@fastify/busboy': 2.1.1
 
   undici@6.28.0: {}
 
