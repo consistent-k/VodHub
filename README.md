@@ -1,3 +1,5 @@
+
+
 <div align="center">
    <h1>VodHub</h1>
    一个视频源聚合解决方案
@@ -87,24 +89,29 @@ $ pnpm dev:frontend
 
 ```bash
 # 获取视频源首页分类（通过 CMS 代理）
-curl --location 'http://127.0.0.1:8888/api/vodhub/cms/proxy?action=home' \
-  --header 'x-proxy-target: https://www.360kan.com'
+curl --location 'http://127.0.0.1:8888/api/vodhub/cms/proxy' \
+  --header 'x-proxy-target: https://www.360kan.com' \
+  --header 'x-proxy-action: home'
 
 # 搜索（通过 CMS 代理）
-curl --location 'http://127.0.0.1:8888/api/vodhub/cms/proxy?action=search&keyword=钢铁侠&page=1' \
-  --header 'x-proxy-target: https://www.360kan.com'
+curl --location 'http://127.0.0.1:8888/api/vodhub/cms/proxy?keyword=钢铁侠&page=1' \
+  --header 'x-proxy-target: https://www.360kan.com' \
+  --header 'x-proxy-action: search'
 
 # 获取分类列表（通过 CMS 代理）
-curl --location 'http://127.0.0.1:8888/api/vodhub/cms/proxy?action=category&id=1&page=1' \
-  --header 'x-proxy-target: https://www.360kan.com'
+curl --location 'http://127.0.0.1:8888/api/vodhub/cms/proxy?id=1&page=1' \
+  --header 'x-proxy-target: https://www.360kan.com' \
+  --header 'x-proxy-action: category'
 
 # 获取详情（通过 CMS 代理）
-curl --location 'http://127.0.0.1:8888/api/vodhub/cms/proxy?action=detail&id=12345' \
-  --header 'x-proxy-target: https://www.360kan.com'
+curl --location 'http://127.0.0.1:8888/api/vodhub/cms/proxy?id=12345' \
+  --header 'x-proxy-target: https://www.360kan.com' \
+  --header 'x-proxy-action: detail'
 
 # 获取播放地址（通过 CMS 代理）
-curl --location 'http://127.0.0.1:8888/api/vodhub/cms/proxy?action=play&url=PLAY_URL' \
-  --header 'x-proxy-target: https://www.360kan.com'
+curl --location 'http://127.0.0.1:8888/api/vodhub/cms/proxy?url=PLAY_URL' \
+  --header 'x-proxy-target: https://www.360kan.com' \
+  --header 'x-proxy-action: play'
 ```
 
 #### TMDB 元数据 API
