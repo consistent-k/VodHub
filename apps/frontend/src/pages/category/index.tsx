@@ -143,14 +143,12 @@ const CategoryPage = () => {
                     ) : null}
 
                     <MediaList
-                        items={categoryList.map(
-                            (vod): MediaListItem => ({
-                                id: vod.vod_id,
-                                title: vod.vod_name,
-                                posterUrl: vod.vod_pic,
-                                badge: vod.vod_remarks || undefined
-                            })
-                        )}
+                        items={categoryList.map((vod): MediaListItem => ({
+                            id: vod.vod_id,
+                            title: vod.vod_name,
+                            posterUrl: vod.vod_pic,
+                            badge: vod.vod_remarks || undefined
+                        }))}
                         onItemClick={(media) => {
                             window.open(`/detail/cms/${encodeURIComponent(String(media.id))}?site=${site}`, '_blank', 'noopener,noreferrer');
                         }}

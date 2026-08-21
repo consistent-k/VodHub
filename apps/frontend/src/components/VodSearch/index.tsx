@@ -104,14 +104,12 @@ const SearchContent: React.FC<SearchContentProps> = (props) => {
                     <Loading description="搜索中" />
                 ) : (
                     <MediaList
-                        items={dataSource.map(
-                            (vod): MediaListItem => ({
-                                id: vod.vod_id,
-                                title: vod.vod_name,
-                                posterUrl: vod.vod_pic,
-                                badge: vod.vod_remarks || undefined
-                            })
-                        )}
+                        items={dataSource.map((vod): MediaListItem => ({
+                            id: vod.vod_id,
+                            title: vod.vod_name,
+                            posterUrl: vod.vod_pic,
+                            badge: vod.vod_remarks || undefined
+                        }))}
                         onItemClick={onItemClick}
                     />
                 )}

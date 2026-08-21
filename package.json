@@ -17,25 +17,25 @@
         "commit": "git-cz"
     },
     "devDependencies": {
-        "@commitlint/cli": "^21.0.2",
-        "@commitlint/config-conventional": "^21.0.2",
+        "@commitlint/cli": "^21.2.2",
+        "@commitlint/config-conventional": "^21.2.2",
         "@eslint/js": "^10.0.1",
         "commitizen": "^4.3.2",
         "cz-conventional-changelog": "^3.3.0",
-        "eslint": "^10.5.0",
+        "eslint": "^10.9.0",
         "eslint-config-prettier": "^10.1.8",
         "eslint-plugin-import": "^2.32.0",
-        "eslint-plugin-import-x": "^4.16.2",
+        "eslint-plugin-import-x": "^4.17.1",
         "eslint-plugin-prettier": "^5.5.5",
         "eslint-plugin-react": "^7.37.5",
         "eslint-plugin-react-hooks": "^7.0.1",
         "eslint-plugin-unused-imports": "^4.4.1",
         "husky": "^9.1.7",
-        "lint-staged": "^17.0.7",
-        "prettier": "^3.8.4",
-        "typescript-eslint": "^8.61.0"
+        "lint-staged": "^17.3.0",
+        "prettier": "^3.9.6",
+        "typescript-eslint": "^8.67.0"
     },
-    "packageManager": "pnpm@10.34.5",
+    "packageManager": "pnpm@11.22.0",
     "config": {
         "commitizen": {
             "path": "./node_modules/cz-conventional-changelog"
@@ -43,6 +43,6 @@
     },
     "engines": {
         "node": ">=24",
-        "pnpm": ">=10"
+        "pnpm": ">=11"
     }
 }

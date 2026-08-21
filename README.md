@@ -87,24 +87,29 @@ $ pnpm dev:frontend
 
 ```bash
 # 获取视频源首页分类（通过 CMS 代理）
-curl --location 'http://127.0.0.1:8888/api/vodhub/cms/proxy?action=home' \
-  --header 'x-proxy-target: https://www.360kan.com'
+curl --location 'http://127.0.0.1:8888/api/vodhub/cms/proxy' \
+  --header 'x-proxy-target: https://www.360kan.com' \
+  --header 'x-proxy-action: home'
 
 # 搜索（通过 CMS 代理）
-curl --location 'http://127.0.0.1:8888/api/vodhub/cms/proxy?action=search&keyword=钢铁侠&page=1' \
-  --header 'x-proxy-target: https://www.360kan.com'
+curl --location 'http://127.0.0.1:8888/api/vodhub/cms/proxy?keyword=钢铁侠&page=1' \
+  --header 'x-proxy-target: https://www.360kan.com' \
+  --header 'x-proxy-action: search'
 
 # 获取分类列表（通过 CMS 代理）
-curl --location 'http://127.0.0.1:8888/api/vodhub/cms/proxy?action=category&id=1&page=1' \
-  --header 'x-proxy-target: https://www.360kan.com'
+curl --location 'http://127.0.0.1:8888/api/vodhub/cms/proxy?id=1&page=1' \
+  --header 'x-proxy-target: https://www.360kan.com' \
+  --header 'x-proxy-action: category'
 
 # 获取详情（通过 CMS 代理）
-curl --location 'http://127.0.0.1:8888/api/vodhub/cms/proxy?action=detail&id=12345' \
-  --header 'x-proxy-target: https://www.360kan.com'
+curl --location 'http://127.0.0.1:8888/api/vodhub/cms/proxy?id=12345' \
+  --header 'x-proxy-target: https://www.360kan.com' \
+  --header 'x-proxy-action: detail'
 
 # 获取播放地址（通过 CMS 代理）
-curl --location 'http://127.0.0.1:8888/api/vodhub/cms/proxy?action=play&url=PLAY_URL' \
-  --header 'x-proxy-target: https://www.360kan.com'
+curl --location 'http://127.0.0.1:8888/api/vodhub/cms/proxy?url=PLAY_URL' \
+  --header 'x-proxy-target: https://www.360kan.com' \
+  --header 'x-proxy-action: play'
 ```
 
 #### TMDB 元数据 API
@@ -205,6 +210,7 @@ VodHub/
 │   │   │   ├── constant/           # 常量定义（状态码、消息、User-Agent 等）
 │   │   │   ├── types/              # 后端类型定义（CMS 响应类型等）
 │   │   │   ├── middleware/         # 中间件（缓存、CORS、压缩、JSON 序列化）
+│   │   │   ├── services/           # 后端服务层
 │   │   │   └── utils/              # 工具函数
 │   │   │       ├── cms/            # CMS 代理处理器（home, homeVod, category, detail, play, search）
 │   │   │       ├── cache/          # 缓存工具（内存 LRU + Redis）
@@ -217,16 +223,24 @@ VodHub/
 │   └── frontend/                   # 前端应用 (Vite + React 19 + React Router)
 │       ├── src/
 │       │   ├── components/         # 可复用组件
+│       │   │   ├── AiSummary/      # AI 内容摘要
 │       │   │   ├── CmsManagement/  # 视频源管理（CRUD）
+│       │   │   ├── detail/         # 详情相关组件
+│       │   │   ├── Disclaimer/     # 免责声明组件
 │       │   │   ├── FeaturedCarousel/ # TMDB 精选轮播
+│       │   │   ├── Icons/          # 图标组件
+│       │   │   ├── InitProvider/   # 初始化 Provider
+│       │   │   ├── Loading/        # 加载状态组件
 │       │   │   ├── MediaList/      # 通用媒体列表
 │       │   │   ├── SearchTmdb/     # TMDB 全局搜索
 │       │   │   ├── SiteHeader/     # 站点导航（含 TMDB/CMS 切换）
+│       │   │   ├── ThemeProvider/  # 主题 Provider
+│       │   │   ├── ThemeSelector/  # 主题切换
 │       │   │   ├── VodPalyer/      # 视频播放器
+│       │   │   ├── VodSearch/      # 视频源搜索
 │       │   │   ├── VodSites/       # 视频源站点选择器
-│       │   │   ├── VodTypes/       # 分类选择器
-│       │   │   └── ThemeSelector/  # 主题切换
-│       │   ├── hooks/              # 自定义 Hooks（useTmdb 等）
+│       │   │   └── VodTypes/       # 分类选择器
+│       │   ├── hooks/              # 自定义 Hooks（useTmdb、useIsMobile 等）
 │       │   ├── pages/              # React Router 页面路由
 │       │   │   ├── home/           # 首页（TMDB 轮播 + CMS 内容）
 │       │   │   ├── category/       # 分类页面
@@ -234,12 +248,15 @@ VodHub/
 │       │   │   ├── cms/            # 视频源管理页面
 │       │   │   └── setting/        # 设置页面
 │       │   ├── store/              # Zustand 状态管理
-│       │   │   ├── useVideoSourcesStore.ts  # 视频源管理（替代旧 useCmsStore）
+│       │   │   ├── useAppConfigStore.ts   # 应用配置
+│       │   │   ├── useSettingStore.ts     # 设置状态
+│       │   │   ├── useThemeStore.ts       # 主题状态
+│       │   │   ├── useVideoSourcesStore.ts # 视频源管理（替代旧 useCmsStore）
+│       │   │   ├── useVodSitesStore.ts    # 视频源站点状态
 │       │   │   ├── useTmdbStore.ts         # TMDB 首页数据
 │       │   │   ├── useTmdbDetailStore.ts   # TMDB 详情数据
-│       │   │   ├── useTmdbMatchStore.ts    # TMDB-CMS 匹配缓存
-│       │   │   └── useAppConfigStore.ts    # 应用配置
-│       │   ├── services/           # API 服务层
+│       │   │   └── useTmdbMatchStore.ts    # TMDB-CMS 匹配缓存
+│       │   ├── services/           # API 服务层（index.ts, match.ts, vodhub/）
 │       │   ├── utils/              # 工具函数（tmdb, tmdb-match, request）
 │       │   ├── themes/             # 多主题定义
 │       │   └── App.tsx             # 应用根组件

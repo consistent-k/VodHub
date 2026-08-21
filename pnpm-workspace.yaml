@@ -1,10 +1,15 @@
 packages:
   - 'apps/*'
   - 'packages/*'
-onlyBuiltDependencies:
-  - '@parcel/watcher'
-  - core-js
-  - es5-ext
-  - esbuild
-  - sharp
-  - unrs-resolver
+allowBuilds:
+  '@parcel/watcher': true
+  core-js: true
+  es5-ext: true
+  esbuild: true
+  sharp: true
+  unrs-resolver: true
+minimumReleaseAgeExclude:
+  - '@ai-sdk/gateway@4.0.59'
+  - '@ai-sdk/openai-compatible@3.0.34'
+  - ai@7.0.73
+  - eslint@10.9.0
