@@ -9,9 +9,8 @@
         "moduleResolution": "bundler",
         "jsx": "react-jsx",
         "types": ["vite/client"],
-        "baseUrl": "./",
         "paths": {
-            "@/*": ["src/*"]
+            "@/*": ["./src/*"]
         },
         "ignoreDeprecations": "6.0"
     },
