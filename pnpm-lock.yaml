@@ -112,7 +112,7 @@ importers:
         version: 4.18.1
       query-string:
         specifier: ^9.5.0
-        version: 9.5.0
+        version: 9.5.1
       tmdb-ts:
         specifier: ^2.3.0
         version: 2.3.0
@@ -185,7 +185,7 @@ importers:
         version: 4.18.1
       query-string:
         specifier: ^9.5.0
-        version: 9.5.0
+        version: 9.5.1
       react:
         specifier: ^19.2.8
         version: 19.3.0
@@ -3650,8 +3650,8 @@ packages:
     resolution: {integrity: sha512-+Owyggi9IxT1ePKGafcI87ubSmxol6smwJ+RAHDQlx9+9cPwFWDiKFFCPuWhr9ignlGpZ9vDQLw67N4dcTVFEA==}
     engines: {node: '>=20'}
 
-  query-string@9.5.0:
-    resolution: {integrity: sha512-YlJmwNyi0RGYjlxYcuDncMsxFU7YyutbuI7gTm8ySxIGBlwx5yiBCOD5ig9ZNoHkawk/1Dey0N5mEfcUybMVAA==}
+  query-string@9.5.1:
+    resolution: {integrity: sha512-/zO3RwuRCMTIcEgq6YMv4OrtEE1XzBG7w5N6zc6ydYnkWYOWsnLI/5894hYEzfESfMOT4cHCsRTIdxsSl1KjGg==}
     engines: {node: '>=18'}
 
   react-dom@19.3.0:
@@ -7921,7 +7921,7 @@ snapshots:
     dependencies:
       hookified: 2.2.0
 
-  query-string@9.5.0:
+  query-string@9.5.1:
     dependencies:
       decode-uri-component: 0.5.0
       filter-obj: 5.1.0
