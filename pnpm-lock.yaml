@@ -206,7 +206,7 @@ importers:
         version: 3.0.27(core-js@3.50.0)
       xgplayer-flv:
         specifier: ^3.0.26
-        version: 3.0.26(core-js@3.50.0)(xgplayer@3.0.27(core-js@3.50.0))
+        version: 3.0.27(core-js@3.50.0)(xgplayer@3.0.27(core-js@3.50.0))
       xgplayer-hls:
         specifier: ^3.0.26
         version: 3.0.26(core-js@3.50.0)(xgplayer@3.0.27(core-js@3.50.0))
@@ -367,6 +367,10 @@ packages:
 
   '@babel/runtime@7.29.10':
     resolution: {integrity: sha512-NpugTzbKgGrNe45Ui32cN8vCFFMxVtP/9rtfwv0nP5FRDAjvYBxJcLVpYA9mr1jxP6cnIT7x9LUzuDTbWYYNRA==}
+    engines: {node: '>=6.9.0'}
+
+  '@babel/runtime@7.29.13':
+    resolution: {integrity: sha512-v+oN26xP4YIlQsbQ/CbTH1WG5m/l/DjKKZNy/Kp3f/AFvbgt7Em/D0FeMM3O2hX0YzeN2M16W8lOpyhIkfCBcQ==}
     engines: {node: '>=6.9.0'}
 
   '@babel/runtime@7.29.7':
@@ -4312,8 +4316,8 @@ packages:
   wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
 
-  xgplayer-flv@3.0.26:
-    resolution: {integrity: sha512-9kyiwNtFag/4r+N8bNxjL0dHETOrKAPGQoc38uD82NXZWANOoEA4NHdrVSqJX2p8y4GqTIQqfVZydGWDOuMq8g==}
+  xgplayer-flv@3.0.27:
+    resolution: {integrity: sha512-OLFHMlvqBVrTro3u+eTY9S1wjEVJeuPhsJR3iEvBLT9twDRlKBVVwzmnr6Hn3iwQIQ54h2sfL4LeKHj8EKuxTQ==}
     peerDependencies:
       core-js: '>=3.12.1'
       xgplayer: '>=3.0.1'
@@ -4340,6 +4344,11 @@ packages:
     peerDependencies:
       core-js: '>=3.12.1'
 
+  xgplayer-streaming-shared@3.0.27:
+    resolution: {integrity: sha512-BYmXdBDJjzATvA1HWmATrOKmr8QNyz9LemNrsuwggrEwjMvdPO0tAE1n5Iqi4kt4nk0sf1jsiCMmhRDe+zcEAA==}
+    peerDependencies:
+      core-js: '>=3.12.1'
+
   xgplayer-subtitles@3.0.27:
     resolution: {integrity: sha512-KMeAi/ZrXCZJf032EEnzIBHRNNwTvu3yBLgVHOGdqI+VvcvZK5g/wUEd4XMzQOj3jSRFYxXs6KELx2UmS8F+JA==}
     peerDependencies:
@@ -4347,6 +4356,11 @@ packages:
 
   xgplayer-transmuxer@3.0.26:
     resolution: {integrity: sha512-McJZPMbrS6hGMHM1dQ7AjDhbaHeeIe2ZrUDOShiHhS3AJFibldtH3+w/veprBs9tAMvtPGDq9mztW/qvdyKUNw==}
+    peerDependencies:
+      core-js: '>=3.12.1'
+
+  xgplayer-transmuxer@3.0.27:
+    resolution: {integrity: sha512-9vnsgE8GKtZLmOk/UUYfWM8slKPa1munPdp40BOHx6qtQ3j25WTytgldbWbejEAVCk09fOu2g4MYBX2OE2Lurw==}
     peerDependencies:
       core-js: '>=3.12.1'
 
@@ -4571,6 +4585,8 @@ snapshots:
       '@babel/types': 7.29.8
 
   '@babel/runtime@7.29.10': {}
+
+  '@babel/runtime@7.29.13': {}
 
   '@babel/runtime@7.29.7': {}
 
@@ -8791,13 +8807,13 @@ snapshots:
 
   wrappy@1.0.2: {}
 
-  xgplayer-flv@3.0.26(core-js@3.50.0)(xgplayer@3.0.27(core-js@3.50.0)):
+  xgplayer-flv@3.0.27(core-js@3.50.0)(xgplayer@3.0.27(core-js@3.50.0)):
     dependencies:
       core-js: 3.50.0
       eventemitter3: 4.0.7
       xgplayer: 3.0.27(core-js@3.50.0)
-      xgplayer-streaming-shared: 3.0.26(core-js@3.50.0)
-      xgplayer-transmuxer: 3.0.26(core-js@3.50.0)
+      xgplayer-streaming-shared: 3.0.27(core-js@3.50.0)
+      xgplayer-transmuxer: 3.0.27(core-js@3.50.0)
 
   xgplayer-hls@3.0.26(core-js@3.50.0)(xgplayer@3.0.27(core-js@3.50.0)):
     dependencies:
@@ -8830,6 +8846,11 @@ snapshots:
       core-js: 3.50.0
       eventemitter3: 4.0.7
 
+  xgplayer-streaming-shared@3.0.27(core-js@3.50.0):
+    dependencies:
+      core-js: 3.50.0
+      eventemitter3: 4.0.7
+
   xgplayer-subtitles@3.0.27(core-js@3.50.0):
     dependencies:
       core-js: 3.50.0
@@ -8838,6 +8859,13 @@ snapshots:
   xgplayer-transmuxer@3.0.26(core-js@3.50.0):
     dependencies:
       '@babel/runtime': 7.29.10
+      concat-typed-array: 1.0.2
+      core-js: 3.50.0
+      crypto-es: 2.1.0
+
+  xgplayer-transmuxer@3.0.27(core-js@3.50.0):
+    dependencies:
+      '@babel/runtime': 7.29.13
       concat-typed-array: 1.0.2
       core-js: 3.50.0
       crypto-es: 2.1.0
