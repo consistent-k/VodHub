@@ -209,7 +209,7 @@ importers:
         version: 3.0.27(core-js@3.50.0)(xgplayer@3.0.27(core-js@3.50.0))
       xgplayer-hls:
         specifier: ^3.0.26
-        version: 3.0.26(core-js@3.50.0)(xgplayer@3.0.27(core-js@3.50.0))
+        version: 3.0.27(core-js@3.50.0)(xgplayer@3.0.27(core-js@3.50.0))
       xgplayer-mp4:
         specifier: ^3.0.26
         version: 3.0.26(core-js@3.50.0)(xgplayer@3.0.27(core-js@3.50.0))
@@ -4326,11 +4326,11 @@ packages:
       core-js: '>=3.12.1'
       xgplayer: '>=3.0.1'
 
-  xgplayer-hls@3.0.26:
-    resolution: {integrity: sha512-F+su9sAGGzZt9MhlrCHxOVhunWT5qy1S8ooKW331lEwueHsCeBR/VFsGsG12cj33FA/+jt0sE2BFpWHxeoEb2g==}
+  xgplayer-hls@3.0.27:
+    resolution: {integrity: sha512-ng7ss88fF1kQFSTAhN3/9dafiX9yltb+Uh4mdyfGmulS6oY4k5qEEFTsxpkgiyjkxle88eeWOua6/2br8dfbvQ==}
     peerDependencies:
       core-js: '>=3.12.1'
-      xgplayer: 3.0.26
+      xgplayer: 3.0.27
 
   xgplayer-mp4-loader@3.0.26:
     resolution: {integrity: sha512-73CAkOkPJSmyZzKmnDNe6RtH1xANYrh3aYHEO13bQcZwIylges2ixDCBGHmBiy4SVT3OXvVQvbO7b+VlLB5wCQ==}
@@ -8821,13 +8821,13 @@ snapshots:
       xgplayer-streaming-shared: 3.0.27(core-js@3.50.0)
       xgplayer-transmuxer: 3.0.27(core-js@3.50.0)
 
-  xgplayer-hls@3.0.26(core-js@3.50.0)(xgplayer@3.0.27(core-js@3.50.0)):
+  xgplayer-hls@3.0.27(core-js@3.50.0)(xgplayer@3.0.27(core-js@3.50.0)):
     dependencies:
       core-js: 3.50.0
       eventemitter3: 4.0.7
       xgplayer: 3.0.27(core-js@3.50.0)
-      xgplayer-streaming-shared: 3.0.26(core-js@3.50.0)
-      xgplayer-transmuxer: 3.0.26(core-js@3.50.0)
+      xgplayer-streaming-shared: 3.0.27(core-js@3.50.0)
+      xgplayer-transmuxer: 3.0.27(core-js@3.50.0)
 
   xgplayer-mp4-loader@3.0.26(core-js@3.50.0):
     dependencies:
