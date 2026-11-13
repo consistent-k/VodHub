@@ -67,7 +67,7 @@ importers:
         version: 3.0.90(zod@4.4.3)
       '@hono/node-server':
         specifier: ^2.1.1
-        version: 2.1.6(hono@4.13.16)
+        version: 2.1.6(hono@4.13.18)
       '@keyv/redis':
         specifier: ^5.1.6
         version: 5.1.6(keyv@5.6.0)
@@ -100,7 +100,7 @@ importers:
         version: 17.4.2
       hono:
         specifier: ^4.13.3
-        version: 4.13.16
+        version: 4.13.18
       ioredis:
         specifier: ^6.0.0
         version: 6.0.0(supports-color@7.1.0)
@@ -2968,8 +2968,8 @@ packages:
     resolution: {integrity: sha512-eSmmWE5bZTK2Nou4g0AI3zZ9rswp7GRKoKXS1BLUkvPviOqs4YTN1djQIqrXy9k5gEtdLPy86JjRwsNM9tnDcA==}
     engines: {node: '>=0.10.0'}
 
-  hono@4.13.16:
-    resolution: {integrity: sha512-AOLOEhvrV+iH92xXCnFr/5+3KjPKcI3xP63XJtX5spAnkznPdHijlIsUTpi7/9EhWqrTCekw5c5zh1K+YsVw7A==}
+  hono@4.13.18:
+    resolution: {integrity: sha512-H9q/E1XizaWstJxUW881dmLxEj+t/TrGGnyxINkm4+sK0qUwsMtFdo2BWI9Vs3cIS19MU6b6iCijoUoEf4f3DA==}
     engines: {node: '>=16.9.0'}
 
   hookified@1.15.1:
@@ -5086,9 +5086,9 @@ snapshots:
       '@eslint/core': 1.2.1
       levn: 0.4.1
 
-  '@hono/node-server@2.1.6(hono@4.13.16)':
+  '@hono/node-server@2.1.6(hono@4.13.18)':
     dependencies:
-      hono: 4.13.16
+      hono: 4.13.18
 
   '@humanfs/core@0.19.2':
     dependencies:
@@ -7364,7 +7364,7 @@ snapshots:
     dependencies:
       parse-passwd: 1.0.0
 
-  hono@4.13.16: {}
+  hono@4.13.18: {}
 
   hookified@1.15.1: {}
 
